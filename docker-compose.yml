@@ -1,0 +1,68 @@
+version: '3.8'
+
+services:
+  # Luxury Ride Share Agent API
+  app:
+    build: .
+    container_name: luxury-rideshare-agent
+    ports:
+      - "8000:8000"
+    environment:
+      - ENVIRONMENT=production
+      - PYTHONUNBUFFERED=1
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - SQUARE_ACCESS_TOKEN=${SQUARE_ACCESS_TOKEN}
+      - WIX_API_KEY=${WIX_API_KEY}
+      - WIX_SITE_ID=${WIX_SITE_ID}
+      - WIX_WEBHOOK_SECRET=${WIX_WEBHOOK_SECRET}
+      - DATABASE_URL=postgresql://${DB_USER}:${DB_PASSWORD}@db:5432/${DB_NAME}
+    volumes:
+      - ./src:/app/src
+      - ./config:/app/config
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - rideshare-network
+    restart: unless-stopped
+
+  # PostgreSQL Database
+  db:
+    image: postgres:15-alpine
+    container_name: luxury-rideshare-db
+    environment:
+      - POSTGRES_USER=${DB_USER:-rideshare}
+      - POSTGRES_PASSWORD=${DB_PASSWORD:-secure_password}
+      - POSTGRES_DB=${DB_NAME:-luxury_rideshare}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - rideshare-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-rideshare}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # Optional: PgAdmin for database management
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: luxury-rideshare-pgadmin
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_EMAIL:-admin@admin.com}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_PASSWORD:-admin}
+    ports:
+      - "5050:80"
+    depends_on:
+      - db
+    networks:
+      - rideshare-network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+
+networks:
+  rideshare-network:
+    driver: bridge
