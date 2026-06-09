@@ -18,6 +18,7 @@ class OfferTier:
     slug: str
     name: str
     price: int
+    access_level: str
     promise: str
     outcome: str
 
@@ -27,6 +28,7 @@ OFFER_TIERS: List[OfferTier] = [
         slug="vault",
         name="Blu Bloods Resource Vault",
         price=497,
+        access_level="starter",
         promise="A self-paced library of the exact content, offer, and posting assets you can use right now.",
         outcome="Turn Instagram into a clearer, more consistent lead source.",
     ),
@@ -34,6 +36,7 @@ OFFER_TIERS: List[OfferTier] = [
         slug="accelerator",
         name="Content-to-Client Accelerator",
         price=1500,
+        access_level="guided",
         promise="A high-touch implementation sprint that turns your content into a structured sales system.",
         outcome="Launch a premium funnel that converts DMs into booked calls.",
     ),
@@ -41,6 +44,7 @@ OFFER_TIERS: List[OfferTier] = [
         slug="vip",
         name="VIP Blueprint Intensive",
         price=3500,
+        access_level="vip",
         promise="A done-with-you premium buildout for your Instagram offer, messaging, and booking flow.",
         outcome="Install a high-ticket client acquisition system tailored to your brand.",
     ),
@@ -55,13 +59,22 @@ class InfoProductFunnel:
         self.db = DatabaseManager(self.settings.DATABASE_URL)
 
     def get_offer_catalog(self) -> List[Dict]:
+        payment_links = {
+            "vault": self.settings.STARTER_PAYMENT_LINK,
+            "accelerator": self.settings.GUIDED_PAYMENT_LINK,
+            "vip": self.settings.VIP_PAYMENT_LINK,
+        }
+
         return [
             {
                 "slug": tier.slug,
                 "name": tier.name,
                 "price": tier.price,
+                "access_level": tier.access_level,
                 "promise": tier.promise,
                 "outcome": tier.outcome,
+                "purchase_link": payment_links.get(tier.slug, ""),
+                "post_purchase_login_url": self.settings.POST_PURCHASE_LOGIN_URL,
             }
             for tier in OFFER_TIERS
         ]

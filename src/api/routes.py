@@ -101,7 +101,7 @@ async def create_timeline(request: Request):
         _require_dashboard_auth(request)
         body = await request.json()
         result = build_event_timeline(
-            event_type=body.get("event_type", "wedding"),
+            event_type=body.get("event_type", "general_party"),
             start_time=body.get("start_time", "18:00"),
             event_date=body.get("event_date", ""),
             venue=body.get("venue", ""),
@@ -133,7 +133,7 @@ async def submit_questionnaire(request: Request):
         body = await request.json()
         result = save_questionnaire_answers(
             portal_id=body.get("portal_id", str(uuid.uuid4())),
-            event_type=body.get("event_type", "wedding"),
+            event_type=body.get("event_type", "general_party"),
             answers=body.get("answers", {}),
         )
         return ApiResponse(success=True, message="Questionnaire saved", data=result)
@@ -165,7 +165,7 @@ async def get_booking_price(request: Request):
         _require_dashboard_auth(request)
         body = await request.json()
         result = calculate_booking_price(
-            event_type=body.get("event_type", "wedding"),
+            event_type=body.get("event_type", "general_party"),
             hours=float(body.get("hours", 4)),
             add_ons=body.get("add_ons", []),
             travel_hours=float(body.get("travel_hours", 0)),
@@ -185,7 +185,7 @@ async def create_content_pack(request: Request):
         body = await request.json()
         result = generate_content_pack(
             years_experience=int(body.get("years_experience", 5)),
-            specialty=body.get("specialty", "wedding"),
+            specialty=body.get("specialty", "general_party"),
             cta=body.get("cta", "Link in bio to apply."),
         )
         return ApiResponse(success=True, message="Content pack ready", data=result)

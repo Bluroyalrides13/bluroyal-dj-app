@@ -158,6 +158,10 @@ h1 {
   background: rgba(255, 255, 255, 0.72);
 }
 
+.tier-link {
+  margin-top: 18px;
+}
+
 .hero__card {
   padding: 22px;
   border-radius: 32px;

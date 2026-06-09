@@ -76,32 +76,47 @@
             <article class="card">
               <div class="card__price">$497</div>
               <h3>Blu Bloods Resource Vault</h3>
-              <p>A self-paced asset library for your captions, content ideas, booking hooks, and sales messaging.</p>
+              <p>Tools only. A self-paced asset library for your captions, content ideas, booking hooks, and sales messaging.</p>
               <div class="checklist">
-                <div class="check">Best for buyers who want fast wins without a big commitment.</div>
-                <div class="check">Use it as your front-end offer or upsell path.</div>
+                <div class="check">Starter access with the dashboard and core tools.</div>
+                <div class="check">No calls, no extra guides, no personal support.</div>
               </div>
+              <a class="button button--secondary tier-link" data-offer="vault" href="#apply">Get Starter Access</a>
             </article>
 
             <article class="card">
               <div class="card__price">$1,500</div>
               <h3>Content-to-Client Accelerator</h3>
-              <p>A high-touch sprint that turns your Instagram content into a premium sales system.</p>
+              <p>Tools plus guidance. A high-touch sprint that turns your Instagram content into a premium sales system.</p>
               <div class="checklist">
-                <div class="check">Ideal for creators ready to close better leads.</div>
-                <div class="check">Includes structure, messaging, and a conversion path.</div>
+                <div class="check">Everything in Starter plus guides and setup direction.</div>
+                <div class="check">Includes one walkthrough or strategy call.</div>
               </div>
+              <a class="button button--secondary tier-link" data-offer="accelerator" href="#apply">Get Guided Access</a>
             </article>
 
             <article class="card">
               <div class="card__price">$3,500</div>
               <h3>VIP Blueprint Intensive</h3>
-              <p>A done-with-you buildout for your message, funnel, and application flow.</p>
+              <p>Tools plus personal help. A done-with-you buildout for your message, funnel, and booking flow.</p>
               <div class="checklist">
-                <div class="check">For serious buyers who want hands-on implementation.</div>
-                <div class="check">Use this as your highest-ticket Instagram offer.</div>
+                <div class="check">Everything in Guided plus custom setup and priority support.</div>
+                <div class="check">Best for buyers who want direct help and faster results.</div>
               </div>
+              <a class="button button--secondary tier-link" data-offer="vip" href="#apply">Get VIP Access</a>
             </article>
+          </div>
+
+          <div class="panel" style="margin-top:24px;">
+            <div class="section__label">Post-purchase flow</div>
+            <p style="margin-bottom:12px;">
+              Each tier uses its own purchase link. After checkout, send everyone to the same login page and only email the extra files, calls, or personal help links that match their tier.
+            </p>
+            <div class="checklist">
+              <div class="check"><strong>$497:</strong> dashboard login only and starter tools.</div>
+              <div class="check"><strong>$1,500:</strong> dashboard login plus guides and booking support.</div>
+              <div class="check"><strong>$3,500:</strong> dashboard login plus personal help and priority access.</div>
+            </div>
           </div>
         </div>
       </section>
@@ -223,6 +238,29 @@
     </footer>
 
     <script>
+      const tierButtons = document.querySelectorAll(".tier-link");
+
+      async function loadOfferLinks() {
+        try {
+          const response = await fetch("/api/offers");
+          const data = await response.json();
+          const offers = data?.data?.offers || [];
+          const bySlug = Object.fromEntries(offers.map((offer) => [offer.slug, offer]));
+
+          tierButtons.forEach((button) => {
+            const offer = bySlug[button.dataset.offer];
+            if (offer?.purchase_link) {
+              button.href = offer.purchase_link;
+              button.textContent = `Get ${offer.price === 497 ? "Starter" : offer.price === 1500 ? "Guided" : "VIP"} Access`;
+            }
+          });
+        } catch (error) {
+          console.error("Unable to load offer links", error);
+        }
+      }
+
+      loadOfferLinks();
+
       const form = document.getElementById("application-form");
       const result = document.getElementById("result");
 

@@ -20,6 +20,16 @@ class Settings(BaseSettings):
     # Dashboard Access Control
     DASHBOARD_USERNAME: str = os.getenv("DASHBOARD_USERNAME", "djadmin")
     DASHBOARD_PASSWORD: str = os.getenv("DASHBOARD_PASSWORD", "change-this-now")
+
+    # Payment Link Configuration
+    STARTER_PAYMENT_LINK: str = os.getenv("STARTER_PAYMENT_LINK", "")
+    GUIDED_PAYMENT_LINK: str = os.getenv("GUIDED_PAYMENT_LINK", "")
+    VIP_PAYMENT_LINK: str = os.getenv("VIP_PAYMENT_LINK", "")
+    POST_PURCHASE_LOGIN_URL: str = os.getenv(
+        "POST_PURCHASE_LOGIN_URL",
+        "https://app.bluroyaladventures.com/dashboard/login",
+    )
+    SUPPORT_EMAIL: str = os.getenv("SUPPORT_EMAIL", "")
     
     # Claude AI Configuration
     ANTHROPIC_API_KEY: str = os.getenv("ANTHROPIC_API_KEY", "")
