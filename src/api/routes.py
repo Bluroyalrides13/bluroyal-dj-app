@@ -5,16 +5,28 @@ Main endpoints for chat, bookings, quotes, and webhooks
 
 import logging
 import uuid
-from fastapi import APIRouter, HTTPException, Header, Request
-from typing import Optional
+from pathlib import Path
+from fastapi import APIRouter, HTTPException, Header, Request, Form
+from fastapi.responses import FileResponse, RedirectResponse
+from typing import List, Optional
 
 from src.models.schemas import (
-    ChatMessage, BookingRequest, ChatResponse, ApiResponse
+    ChatMessage, BookingRequest, ChatResponse, ApiResponse,
+    InfoProductApplicationRequest,
 )
 from src.agent.chat_interface import ChatInterface
 from src.agent.booking_manager import BookingManager
 from src.agent.pricing_engine import PricingEngine
 from src.integrations.wix_connector import WixConnector, WixWebhookHandler
+from src.marketing.funnel import InfoProductFunnel
+from src.dj_tools.engine import (
+    build_event_timeline,
+    get_questionnaire_template,
+    save_questionnaire_answers,
+    build_setlist,
+    calculate_booking_price,
+    generate_content_pack,
+)
 from config.settings import Settings
 
 logger = logging.getLogger(__name__)
@@ -27,6 +39,196 @@ pricing_engine = PricingEngine()
 wix = WixConnector()
 wix_handler = WixWebhookHandler(wix)
 settings = Settings()
+funnel = InfoProductFunnel()
+STATIC_DIR = Path(__file__).resolve().parents[2] / "static"
+
+
+def _is_dashboard_authenticated(request: Request) -> bool:
+    return request.cookies.get("dj_dashboard_auth") == "1"
+
+
+def _require_dashboard_auth(request: Request):
+    if not _is_dashboard_authenticated(request):
+        raise HTTPException(status_code=401, detail="Unauthorized")
+
+
+# ===================== DJ Dashboard UI =====================
+
+@router.get("/dashboard/login", include_in_schema=False)
+async def dashboard_login_page():
+    """Serve dashboard login page"""
+    return FileResponse(STATIC_DIR / "dashboard-login.html")
+
+
+@router.post("/dashboard/login", include_in_schema=False)
+async def dashboard_login(username: str = Form(...), password: str = Form(...)):
+    """Authenticate dashboard access"""
+    if username != settings.DASHBOARD_USERNAME or password != settings.DASHBOARD_PASSWORD:
+        return RedirectResponse(url="/dashboard/login?error=1", status_code=303)
+
+    response = RedirectResponse(url="/dashboard", status_code=303)
+    response.set_cookie(
+        key="dj_dashboard_auth",
+        value="1",
+        httponly=True,
+        samesite="lax",
+    )
+    return response
+
+
+@router.post("/dashboard/logout", include_in_schema=False)
+async def dashboard_logout():
+    """Log out dashboard session"""
+    response = RedirectResponse(url="/dashboard/login", status_code=303)
+    response.delete_cookie("dj_dashboard_auth")
+    return response
+
+
+@router.get("/dashboard", include_in_schema=False)
+async def dashboard_page(request: Request):
+    """Serve the DJ Business Engine dashboard"""
+    if not _is_dashboard_authenticated(request):
+        return RedirectResponse(url="/dashboard/login", status_code=303)
+    return FileResponse(STATIC_DIR / "dashboard.html")
+
+
+# ===================== DJ Tool Endpoints =====================
+
+@router.post("/api/tools/timeline")
+async def create_timeline(request: Request):
+    """Build an event run-of-show timeline"""
+    try:
+        _require_dashboard_auth(request)
+        body = await request.json()
+        result = build_event_timeline(
+            event_type=body.get("event_type", "wedding"),
+            start_time=body.get("start_time", "18:00"),
+            event_date=body.get("event_date", ""),
+            venue=body.get("venue", ""),
+            notes=body.get("notes", ""),
+        )
+        return ApiResponse(success=True, message="Timeline created", data=result)
+    except Exception as e:
+        logger.error(f"Timeline error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/api/tools/questionnaire/{event_type}")
+async def get_questionnaire(event_type: str, request: Request):
+    """Return the client questionnaire for a given event type"""
+    try:
+        _require_dashboard_auth(request)
+        result = get_questionnaire_template(event_type)
+        return ApiResponse(success=True, message="Questionnaire ready", data=result)
+    except Exception as e:
+        logger.error(f"Questionnaire error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/api/tools/questionnaire/submit")
+async def submit_questionnaire(request: Request):
+    """Save a completed client questionnaire"""
+    try:
+        _require_dashboard_auth(request)
+        body = await request.json()
+        result = save_questionnaire_answers(
+            portal_id=body.get("portal_id", str(uuid.uuid4())),
+            event_type=body.get("event_type", "wedding"),
+            answers=body.get("answers", {}),
+        )
+        return ApiResponse(success=True, message="Questionnaire saved", data=result)
+    except Exception as e:
+        logger.error(f"Questionnaire submit error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/api/tools/setlist")
+async def create_setlist(request: Request):
+    """Build an organized setlist by moment"""
+    try:
+        _require_dashboard_auth(request)
+        body = await request.json()
+        result = build_setlist(
+            moments=body.get("moments"),
+            songs=body.get("songs", []),
+        )
+        return ApiResponse(success=True, message="Setlist created", data=result)
+    except Exception as e:
+        logger.error(f"Setlist error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/api/tools/pricing")
+async def get_booking_price(request: Request):
+    """Calculate a full DJ booking quote"""
+    try:
+        _require_dashboard_auth(request)
+        body = await request.json()
+        result = calculate_booking_price(
+            event_type=body.get("event_type", "wedding"),
+            hours=float(body.get("hours", 4)),
+            add_ons=body.get("add_ons", []),
+            travel_hours=float(body.get("travel_hours", 0)),
+            discount_percent=float(body.get("discount_percent", 0)),
+        )
+        return ApiResponse(success=True, message="Quote generated", data=result)
+    except Exception as e:
+        logger.error(f"Pricing error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/api/tools/content-pack")
+async def create_content_pack(request: Request):
+    """Generate a 30-day Instagram content pack"""
+    try:
+        _require_dashboard_auth(request)
+        body = await request.json()
+        result = generate_content_pack(
+            years_experience=int(body.get("years_experience", 5)),
+            specialty=body.get("specialty", "wedding"),
+            cta=body.get("cta", "Link in bio to apply."),
+        )
+        return ApiResponse(success=True, message="Content pack ready", data=result)
+    except Exception as e:
+        logger.error(f"Content pack error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/", include_in_schema=False)
+async def home_page():
+    """Serve the DJ Blu Bloods sales page"""
+    return FileResponse(STATIC_DIR / "index.html")
+
+
+@router.get("/apply", include_in_schema=False)
+async def apply_page():
+    """Serve the same sales page with the application form in view"""
+    return FileResponse(STATIC_DIR / "index.html")
+
+
+@router.get("/api/offers")
+async def get_offer_catalog():
+    """Return the offer stack for the info product funnel"""
+    return ApiResponse(
+        success=True,
+        message="Offer catalog retrieved",
+        data={"offers": funnel.get_offer_catalog()},
+    )
+
+
+@router.post("/api/applications")
+async def submit_application(application: InfoProductApplicationRequest):
+    """Capture a lead and score it for the right high-ticket offer"""
+    try:
+        result = funnel.process_application(application)
+        return ApiResponse(
+            success=True,
+            message="Application captured",
+            data=result,
+        )
+    except Exception as e:
+        logger.error(f"Error capturing application: {e}")
+        raise HTTPException(status_code=500, detail="Error capturing application")
 
 
 # ===================== Chat Endpoints =====================

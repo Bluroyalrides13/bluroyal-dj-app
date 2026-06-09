@@ -151,6 +151,28 @@ class DatabaseManager:
                 FOREIGN KEY (booking_id) REFERENCES bookings(id)
             )
         """)
+
+        # Info product applications table
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS info_product_applications (
+                id TEXT PRIMARY KEY,
+                name TEXT NOT NULL,
+                email TEXT NOT NULL,
+                instagram_handle TEXT NOT NULL,
+                audience_size TEXT,
+                monthly_revenue TEXT,
+                biggest_goal TEXT,
+                biggest_block TEXT,
+                budget_range TEXT,
+                interested_offer TEXT,
+                overall_score REAL,
+                recommended_offer TEXT,
+                status TEXT DEFAULT 'nurture',
+                notes TEXT,
+                created_at TEXT,
+                updated_at TEXT
+            )
+        """)
         
         conn.commit()
         conn.close()
@@ -251,3 +273,52 @@ class DatabaseManager:
         conn.commit()
         conn.close()
         return booking_data.get('id')
+
+    def create_info_product_application(self, application_data: dict) -> str:
+        """Persist an info product application"""
+        conn = self.get_connection()
+        cursor = conn.cursor()
+
+        cursor.execute("""
+            INSERT INTO info_product_applications (
+                id, name, email, instagram_handle, audience_size, monthly_revenue,
+                biggest_goal, biggest_block, budget_range, interested_offer,
+                overall_score, recommended_offer, status, notes, created_at, updated_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """, (
+            application_data.get('id'),
+            application_data.get('name'),
+            application_data.get('email'),
+            application_data.get('instagram_handle'),
+            application_data.get('audience_size'),
+            application_data.get('monthly_revenue'),
+            application_data.get('biggest_goal'),
+            application_data.get('biggest_block'),
+            application_data.get('budget_range'),
+            application_data.get('interested_offer'),
+            application_data.get('overall_score', 0),
+            application_data.get('recommended_offer'),
+            application_data.get('status', 'nurture'),
+            application_data.get('notes'),
+            application_data.get('created_at', datetime.utcnow().isoformat()),
+            application_data.get('updated_at', datetime.utcnow().isoformat()),
+        ))
+
+        conn.commit()
+        conn.close()
+        return application_data.get('id')
+
+    def get_recent_info_product_applications(self, limit: int = 20) -> List[dict]:
+        """Return recent info product applications"""
+        conn = self.get_connection()
+        cursor = conn.cursor()
+
+        cursor.execute(
+            "SELECT * FROM info_product_applications ORDER BY created_at DESC LIMIT ?",
+            (limit,)
+        )
+        rows = cursor.fetchall()
+        columns = [description[0] for description in cursor.description]
+        conn.close()
+
+        return [dict(zip(columns, row)) for row in rows]

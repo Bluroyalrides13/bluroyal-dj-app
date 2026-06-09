@@ -1,0 +1,732 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DJ Blu Bloods — Business Engine</title>
+  <style>
+    :root {
+      --bg: #0d0f1a;
+      --surface: #151827;
+      --surface2: #1e2235;
+      --border: rgba(255,255,255,0.07);
+      --text: #f0f2ff;
+      --muted: #7a82a8;
+      --accent: #ff3d8d;
+      --accent2: #0fbb8f;
+      --accent3: #ffb84d;
+      --radius: 18px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: Inter, "Segoe UI", sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+    /* ── Layout ── */
+    .app { display: grid; grid-template-columns: 240px 1fr; min-height: 100vh; }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      padding: 28px 18px;
+      display: flex; flex-direction: column; gap: 6px;
+      position: sticky; top: 0; height: 100vh; overflow-y: auto;
+    }
+    .sidebar__brand {
+      display: flex; align-items: center; gap: 12px;
+      padding: 0 8px 24px; border-bottom: 1px solid var(--border);
+      margin-bottom: 10px;
+    }
+    .brand-mark {
+      width: 38px; height: 38px; border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent), #ff7a59);
+      display: grid; place-items: center;
+      font-weight: 900; font-size: 0.85rem;
+    }
+    .brand-name { font-weight: 800; font-size: 0.95rem; line-height: 1.2; }
+    .brand-sub  { color: var(--muted); font-size: 0.75rem; }
+
+    .nav-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 11px 14px; border-radius: 12px;
+      font-size: 0.9rem; font-weight: 600; cursor: pointer;
+      color: var(--muted); transition: all 150ms;
+      border: none; background: none; width: 100%; text-align: left;
+    }
+    .nav-item:hover  { background: var(--surface2); color: var(--text); }
+    .nav-item.active { background: rgba(255,61,141,0.12); color: var(--accent); }
+    .nav-icon { font-size: 1.1rem; width: 22px; text-align: center; }
+
+    /* ── Main ── */
+    .main { padding: 32px; overflow-y: auto; }
+    .page { display: none; }
+    .page.active { display: block; }
+
+    /* ── Page header ── */
+    .page-header { margin-bottom: 28px; }
+    .page-header h1 { font-size: 1.8rem; letter-spacing: -0.04em; }
+    .page-header p  { color: var(--muted); margin-top: 6px; font-size: 0.95rem; }
+
+    /* ── Cards / Panels ── */
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+    }
+    .panel + .panel { margin-top: 18px; }
+    .panel h2 { font-size: 1.1rem; margin-bottom: 16px; letter-spacing: -0.02em; }
+
+    /* ── Form controls ── */
+    .form-row   { display: grid; gap: 14px; margin-bottom: 14px; }
+    .form-2col  { grid-template-columns: 1fr 1fr; }
+    .form-3col  { grid-template-columns: repeat(3, 1fr); }
+    .field label { display: block; font-size: 0.82rem; font-weight: 700; color: var(--muted); margin-bottom: 7px; text-transform: uppercase; letter-spacing: 0.05em; }
+    .field input,
+    .field select,
+    .field textarea {
+      width: 100%;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: var(--text);
+      font: inherit;
+      padding: 11px 14px;
+    }
+    .field textarea { min-height: 100px; resize: vertical; }
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus { outline: none; border-color: var(--accent); }
+
+    /* ── Buttons ── */
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 12px 20px; border-radius: 999px;
+      font: inherit; font-weight: 800; font-size: 0.9rem;
+      cursor: pointer; border: none; transition: transform 150ms, opacity 150ms;
+    }
+    .btn:hover { opacity: 0.88; transform: translateY(-1px); }
+    .btn-primary   { background: linear-gradient(135deg, var(--accent), #ff7a59); color: #fff; }
+    .btn-secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+    .btn-green     { background: linear-gradient(135deg, var(--accent2), #0d9e7a); color: #fff; }
+
+    /* ── Result boxes ── */
+    .result-box {
+      margin-top: 20px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      display: none;
+    }
+    .result-box.show { display: block; }
+    .result-box pre  { font-family: "Fira Mono", monospace; font-size: 0.82rem; white-space: pre-wrap; color: var(--muted); }
+
+    /* ── Timeline table ── */
+    .timeline-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+    .timeline-table th { text-align: left; padding: 9px 12px; background: var(--surface2); color: var(--muted); font-weight: 700; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.05em; }
+    .timeline-table td { padding: 10px 12px; border-top: 1px solid var(--border); vertical-align: top; }
+    .time-badge { display: inline-block; padding: 3px 10px; border-radius: 999px; background: rgba(255,61,141,0.12); color: var(--accent); font-weight: 800; font-size: 0.8rem; }
+
+    /* ── Pricing breakdown ── */
+    .price-line { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+    .price-line:last-child { border: none; }
+    .price-total { font-size: 1.4rem; font-weight: 900; letter-spacing: -0.04em; color: var(--accent2); }
+
+    /* ── Content post card ── */
+    .post-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 14px; padding: 16px; margin-bottom: 12px; }
+    .post-meta { display: flex; gap: 10px; align-items: center; margin-bottom: 10px; }
+    .post-day  { width: 32px; height: 32px; border-radius: 10px; background: rgba(255,184,77,0.15); color: var(--accent3); display: grid; place-items: center; font-weight: 900; font-size: 0.8rem; }
+    .post-type { padding: 3px 10px; border-radius: 999px; font-size: 0.75rem; font-weight: 700; background: rgba(15,187,143,0.12); color: var(--accent2); }
+    .post-caption { font-size: 0.85rem; color: var(--muted); white-space: pre-wrap; line-height: 1.6; }
+
+    /* ── DM scripts ── */
+    .dm-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 14px; padding: 16px; margin-bottom: 12px; }
+    .dm-label { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 8px; }
+    .dm-text  { font-size: 0.88rem; color: var(--muted); line-height: 1.6; }
+
+    /* ── Setlist ── */
+    .moment-group { margin-bottom: 18px; }
+    .moment-title { font-size: 0.78rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.07em; color: var(--accent3); margin-bottom: 8px; }
+    .song-row { display: flex; gap: 12px; padding: 9px 12px; background: var(--surface2); border-radius: 10px; margin-bottom: 6px; font-size: 0.88rem; }
+    .song-title  { font-weight: 700; }
+    .song-artist { color: var(--muted); }
+
+    /* ── Questionnaire ── */
+    .q-item { margin-bottom: 16px; }
+
+    /* ── Tabs ── */
+    .tabs { display: flex; gap: 8px; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 0; }
+    .tab { padding: 10px 16px; font: inherit; font-weight: 700; font-size: 0.88rem; cursor: pointer; background: none; border: none; color: var(--muted); border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all 150ms; }
+    .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ── Print button ── */
+    .print-bar {
+      display: flex; justify-content: flex-end; margin-bottom: 14px;
+    }
+    .btn-print {
+      background: rgba(255,184,77,0.12); color: var(--accent3);
+      border: 1px solid rgba(255,184,77,0.25);
+    }
+
+    /* ── Print styles ── */
+    @media print {
+      .sidebar, .page-header, .panel:first-of-type, .print-bar, button { display: none !important; }
+      .app { display: block; }
+      .main { padding: 0; }
+      .page { display: block !important; }
+      .result-box { display: block !important; border: none; background: white; color: black; padding: 0; }
+      .time-badge { background: #eee; color: #000; }
+      .timeline-table th, .timeline-table td { color: #000; border-color: #ccc; }
+      .timeline-table th { background: #f5f5f5; }
+      .post-card, .dm-card, .song-row, .moment-title, .price-line { color: #000; background: white; }
+      .price-total { color: #000; }
+      body { background: white; color: black; }
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .app { grid-template-columns: 1fr; }
+      .sidebar { position: static; height: auto; flex-direction: row; flex-wrap: wrap; padding: 14px; }
+      .sidebar__brand { display: none; }
+      .form-2col, .form-3col { grid-template-columns: 1fr; }
+      .main { padding: 18px; }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ── Sidebar ── -->
+  <nav class="sidebar">
+    <div class="sidebar__brand">
+      <div class="brand-mark">DB</div>
+      <div>
+        <div class="brand-name">Blu Bloods</div>
+        <div class="brand-sub">Business Engine</div>
+      </div>
+    </div>
+    <button class="nav-item active" onclick="showPage('timeline', this)">
+      <span class="nav-icon">📋</span> Event Timeline
+    </button>
+    <button class="nav-item" onclick="showPage('questionnaire', this)">
+      <span class="nav-icon">📝</span> Client Questionnaire
+    </button>
+    <button class="nav-item" onclick="showPage('setlist', this)">
+      <span class="nav-icon">🎵</span> Setlist Organizer
+    </button>
+    <button class="nav-item" onclick="showPage('pricing', this)">
+      <span class="nav-icon">💰</span> Pricing Calculator
+    </button>
+    <button class="nav-item" onclick="showPage('content', this)">
+      <span class="nav-icon">📱</span> Instagram Pack
+    </button>
+  </nav>
+
+  <!-- ── Main content ── -->
+  <main class="main">
+    <div style="display:flex;justify-content:flex-end;margin-bottom:12px;">
+      <form method="post" action="/dashboard/logout">
+        <button class="btn btn-secondary" type="submit">Log out</button>
+      </form>
+    </div>
+
+    <!-- ──────────── TIMELINE ──────────── -->
+    <div class="page active" id="page-timeline">
+      <div class="page-header">
+        <h1>Event Timeline Builder</h1>
+        <p>Enter the event details and get a complete minute-by-minute run-of-show.</p>
+      </div>
+      <div class="panel">
+        <div class="form-row form-2col">
+          <div class="field">
+            <label>Event type</label>
+            <select id="tl-type">
+              <option value="wedding">Wedding</option>
+              <option value="same_sex_wedding_lgbtq">Same-Sex Wedding (LGBTQ+)</option>
+              <option value="corporate">Corporate</option>
+              <option value="sweet_16">Sweet 16</option>
+              <option value="birthday">Birthday</option>
+              <option value="quinceanera">Quinceanera</option>
+              <option value="general_party">General Party</option>
+              <option value="bar_mitzvah">Bar Mitzvah</option>
+              <option value="bat_mitzvah">Bat Mitzvah</option>
+              <option value="anniversary">Anniversary</option>
+              <option value="club">Club / Party</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Event date</label>
+            <input type="date" id="tl-date" />
+          </div>
+        </div>
+        <div class="form-row form-2col">
+          <div class="field">
+            <label>Start time</label>
+            <input type="time" id="tl-start" value="18:00" />
+          </div>
+          <div class="field">
+            <label>Venue</label>
+            <input type="text" id="tl-venue" placeholder="Grand Ballroom, Miami" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="field">
+            <label>Notes</label>
+            <textarea id="tl-notes" placeholder="Any special details for this event..."></textarea>
+          </div>
+        </div>
+        <button class="btn btn-primary" onclick="buildTimeline()">📋 Generate Timeline</button>
+      </div>
+      <div class="result-box" id="tl-result">
+        <div class="print-bar">
+          <button class="btn btn-print" onclick="printSection('tl-result', 'Event Timeline')">🖨️ Print / Save PDF</button>
+        </div>
+        <table class="timeline-table">
+          <thead><tr><th>Time</th><th>Moment</th><th>Song</th><th>Notes</th></tr></thead>
+          <tbody id="tl-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ──────────── QUESTIONNAIRE ──────────── -->
+    <div class="page" id="page-questionnaire">
+      <div class="page-header">
+        <h1>Client Questionnaire</h1>
+        <p>Load the template for your event type and fill it in with your client — or send them the link.</p>
+      </div>
+      <div class="panel">
+        <div class="form-row">
+          <div class="field">
+            <label>Event type</label>
+            <select id="q-type" onchange="loadQuestionnaire()">
+              <option value="wedding">Wedding</option>
+              <option value="same_sex_wedding_lgbtq">Same-Sex Wedding (LGBTQ+)</option>
+              <option value="corporate">Corporate</option>
+              <option value="sweet_16">Sweet 16</option>
+              <option value="birthday">Birthday</option>
+              <option value="quinceanera">Quinceanera</option>
+              <option value="general_party">General Party</option>
+              <option value="bar_mitzvah">Bar Mitzvah</option>
+              <option value="bat_mitzvah">Bat Mitzvah</option>
+              <option value="anniversary">Anniversary</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn btn-secondary" onclick="loadQuestionnaire()">📝 Load Questions</button>
+      </div>
+      <div id="q-form-wrap" style="margin-top:18px;display:none;">
+        <div class="panel">
+          <div id="q-fields"></div>
+          <button class="btn btn-green" onclick="submitQuestionnaire()" style="margin-top:16px;">✅ Save Brief</button>
+        </div>
+      </div>
+      <div class="result-box" id="q-result">
+        <div class="print-bar">
+          <button class="btn btn-print" onclick="printSection('q-result', 'Client Brief')">🖨️ Print / Save PDF</button>
+        </div>
+        <p style="font-weight:700;margin-bottom:10px;">Brief saved ✓</p>
+        <div id="q-result-pre" style="font-size:0.9rem;line-height:1.8;"></div>
+      </div>
+    </div>
+
+    <!-- ──────────── SETLIST ──────────── -->
+    <div class="page" id="page-setlist">
+      <div class="page-header">
+        <h1>Setlist Organizer</h1>
+        <p>Add songs and assign them to the right moment in your event.</p>
+      </div>
+      <div class="panel">
+        <h2>Add a song</h2>
+        <div class="form-row form-3col">
+          <div class="field">
+            <label>Song title</label>
+            <input type="text" id="sl-title" placeholder="Can't Stop the Feeling" />
+          </div>
+          <div class="field">
+            <label>Artist</label>
+            <input type="text" id="sl-artist" placeholder="Justin Timberlake" />
+          </div>
+          <div class="field">
+            <label>Moment</label>
+            <select id="sl-moment">
+              <option>Pre-show</option>
+              <option>Processional</option>
+              <option>Cocktail Hour</option>
+              <option>Dinner</option>
+              <option>First Dance</option>
+              <option>Party / Open Floor</option>
+              <option>Last Song</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="field">
+            <label>Notes</label>
+            <input type="text" id="sl-notes" placeholder="Fade in at start, high energy mix..." />
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;">
+          <button class="btn btn-secondary" onclick="addSong()">➕ Add Song</button>
+          <button class="btn btn-primary"   onclick="buildSetlist()">🎵 Build Setlist</button>
+        </div>
+      </div>
+      <div class="result-box" id="sl-result">
+        <div class="print-bar">
+          <button class="btn btn-print" onclick="printSection('sl-result', 'Setlist')">🖨️ Print / Save PDF</button>
+        </div>
+        <div id="sl-output"></div>
+      </div>
+    </div>
+
+    <!-- ──────────── PRICING ──────────── -->
+    <div class="page" id="page-pricing">
+      <div class="page-header">
+        <h1>Booking & Pricing Calculator</h1>
+        <p>Know exactly what to charge before you get on any client call.</p>
+      </div>
+      <div class="panel">
+        <div class="form-row form-2col">
+          <div class="field">
+            <label>Event type</label>
+            <select id="pr-type">
+              <option value="wedding">Wedding ($1,200 base)</option>
+              <option value="same_sex_wedding_lgbtq">Same-Sex Wedding (LGBTQ+) ($1,200 base)</option>
+              <option value="corporate">Corporate ($900 base)</option>
+              <option value="sweet_16">Sweet 16 ($700 base)</option>
+              <option value="birthday">Birthday ($600 base)</option>
+              <option value="quinceanera">Quinceanera ($850 base)</option>
+              <option value="general_party">General Party ($600 base)</option>
+              <option value="bar_mitzvah">Bar Mitzvah ($950 base)</option>
+              <option value="bat_mitzvah">Bat Mitzvah ($950 base)</option>
+              <option value="anniversary">Anniversary ($650 base)</option>
+              <option value="club">Club / Party ($500 base)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Hours of DJ coverage</label>
+            <input type="number" id="pr-hours" value="5" min="1" max="12" />
+          </div>
+        </div>
+        <div class="form-row form-2col">
+          <div class="field">
+            <label>Travel hours (one way)</label>
+            <input type="number" id="pr-travel" value="0" min="0" step="0.5" />
+          </div>
+          <div class="field">
+            <label>Discount %</label>
+            <input type="number" id="pr-discount" value="0" min="0" max="50" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="field">
+            <label>Add-ons</label>
+            <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:6px;">
+              <label style="display:flex;align-items:center;gap:6px;font-weight:500;text-transform:none;letter-spacing:0;font-size:0.88rem;cursor:pointer;">
+                <input type="checkbox" value="ceremony_add_on" class="pr-addon" /> Ceremony add-on (+$300)
+              </label>
+              <label style="display:flex;align-items:center;gap:6px;font-weight:500;text-transform:none;letter-spacing:0;font-size:0.88rem;cursor:pointer;">
+                <input type="checkbox" value="lighting_package" class="pr-addon" /> Lighting package (+$400)
+              </label>
+              <label style="display:flex;align-items:center;gap:6px;font-weight:500;text-transform:none;letter-spacing:0;font-size:0.88rem;cursor:pointer;">
+                <input type="checkbox" value="photo_booth" class="pr-addon" /> Photo booth (+$500)
+              </label>
+              <label style="display:flex;align-items:center;gap:6px;font-weight:500;text-transform:none;letter-spacing:0;font-size:0.88rem;cursor:pointer;">
+                <input type="checkbox" value="mc_services" class="pr-addon" /> MC services (+$200)
+              </label>
+            </div>
+          </div>
+        </div>
+        <button class="btn btn-primary" onclick="calcPrice()">💰 Calculate Quote</button>
+      </div>
+      <div class="result-box" id="pr-result">
+        <div class="print-bar">
+          <button class="btn btn-print" onclick="printSection('pr-result', 'Pricing Quote')">🖨️ Print / Save PDF</button>
+        </div>
+        <div id="pr-breakdown"></div>
+      </div>
+    </div>
+
+    <!-- ──────────── CONTENT PACK ──────────── -->
+    <div class="page" id="page-content">
+      <div class="page-header">
+        <h1>Instagram Content Pack</h1>
+        <p>Get 30 days of ready-to-post captions, hooks, and DM scripts tailored to your brand.</p>
+      </div>
+      <div class="panel">
+        <div class="form-row form-3col">
+          <div class="field">
+            <label>Years of experience</label>
+            <input type="number" id="cp-years" value="5" min="1" max="30" />
+          </div>
+          <div class="field">
+            <label>Specialty</label>
+            <select id="cp-specialty">
+              <option value="wedding">Wedding</option>
+              <option value="corporate">Corporate</option>
+              <option value="club">Club / Events</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Your bio CTA (call to action)</label>
+            <input type="text" id="cp-cta" value="Link in bio to apply." />
+          </div>
+        </div>
+        <button class="btn btn-primary" onclick="buildContentPack()">📱 Generate 30-Day Pack</button>
+      </div>
+
+      <div class="result-box" id="cp-result">
+        <div class="print-bar">
+          <button class="btn btn-print" onclick="printSection('cp-result', 'Instagram Content Pack')">🖨️ Print / Save PDF</button>
+        </div>
+        <div class="tabs">
+          <button class="tab active" onclick="showTab('posts', this)">30-Day Posts</button>
+          <button class="tab" onclick="showTab('dm-scripts', this)">DM Scripts</button>
+          <button class="tab" onclick="showTab('bio', this)">Bio Ideas</button>
+        </div>
+        <div class="tab-panel active" id="tab-posts">
+          <div id="cp-posts"></div>
+        </div>
+        <div class="tab-panel" id="tab-dm-scripts">
+          <div id="cp-dms"></div>
+        </div>
+        <div class="tab-panel" id="tab-bio">
+          <div id="cp-bio"></div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+  // ── Print any result section ──
+  function printSection(sectionId, title) {
+    const content = document.getElementById(sectionId).innerHTML;
+    const win = window.open('', '_blank');
+    win.document.write(`<!doctype html><html><head>
+      <title>${title} — DJ Blu Bloods</title>
+      <style>
+        body { font-family: Inter, Arial, sans-serif; padding: 32px; color: #111; font-size: 14px; }
+        h1   { font-size: 1.4rem; margin-bottom: 20px; letter-spacing: -0.03em; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
+        th   { text-align: left; padding: 8px 10px; background: #f5f5f5; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; }
+        td   { padding: 9px 10px; border-top: 1px solid #e5e5e5; vertical-align: top; }
+        input { width: 100%; border: 1px solid #ddd; border-radius: 6px; padding: 5px 8px; font: inherit; }
+        .time-badge { display:inline-block; padding: 2px 8px; border-radius: 999px; background: #ffe4ef; font-weight: 700; font-size: 0.8rem; }
+        .print-bar, button.btn-print { display: none; }
+        .price-line { display:flex; justify-content:space-between; padding: 8px 0; border-bottom: 1px solid #eee; }
+        .price-total { font-size: 1.3rem; font-weight: 900; }
+        .post-card, .dm-card { border: 1px solid #eee; border-radius: 10px; padding: 14px; margin-bottom: 10px; }
+        .post-meta { display:flex; gap:10px; margin-bottom:8px; }
+        .dm-label { font-weight: 800; font-size: 0.75rem; text-transform: uppercase; color: #888; margin-bottom: 6px; }
+        .result-box { display: block !important; }
+        .tabs, .tab { display: none; }
+        .tab-panel { display: block !important; }
+        @media print { button { display:none; } }
+      </style>
+    </head><body>
+      <h1>${title}</h1>
+      ${content}
+      <script>window.onload = () => { window.print(); }<\/script>
+    </body></html>`);
+    win.document.close();
+  }
+
+  // ── Page navigation ──
+  function showPage(name, btn) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+    document.getElementById('page-' + name).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  // ── Tab navigation ──
+  function showTab(name, btn) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + name).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  // ── API helper ──
+  async function post(url, body) {
+    const r = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    return r.json();
+  }
+
+  // ── TIMELINE ──
+  async function buildTimeline() {
+    const res = await post('/api/tools/timeline', {
+      event_type: document.getElementById('tl-type').value,
+      event_date: document.getElementById('tl-date').value || new Date().toISOString().slice(0,10),
+      start_time: document.getElementById('tl-start').value,
+      venue:      document.getElementById('tl-venue').value,
+      notes:      document.getElementById('tl-notes').value,
+    });
+    if (!res.success) return alert('Error generating timeline');
+    const tbody = document.getElementById('tl-tbody');
+    tbody.innerHTML = '';
+    res.data.timeline.forEach(row => {
+      tbody.innerHTML += `<tr>
+        <td><span class="time-badge">${row.time}</span></td>
+        <td>${row.moment}</td>
+        <td><input style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:6px 10px;color:var(--text);font:inherit;width:100%" placeholder="Add song…" /></td>
+        <td><input style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:6px 10px;color:var(--text);font:inherit;width:100%" placeholder="Notes…" /></td>
+      </tr>`;
+    });
+    document.getElementById('tl-result').classList.add('show');
+  }
+
+  // ── QUESTIONNAIRE ──
+  let qPortalId = '';
+  let qQuestions = [];
+  async function loadQuestionnaire() {
+    const type = document.getElementById('q-type').value;
+    const r = await fetch(`/api/tools/questionnaire/${type}`);
+    const res = await r.json();
+    if (!res.success) return;
+    qPortalId = res.data.portal_id;
+    qQuestions = res.data.questions;
+    const wrap = document.getElementById('q-fields');
+    wrap.innerHTML = '';
+    res.data.questions.forEach(q => {
+      let input = '';
+      if (q.type === 'textarea') input = `<textarea id="qf-${q.id}" placeholder="${q.label}"></textarea>`;
+      else if (q.type === 'number') input = `<input type="number" id="qf-${q.id}" />`;
+      else if (q.type === 'date')   input = `<input type="date" id="qf-${q.id}" />`;
+      else if (q.type === 'time')   input = `<input type="time" id="qf-${q.id}" />`;
+      else input = `<input type="text" id="qf-${q.id}" placeholder="${q.label}" />`;
+      wrap.innerHTML += `<div class="q-item field"><label>${q.label}</label>${input}</div>`;
+    });
+    document.getElementById('q-form-wrap').style.display = 'block';
+  }
+
+  async function submitQuestionnaire() {
+    const type = document.getElementById('q-type').value;
+    const answers = {};
+    document.querySelectorAll('[id^="qf-"]').forEach(el => {
+      answers[el.id.replace('qf-', '')] = el.value;
+    });
+    const res = await post('/api/tools/questionnaire/submit', { portal_id: qPortalId, event_type: type, answers });
+    if (!res.success) return alert('Error saving brief');
+    // Render as readable list instead of raw JSON
+    const pre = document.getElementById('q-result-pre');
+    pre.innerHTML = '';
+    qQuestions.forEach(q => {
+      const val = answers[q.id] || '—';
+      pre.innerHTML += `<div style="margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.06)">
+        <div style="font-weight:700;font-size:0.8rem;text-transform:uppercase;letter-spacing:0.05em;color:var(--muted);margin-bottom:4px">${q.label}</div>
+        <div style="font-size:0.95rem">${val}</div>
+      </div>`;
+    });
+    document.getElementById('q-result').classList.add('show');
+    document.getElementById('q-result').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  // ── SETLIST ──
+  const songs = [];
+  function addSong() {
+    const title  = document.getElementById('sl-title').value.trim();
+    const artist = document.getElementById('sl-artist').value.trim();
+    const moment = document.getElementById('sl-moment').value;
+    const notes  = document.getElementById('sl-notes').value.trim();
+    if (!title) return alert('Enter a song title');
+    songs.push({ title, artist, moment, notes });
+    document.getElementById('sl-title').value  = '';
+    document.getElementById('sl-artist').value = '';
+    document.getElementById('sl-notes').value  = '';
+    alert(`"${title}" added (${songs.length} songs total)`);
+  }
+
+  async function buildSetlist() {
+    const res = await post('/api/tools/setlist', { songs });
+    if (!res.success) return alert('Error building setlist');
+    const out = document.getElementById('sl-output');
+    out.innerHTML = '';
+    Object.entries(res.data.songs_by_moment).forEach(([moment, tracks]) => {
+      if (!tracks.length) return;
+      out.innerHTML += `<div class="moment-group">
+        <div class="moment-title">${moment}</div>
+        ${tracks.map(t => `<div class="song-row"><span class="song-title">${t.title}</span><span class="song-artist">${t.artist ? '— ' + t.artist : ''}</span><span style="color:var(--muted);font-size:0.8rem">${t.notes || ''}</span></div>`).join('')}
+      </div>`;
+    });
+    if (!out.innerHTML) out.innerHTML = '<p style="color:var(--muted)">Add songs first, then click Build Setlist.</p>';
+    document.getElementById('sl-result').classList.add('show');
+  }
+
+  // ── PRICING ──
+  async function calcPrice() {
+    const addOns = [...document.querySelectorAll('.pr-addon:checked')].map(c => c.value);
+    const res = await post('/api/tools/pricing', {
+      event_type:       document.getElementById('pr-type').value,
+      hours:            document.getElementById('pr-hours').value,
+      travel_hours:     document.getElementById('pr-travel').value,
+      discount_percent: document.getElementById('pr-discount').value,
+      add_ons:          addOns,
+    });
+    if (!res.success) return alert('Error calculating price');
+    const d = res.data;
+    const wrap = document.getElementById('pr-breakdown');
+    const addOnLines = d.add_ons.map(a =>
+      `<div class="price-line"><span>${a.item.replace(/_/g,' ')}</span><span>+$${a.cost.toFixed(2)}</span></div>`).join('');
+    wrap.innerHTML = `
+      <div class="price-line"><span>Base rate (${d.event_type})</span><span>$${d.base_rate.toFixed(2)}</span></div>
+      ${d.extra_hours > 0 ? `<div class="price-line"><span>Extra ${d.extra_hours}h @ $150/hr</span><span>+$${d.extra_hour_cost.toFixed(2)}</span></div>` : ''}
+      ${addOnLines}
+      ${d.travel_cost > 0 ? `<div class="price-line"><span>Travel</span><span>+$${d.travel_cost.toFixed(2)}</span></div>` : ''}
+      ${d.discount_amount > 0 ? `<div class="price-line"><span>Discount (${d.discount_percent}%)</span><span style="color:var(--accent2)">-$${d.discount_amount.toFixed(2)}</span></div>` : ''}
+      <div class="price-line" style="margin-top:8px;padding-top:16px;border-top:2px solid var(--border);border-bottom:none">
+        <span>Total quote</span><span class="price-total">$${d.total.toFixed(2)}</span>
+      </div>
+      <p style="color:var(--muted);font-size:0.8rem;margin-top:14px">Quote valid until ${new Date(d.valid_until).toLocaleDateString()}. Ref: ${d.quote_id.slice(0,8).toUpperCase()}</p>`;
+    document.getElementById('pr-result').classList.add('show');
+  }
+
+  // ── CONTENT PACK ──
+  async function buildContentPack() {
+    const res = await post('/api/tools/content-pack', {
+      years_experience: document.getElementById('cp-years').value,
+      specialty:        document.getElementById('cp-specialty').value,
+      cta:              document.getElementById('cp-cta').value,
+    });
+    if (!res.success) return alert('Error generating content pack');
+    const d = res.data;
+
+    // Posts
+    const postsEl = document.getElementById('cp-posts');
+    postsEl.innerHTML = '';
+    d.posts.slice(0, 30).forEach(p => {
+      postsEl.innerHTML += `<div class="post-card">
+        <div class="post-meta">
+          <div class="post-day">D${p.day}</div>
+          <span class="post-type">${p.format}</span>
+          <span style="color:var(--muted);font-size:0.8rem">${p.category}</span>
+        </div>
+        <div class="post-caption">${p.caption}</div>
+      </div>`;
+    });
+
+    // DM scripts
+    const dmsEl = document.getElementById('cp-dms');
+    dmsEl.innerHTML = '';
+    Object.entries(d.dm_scripts).forEach(([key, text]) => {
+      dmsEl.innerHTML += `<div class="dm-card">
+        <div class="dm-label">${key.replace(/_/g, ' ')}</div>
+        <div class="dm-text">${text}</div>
+      </div>`;
+    });
+
+    // Bio ideas
+    const bioEl = document.getElementById('cp-bio');
+    bioEl.innerHTML = '';
+    d.bio_suggestions.forEach(bio => {
+      bioEl.innerHTML += `<div class="dm-card"><div class="dm-text">${bio}</div></div>`;
+    });
+
+    document.getElementById('cp-result').classList.add('show');
+  }
+</script>
+</body>
+</html>

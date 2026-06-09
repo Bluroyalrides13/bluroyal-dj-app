@@ -16,6 +16,10 @@ class Settings(BaseSettings):
     PORT: int = int(os.getenv("PORT", "8000"))
     ENVIRONMENT: str = os.getenv("ENVIRONMENT", "development")
     LOG_LEVEL: str = os.getenv("LOG_LEVEL", "INFO")
+
+    # Dashboard Access Control
+    DASHBOARD_USERNAME: str = os.getenv("DASHBOARD_USERNAME", "djadmin")
+    DASHBOARD_PASSWORD: str = os.getenv("DASHBOARD_PASSWORD", "change-this-now")
     
     # Claude AI Configuration
     ANTHROPIC_API_KEY: str = os.getenv("ANTHROPIC_API_KEY", "")

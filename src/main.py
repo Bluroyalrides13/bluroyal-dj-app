@@ -4,8 +4,10 @@ Orchestrates the Claude AI agent with LangChain for ride booking and lead qualif
 """
 
 import logging
+from pathlib import Path
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from contextlib import asynccontextmanager
 import uvicorn
 
@@ -22,25 +24,29 @@ logger = logging.getLogger(__name__)
 
 # Load settings
 settings = Settings()
+BASE_DIR = Path(__file__).resolve().parent.parent
+STATIC_DIR = BASE_DIR / "static"
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Application lifecycle management"""
-    logger.info("🚗 Luxury Ride Share Agent starting up...")
+    logger.info("DJ Blu Bloods Resources platform starting up...")
     logger.info(f"Environment: {settings.ENVIRONMENT}")
     logger.info(f"Claude Model: {settings.CLAUDE_MODEL}")
     yield
-    logger.info("🛑 Luxury Ride Share Agent shutting down...")
+    logger.info("DJ Blu Bloods Resources platform shutting down...")
 
 
 # Create FastAPI application
 app = FastAPI(
-    title="Luxury Ride Share Agent",
-    description="AI-powered lead qualification and booking management for luxury ride share",
+    title="DJ Blu Bloods Resources",
+    description="High-ticket Instagram sales platform for DJ Blu Bloods resources and premium offers",
     version="1.0.0",
     lifespan=lifespan
 )
+
+app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
 # Configure CORS for Wix integration
 app.add_middleware(
@@ -63,7 +69,7 @@ async def health_check():
     """Health check endpoint"""
     return {
         "status": "healthy",
-        "service": "luxury-rideshare-agent",
+        "service": "dj-blu-bloods-resources",
         "version": "1.0.0"
     }
 

@@ -38,6 +38,23 @@ class LeadStatusEnum(str, Enum):
     CLOSED = "closed"
 
 
+class BudgetRangeEnum(str, Enum):
+    """Budget range for info product applications"""
+    UNDER_500 = "under_500"
+    RANGE_500_1500 = "500_1500"
+    RANGE_1500_5000 = "1500_5000"
+    RANGE_5000_PLUS = "5000_plus"
+
+
+class AudienceSizeEnum(str, Enum):
+    """Audience size buckets for lead qualification"""
+    UNDER_1K = "under_1k"
+    RANGE_1K_5K = "1k_5k"
+    RANGE_5K_10K = "5k_10k"
+    RANGE_10K_25K = "10k_25k"
+    RANGE_25K_PLUS = "25k_plus"
+
+
 # ===================== Request/Response Schemas =====================
 
 class ChatMessage(BaseModel):
@@ -176,6 +193,39 @@ class PaymentIntent(BaseModel):
     payment_method: str  # "square", "apple_pay", "google_pay"
     square_payment_id: Optional[str] = None
     receipt_url: Optional[str] = None
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
+
+
+class InfoProductApplicationRequest(BaseModel):
+    """Application request for the DJ Blu Bloods info product funnel"""
+    name: str = Field(..., min_length=2, max_length=120)
+    email: EmailStr
+    instagram_handle: str = Field(..., min_length=2, max_length=50)
+    audience_size: Optional[AudienceSizeEnum] = None
+    monthly_revenue: Optional[BudgetRangeEnum] = None
+    biggest_goal: Optional[str] = Field(default=None, max_length=500)
+    biggest_block: Optional[str] = Field(default=None, max_length=500)
+    budget_range: BudgetRangeEnum = BudgetRangeEnum.UNDER_500
+    interested_offer: Optional[str] = Field(default=None, max_length=120)
+
+
+class InfoProductApplication(BaseModel):
+    """Persisted application record"""
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    name: str
+    email: EmailStr
+    instagram_handle: str
+    audience_size: Optional[AudienceSizeEnum] = None
+    monthly_revenue: Optional[BudgetRangeEnum] = None
+    biggest_goal: Optional[str] = None
+    biggest_block: Optional[str] = None
+    budget_range: BudgetRangeEnum
+    interested_offer: Optional[str] = None
+    overall_score: float = Field(ge=0, le=100)
+    recommended_offer: str
+    status: str
+    notes: Optional[str] = None
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
 
