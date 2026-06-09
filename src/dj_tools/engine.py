@@ -42,6 +42,126 @@ RECEPTION_MOMENTS = [
     ("Send-off", 240),
 ]
 
+WEDDING_MOMENTS = RECEPTION_MOMENTS
+
+SWEET_16_MOMENTS = [
+    ("Guest Arrival", 0),
+    ("Candle Lighting Ceremony", 15),
+    ("First Dance", 45),
+    ("Cake Cutting", 60),
+    ("Special Dances", 75),
+    ("Open Dancing", 90),
+    ("Speeches / Toasts", 120),
+    ("Last Dance", 180),
+]
+
+BIRTHDAY_MOMENTS = [
+    ("Guest Arrival", 0),
+    ("Grand Entrance / Intro", 15),
+    ("Cake Cutting", 30),
+    ("Special Dances", 50),
+    ("Open Dancing", 70),
+    ("Speeches / Toasts", 120),
+    ("Last Dance", 180),
+]
+
+QUINCEANERA_MOMENTS = [
+    ("Ceremony / Guest Arrival", 0),
+    ("Debutante Entrance", 15),
+    ("Father-Daughter Dance", 30),
+    ("First Dance", 40),
+    ("Welcome / Blessing", 50),
+    ("Dinner Service", 60),
+    ("Cake Cutting", 90),
+    ("Toasts & Speeches", 110),
+    ("Open Dancing", 130),
+    ("Last Dance", 240),
+]
+
+BAR_MITZVAH_MOMENTS = [
+    ("Service Ends / Reception Starts", 0),
+    ("Grand Entrance", 15),
+    ("Candle Lighting Ceremony", 25),
+    ("Cake Cutting", 50),
+    ("Special Dances / Traditions", 70),
+    ("Dinner Service", 90),
+    ("Speeches / Toasts", 120),
+    ("Open Dancing", 150),
+    ("Last Dance", 180),
+]
+
+BAT_MITZVAH_MOMENTS = [
+    ("Service Ends / Reception Starts", 0),
+    ("Grand Entrance", 15),
+    ("Candle Lighting Ceremony", 25),
+    ("Cake Cutting", 50),
+    ("Special Dances / Traditions", 70),
+    ("Dinner Service", 90),
+    ("Speeches / Toasts", 120),
+    ("Open Dancing", 150),
+    ("Last Dance", 180),
+]
+
+ANNIVERSARY_MOMENTS = [
+    ("Guest Arrival / Cocktail", 0),
+    ("Couple's Entrance", 20),
+    ("First Dance (Re-dedication)", 30),
+    ("Welcome / Remarks", 40),
+    ("Dinner Service", 50),
+    ("Toasts & Well-wishes", 90),
+    ("Cake Cutting", 120),
+    ("Open Dancing", 140),
+    ("Last Dance / Send-off", 200),
+]
+
+CORPORATE_MOMENTS = [
+    ("Guest Check-in", 0),
+    ("Welcome / Remarks", 15),
+    ("Networking / Cocktails", 30),
+    ("Dinner Service", 60),
+    ("Awards / Announcements", 120),
+    ("Dancing", 150),
+    ("Closing Remarks", 210),
+]
+
+CLUB_MOMENTS = [
+    ("Setup / Soundcheck", -30),
+    ("Doors Open / Early Crowd", 0),
+    ("Warm-up Set", 30),
+    ("Building Energy", 60),
+    ("Peak Hour", 90),
+    ("Sustained Peak", 120),
+    ("Wind Down", 150),
+    ("Closing Set", 180),
+]
+
+GENERAL_PARTY_MOMENTS = [
+    ("Guest Arrival", 0),
+    ("Grand Intro", 15),
+    ("Games / Activities", 30),
+    ("Dinner / Snacks", 60),
+    ("Open Dancing", 90),
+    ("Peak Hour", 120),
+    ("Cake / Celebration", 150),
+    ("Last Dance", 210),
+]
+
+# Timeline moments mapping
+TIMELINE_BY_EVENT = {
+    "wedding": WEDDING_MOMENTS,
+    "same_sex_wedding_lgbtq": WEDDING_MOMENTS,
+    "corporate": CORPORATE_MOMENTS,
+    "sweet_16": SWEET_16_MOMENTS,
+    "birthday": BIRTHDAY_MOMENTS,
+    "quinceanera": QUINCEANERA_MOMENTS,
+    "general_party": GENERAL_PARTY_MOMENTS,
+    "bar_mitzvah": BAR_MITZVAH_MOMENTS,
+    "bat_mitzvah": BAT_MITZVAH_MOMENTS,
+    "anniversary": ANNIVERSARY_MOMENTS,
+    "anniversay": ANNIVERSARY_MOMENTS,
+    "club": CLUB_MOMENTS,
+}
+
 
 def build_event_timeline(
     event_type: str,           # "wedding" | "corporate" | "birthday" | "club"
@@ -50,26 +170,13 @@ def build_event_timeline(
     venue: str = "",
     notes: str = "",
 ) -> Dict:
-    """Generate a minute-by-minute run-of-show timeline."""
+    """Generate a minute-by-minute run-of-show timeline for the specific event type."""
 
     base_hour, base_minute = map(int, start_time.split(":"))
     base_dt = datetime.strptime(f"{event_date} {start_time}", "%Y-%m-%d %H:%M")
 
-    reception_style_events = {
-        "wedding",
-        "same_sex_wedding_lgbtq",
-        "corporate",
-        "sweet_16",
-        "birthday",
-        "quinceanera",
-        "general_party",
-        "bar_mitzvah",
-        "bat_mitzvah",
-        "anniversary",
-        "anniversay",
-        "club",
-    }
-    moments = RECEPTION_MOMENTS if event_type in reception_style_events else CEREMONY_MOMENTS
+    # Get event-specific moments
+    moments = TIMELINE_BY_EVENT.get(event_type, GENERAL_PARTY_MOMENTS)
 
     timeline = []
     for label, offset in moments:
@@ -457,10 +564,164 @@ CONTENT_HOOKS = {
     ],
 }
 
+WEDDING_HOOKS = {
+    "authority": [
+        "Most DJs make this one mistake that costs them every high-end wedding booking.",
+        "Here is the exact timeline I use for every 5-star wedding reception.",
+        "The song sequence that keeps the dance floor packed all night long.",
+        "Father-daughter dance setup: how to make it emotional and keep the energy flowing.",
+    ],
+    "social_proof": [
+        "Client said 'It was the best wedding they had ever attended.' Here is what I did differently.",
+        "Just wrapped back-to-back weddings. The couple cried during our first dance. Here is the setup.",
+        "Booked this couple from a 30-second Instagram video. It showed my timeline system.",
+    ],
+    "value": [
+        "Save this — the complete DJ run-of-show template for a wedding reception.",
+        "The 5 critical songs for a wedding that guarantee a packed dance floor.",
+        "Pricing breakdown: how to charge premium rates and book more weddings.",
+    ],
+    "offer": [
+        "I built a wedding-specific tool for DJ timelines, client forms, and quotes. Link in bio.",
+        "Done-with-you wedding DJ system inside the Vault. Everything templated. Link in bio.",
+        "DM me if you want to book 2-3 premium weddings per month at higher rates.",
+    ],
+}
+
+BIRTHDAY_HOOKS = {
+    "authority": [
+        "How to keep a birthday party energy high from start to finish — no dead moments.",
+        "The birthday DJ mistake that makes people leave early (and how to avoid it).",
+        "Cake cutting songs that get the crowd hyped, not awkward.",
+    ],
+    "social_proof": [
+        "Just played a 50th birthday bash where everyone was dancing the whole time.",
+        "Parent booked me for their kid's 16th because I made the 13th party unforgettable.",
+        "Turned a small birthday into the talk of the neighborhood. Here is the timeline.",
+    ],
+    "value": [
+        "Birthday party checklist: the moments that matter and songs that land.",
+        "How to read the crowd and adapt your setlist real-time for birthdays.",
+        "Pricing strategy for birthday parties that gets you booked every weekend.",
+    ],
+    "offer": [
+        "Birthday-specific system: timelines, questionnaires, all set up. Link in bio.",
+        "Book more birthday parties with the DJ system built for multi-generational crowds.",
+        "Everything you need to run a birthday party from start to finish in the Vault.",
+    ],
+}
+
+SWEET_16_HOOKS = {
+    "authority": [
+        "Sweet 16 candle lighting: the one moment that has to be perfect.",
+        "How to keep a Sweet 16 dance floor packed without playing radio hits all night.",
+        "Sweet 16 DJ setup: from ceremony to party — minute by minute.",
+    ],
+    "social_proof": [
+        "Just played a Sweet 16 where the birthday girl cried happy tears during candle lighting.",
+        "Parent hired me after seeing my Sweet 16 timeline posted on Instagram.",
+        "Booked 3 more Sweet 16s from the one I did last month. Here is why it worked.",
+    ],
+    "value": [
+        "Complete Sweet 16 timeline: candle ceremony to last dance.",
+        "Songs for Sweet 16 that hit with both the birthday girl and her parents.",
+        "How to price Sweet 16 parties and actually get booked.",
+    ],
+    "offer": [
+        "Sweet 16 specialist system — all the templates you need. Link in bio.",
+        "Book more Sweet 16s with the DJ questionnaire and timeline built for this exact event.",
+        "Everything inside: candle ceremony setups, best songs, pricing formula.",
+    ],
+}
+
+QUINCEANERA_HOOKS = {
+    "authority": [
+        "Quinceanera tradition meets modern music — how to do both perfectly.",
+        "The debutante entrance song that sets the tone for the whole night.",
+        "Father-daughter choreography cues: how a DJ enhances the moment.",
+    ],
+    "social_proof": [
+        "Just played a Quinceanera with 300 guests. The traditional moments hit perfectly.",
+        "Booked two more Quinceaneras after this family saw my timeline system.",
+        "Parent told me this was the most well-timed Quinceanera they had attended.",
+    ],
+    "value": [
+        "Quinceanera timeline: ceremony to reception to after-party.",
+        "How to honor tradition while keeping modern guests engaged and dancing.",
+        "Pricing Quinceaneras what they are actually worth.",
+    ],
+    "offer": [
+        "Quinceanera-specific platform with ceremony timing, song cues, and pricing. Link in bio.",
+        "Book premium Quinceaneras with a system built for this exact tradition.",
+        "Get all the templates, questionnaires, and timelines in the Vault.",
+    ],
+}
+
+CORPORATE_HOOKS = {
+    "authority": [
+        "Corporate event DJ: how to read the room and adapt real-time.",
+        "The difference between a DJ who kills corporate events and one who does not.",
+        "How to time announcements, awards, and dancing perfectly.",
+    ],
+    "social_proof": [
+        "Just wrapped a 500-person corporate event. Seamless. No awkward moments.",
+        "Company re-booked me for their quarterly events. Here is the system I use.",
+        "Corporate client said 'Best event energy we have ever had.' Here is why.",
+    ],
+    "value": [
+        "Corporate event timeline: check-in to closing remarks.",
+        "How to handle technical A/V, live announcements, and dancing all at once.",
+        "Corporate pricing: how to charge premium rates for these gigs.",
+    ],
+    "offer": [
+        "Corporate event system — timelines, questionnaires, technical checklist. Link in bio.",
+        "Book high-ticket corporate events with a professional system. Vault link.",
+        "Everything templates and ready to go for corporate bookings.",
+    ],
+}
+
+CLUB_HOOKS = {
+    "authority": [
+        "Club DJ energy: how to read a crowd and keep momentum all night.",
+        "The BPM progression that keeps a dance floor packed for 4 hours straight.",
+        "Club setup: how to soundcheck and still have time for dinner.",
+    ],
+    "social_proof": [
+        "Just finished a 4-hour club set. Packed the whole time. Here is how I sequenced it.",
+        "Booked for a club's weekend residency after one stellar night.",
+        "Venue manager asked me back before I even left. Here is what I did.",
+    ],
+    "value": [
+        "Club DJ workflow: setup to peak hour to closing.",
+        "Songs that work in clubs but still feel premium and intentional.",
+        "Club pricing: getting paid what this work is actually worth.",
+    ],
+    "offer": [
+        "Club DJ playbook: technical setup, setlist strategy, timing. Link in bio.",
+        "Book club residencies by running professional systems. Vault inside.",
+        "Everything a club DJ needs in one platform.",
+    ],
+}
+
+CONTENT_HOOKS_BY_EVENT = {
+    "wedding": WEDDING_HOOKS,
+    "same_sex_wedding_lgbtq": WEDDING_HOOKS,
+    "corporate": CORPORATE_HOOKS,
+    "sweet_16": SWEET_16_HOOKS,
+    "birthday": BIRTHDAY_HOOKS,
+    "quinceanera": QUINCEANERA_HOOKS,
+    "general_party": BIRTHDAY_HOOKS,
+    "bar_mitzvah": BIRTHDAY_HOOKS,
+    "bat_mitzvah": BIRTHDAY_HOOKS,
+    "anniversary": WEDDING_HOOKS,
+    "anniversay": WEDDING_HOOKS,
+    "club": CLUB_HOOKS,
+}
+
 CAPTION_TEMPLATES = [
     """{hook}
 
-Here is what I have learned after {years} years behind the decks:
+Here is what I have learned after {years} years behind the decks at {specialty} events:
 
 The DJs who stay booked year-round are not always the most technical. They run a better system.
 
@@ -470,7 +731,7 @@ That is what the Blu Bloods platform is built to give you.
 
 {cta}
 
-#DJLife #WeddingDJ #EventDJ #DJBusiness #BluBloods""",
+#DJLife #DJ {specialty.replace(' ', '')} #EventDJ #DJBusiness #BluBloods""",
 
     """{hook}
 
@@ -478,11 +739,11 @@ No one talks about the business side of DJing.
 
 Getting leads. Converting them. Running the event without stress. Getting paid what you are worth.
 
-I built a platform that handles all of it.
+I built a platform that handles all of it — specifically for {specialty} DJs.
 
 {cta}
 
-#DJBusiness #WeddingDJ #DJTips #BluBloods""",
+#DJBusiness #DJ {specialty.replace(' ', '')} #DJTips #BluBloods""",
 
     """{hook}
 
@@ -490,7 +751,7 @@ Drop a 🎵 below if you want the full breakdown.
 
 {cta}
 
-#DJLife #EventPlanning #WeddingDJ #BluBloods #DJTips""",
+#DJLife #EventPlanning #DJ {specialty.replace(' ', '')} #BluBloods #DJTips""",
 ]
 
 DM_SCRIPTS = {
@@ -525,20 +786,22 @@ DM_SCRIPTS = {
 
 def generate_content_pack(
     years_experience: int = 5,
-    specialty: str = "wedding",
+    specialty: str = "general_party",
     cta: str = "Link in bio to apply.",
 ) -> Dict:
-    """Generate a 30-day Instagram content plan with captions and DM scripts."""
+    """Generate a 30-day Instagram content plan with event-specific captions and DM scripts."""
 
+    # Get event-specific hooks
+    hooks_dict = CONTENT_HOOKS_BY_EVENT.get(specialty, BIRTHDAY_HOOKS)
     posts = []
-    categories = list(CONTENT_HOOKS.keys())
+    categories = list(hooks_dict.keys())
 
     for day in range(1, 31):
         category = categories[(day - 1) % len(categories)]
-        hooks = CONTENT_HOOKS[category]
+        hooks = hooks_dict[category]
         hook = hooks[(day - 1) % len(hooks)]
         template = CAPTION_TEMPLATES[(day - 1) % len(CAPTION_TEMPLATES)]
-        caption = template.format(hook=hook, years=years_experience, cta=cta)
+        caption = template.format(hook=hook, years=years_experience, cta=cta, specialty=specialty.replace("_", " ").title())
 
         posts.append({
             "day": day,
@@ -556,9 +819,9 @@ def generate_content_pack(
         "posts": posts,
         "dm_scripts": DM_SCRIPTS,
         "bio_suggestions": [
-            f"DJ & event specialist | {specialty.title()} expert | Helping DJs book premium events | Link below",
-            f"Booked {years_experience}+ years | {specialty.title()} DJ | Resources for DJs who want more | Apply below",
-            f"DJ Blu Bloods | Premium event experiences | DM for booking | Resources for DJs in bio",
+            f"DJ & {specialty.replace('_', ' ').lower()} specialist | {years_experience}+ years | Helping DJs book premium events | Link below",
+            f"Booked {years_experience}+ years | {specialty.replace('_', ' ').title()} expert | Resources for DJs | Apply below",
+            f"DJ Blu Bloods | Premium {specialty.replace('_', ' ').lower()} experiences | DM for booking | Resources in bio",
         ],
         "created_at": datetime.utcnow().isoformat(),
     }
