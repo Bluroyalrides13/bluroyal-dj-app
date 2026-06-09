@@ -251,6 +251,23 @@ ANNIVERSARY_QUESTIONS = [
     {"id": "special_requests",  "label": "Anything else?",                    "type": "textarea"},
 ]
 
+CLUB_QUESTIONS = [
+    {"id": "venue_name",        "label": "Club / venue name & location",      "type": "text"},
+    {"id": "event_date",        "label": "Event date",                        "type": "date"},
+    {"id": "start_time",        "label": "Set start time",                    "type": "time"},
+    {"id": "end_time",          "label": "Set end time",                      "type": "time"},
+    {"id": "expected_crowd",    "label": "Expected crowd size",               "type": "number"},
+    {"id": "venue_setup",       "label": "Venue layout (dance floor, stage, etc)", "type": "textarea"},
+    {"id": "dancefloor_vibe",   "label": "Desired dance floor energy level (1-10)", "type": "text"},
+    {"id": "music_genres",      "label": "Preferred music genres / BPM range", "type": "textarea"},
+    {"id": "peak_hour",         "label": "When is peak hour? (most people dancing)", "type": "time"},
+    {"id": "technical_needs",   "label": "Any technical requirements or AV?",  "type": "textarea"},
+    {"id": "must_play",         "label": "Must-play tracks",                   "type": "textarea"},
+    {"id": "do_not_play",       "label": "Do-NOT-play songs or genres",        "type": "textarea"},
+    {"id": "vibe",              "label": "Overall vibe for the night",        "type": "textarea"},
+    {"id": "special_requests",  "label": "Anything else?",                    "type": "textarea"},
+]
+
 QUESTIONNAIRE_BY_EVENT = {
     "wedding": WEDDING_QUESTIONS,
     "same_sex_wedding_lgbtq": WEDDING_QUESTIONS,
@@ -263,7 +280,7 @@ QUESTIONNAIRE_BY_EVENT = {
     "bat_mitzvah": BAT_MITZVAH_QUESTIONS,
     "anniversary": ANNIVERSARY_QUESTIONS,
     "anniversay": ANNIVERSARY_QUESTIONS,
-    "club": PARTY_QUESTIONS,
+    "club": CLUB_QUESTIONS,
 }
 
 
