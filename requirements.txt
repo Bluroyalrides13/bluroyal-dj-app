@@ -1,13 +1,12 @@
-langchain-anthropic>=0.1.0
 # Core FastAPI and async
 fastapi==0.104.1
 uvicorn[standard]==0.24.0
 starlette==0.27.0
 
 # AI/ML
-anthropic==0.7.1
-langchain==0.0.352
-langchain-anthropic==0.0.11
+anthropic>=0.20.0
+langchain>=0.1.0
+langchain-anthropic>=0.1.0
 
 # Payment Processing
 squareup==33.1.0
