@@ -385,9 +385,15 @@
         }).join('');
       }
 
-      hooks.innerHTML = (d.instagram_promo_hooks || []).map((h) => `
-        <div class="card small">${h}</div>
-      `).join('');
+      const hookItems = d.instagram_promo_hooks || [];
+      hooks.innerHTML = `
+        <div style="display:flex;justify-content:flex-end;margin-bottom:10px;">
+          <button class="btn btn-secondary" type="button" onclick="copyLessonHooks()">Copy Hooks</button>
+        </div>
+        ${hookItems.map((h) => `<div class="card small">${h}</div>`).join('')}
+      `;
+
+      window.lastLessonHooks = hookItems;
 
       window.lastPrintableDocs = docs;
       document.getElementById('lp-result').style.display = 'block';
@@ -428,6 +434,24 @@
       }
       printWin.document.close();
       printWin.onload = () => printWin.print();
+    }
+
+    async function copyLessonHooks() {
+      const hooks = window.lastLessonHooks || [];
+      if (!hooks.length) return;
+      const text = hooks.join('\n\n');
+      try {
+        await navigator.clipboard.writeText(text);
+        alert('Instagram hooks copied to clipboard.');
+      } catch (err) {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        ta.remove();
+        alert('Instagram hooks copied to clipboard.');
+      }
     }
   </script>
 </body>

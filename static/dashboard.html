@@ -2981,11 +2981,15 @@ POST-EVENT
 
     window.lastLessonPrintableDocs = docs;
 
+    const hookItems = d.instagram_promo_hooks || [];
     const hooksEl = document.getElementById('lp-hooks-output');
-    hooksEl.innerHTML = '';
-    (d.instagram_promo_hooks || []).forEach((hook) => {
-      hooksEl.innerHTML += `<div class="dm-card"><div class="dm-text">${hook}</div></div>`;
-    });
+    hooksEl.innerHTML = `
+      <div style="display:flex;justify-content:flex-end;margin-bottom:10px;">
+        <button class="btn btn-secondary" type="button" onclick="copyLessonHooksDashboard()">Copy Hooks</button>
+      </div>
+      ${hookItems.map((hook) => `<div class="dm-card"><div class="dm-text">${hook}</div></div>`).join('')}
+    `;
+    window.lastLessonHooks = hookItems;
 
     const panel = document.getElementById('lp-result');
     panel.classList.add('show');
@@ -3031,6 +3035,24 @@ POST-EVENT
     }
     win.document.close();
     win.onload = () => win.print();
+  }
+
+  async function copyLessonHooksDashboard() {
+    const hooks = window.lastLessonHooks || [];
+    if (!hooks.length) return;
+    const text = hooks.join('\n\n');
+    try {
+      await navigator.clipboard.writeText(text);
+      showToast('Instagram hooks copied');
+    } catch (err) {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      ta.remove();
+      showToast('Instagram hooks copied');
+    }
   }
 
   async function buildContentPack() {

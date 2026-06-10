@@ -2354,18 +2354,43 @@ def generate_lesson_plan(
         "is_comprehensive": False,
         "instagram_promo_hooks": [
             _bilingual(
-                f"Parents asked for done-for-you {normalized_theme.lower()} lesson plans, so we built them.",
-                f"Las familias pidieron planes de {normalized_theme.lower()} listos para usar, y por eso los creamos.",
+                f"REEL HOOK: Parents keep asking how we plan {normalized_theme.lower()} without late-night prep. This {weeks}-week kit is how.",
+                f"GANCHO REEL: Las familias preguntan como planificamos {normalized_theme.lower()} sin desvelarnos. Este kit de {weeks} semanas es la clave.",
                 normalized_language,
             ),
             _bilingual(
-                f"Stop planning from scratch: this {weeks}-week {normalized_theme.lower()} kit is classroom-ready.",
-                f"Deja de planear desde cero: este kit de {weeks} semanas sobre {normalized_theme.lower()} esta listo para clase.",
+                f"REEL CTA: Save this and comment LESSONS to get the exact {normalized_theme.lower()} plan we use for premium outcomes.",
+                f"CTA REEL: Guarda esto y comenta LECCIONES para recibir el plan exacto de {normalized_theme.lower()} que usamos para resultados premium.",
                 normalized_language,
             ),
             _bilingual(
-                "Comment LESSONS and we will send the tier that fits your school-year goals.",
-                "Comenta LECCIONES y te enviamos el nivel que mejor se adapta a tus metas escolares.",
+                f"STORY FRAME 1: We turned {normalized_theme.lower()} planning into a done-for-you system for busy educators.",
+                f"HISTORIA 1: Convertimos la planificacion de {normalized_theme.lower()} en un sistema listo para usar para educadores ocupados.",
+                normalized_language,
+            ),
+            _bilingual(
+                "STORY FRAME 2: Poll - Want weekly lesson plans + printable activities ready to teach? YES / SEND IT",
+                "HISTORIA 2: Encuesta - Quieres planes semanales + actividades imprimibles listas para usar? SI / ENVIAMELO",
+                normalized_language,
+            ),
+            _bilingual(
+                "STORY FRAME 3: DM us LESSONS and we will recommend your best-fit tier: Basic, Intermediate, or Full.",
+                "HISTORIA 3: Envia LECCIONES por DM y te recomendaremos tu nivel ideal: Basico, Intermedio o Completo.",
+                normalized_language,
+            ),
+            _bilingual(
+                f"DM OPENER: Thanks for reaching out! Are you teaching preschool or homeschool, and what is your monthly resource budget for {normalized_theme.lower()} planning?",
+                f"APERTURA DM: Gracias por escribir! Ensenas preescolar o homeschool, y cual es tu presupuesto mensual para recursos de {normalized_theme.lower()}?",
+                normalized_language,
+            ),
+            _bilingual(
+                "DM QUALIFIER: Perfect. Based on your goals, I can send Basic ($497), Intermediate ($1,500), or Full ($3,500). Which level of support do you want?",
+                "DM CALIFICACION: Perfecto. Segun tus metas, puedo enviarte Basico ($497), Intermedio ($1,500) o Completo ($3,500). Que nivel de apoyo quieres?",
+                normalized_language,
+            ),
+            _bilingual(
+                "DM CLOSE: I can send checkout now so you can start immediately with lesson plans and printables. Reply START and I will send your link.",
+                "CIERRE DM: Puedo enviarte el checkout ahora para que inicies hoy con planes y printables. Responde EMPEZAR y te envio el enlace.",
                 normalized_language,
             ),
         ],
