@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760" role="img" aria-labelledby="title desc">
+  <title id="title">All About Me Unit Thumbnail</title>
+  <desc id="desc">Colorful preschool themed thumbnail for all about me unit.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ffe7f3"/>
+      <stop offset="60%" stop-color="#e7f4ff"/>
+      <stop offset="100%" stop-color="#fff8db"/>
+    </linearGradient>
+    <linearGradient id="panel" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.92"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0.82"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="760" fill="url(#bg)"/>
+  <circle cx="1030" cy="110" r="130" fill="#f03b83" opacity="0.14"/>
+  <circle cx="150" cy="620" r="160" fill="#0baf8a" opacity="0.12"/>
+  <rect x="56" y="52" width="1088" height="656" rx="42" fill="url(#panel)" stroke="#12224a" stroke-opacity="0.1"/>
+  <rect x="96" y="104" width="500" height="500" rx="30" fill="#ffd7ea"/>
+  <rect x="122" y="130" width="448" height="448" rx="26" fill="#ffffff"/>
+  <circle cx="224" cy="232" r="46" fill="#ffbf54"/>
+  <circle cx="336" cy="232" r="46" fill="#0baf8a"/>
+  <circle cx="448" cy="232" r="46" fill="#f03b83"/>
+  <rect x="180" y="332" width="340" height="26" rx="13" fill="#5a6ea0" opacity="0.35"/>
+  <rect x="180" y="374" width="290" height="26" rx="13" fill="#5a6ea0" opacity="0.25"/>
+  <rect x="180" y="416" width="320" height="26" rx="13" fill="#5a6ea0" opacity="0.25"/>
+  <text x="640" y="196" fill="#12224a" font-family="Sora, Arial, sans-serif" font-size="62" font-weight="800">ALL ABOUT ME</text>
+  <text x="640" y="254" fill="#4f5c81" font-family="Plus Jakarta Sans, Arial, sans-serif" font-size="36" font-weight="700">Age 3-5 • Bilingual Activities</text>
+  <rect x="640" y="304" width="450" height="66" rx="20" fill="#f03b83" fill-opacity="0.16"/>
+  <text x="670" y="347" fill="#9f2660" font-family="Plus Jakarta Sans, Arial, sans-serif" font-size="30" font-weight="800">Circle Time + Literacy + Home</text>
+  <rect x="640" y="404" width="450" height="66" rx="20" fill="#0baf8a" fill-opacity="0.14"/>
+  <text x="670" y="447" fill="#087d63" font-family="Plus Jakarta Sans, Arial, sans-serif" font-size="30" font-weight="800">Printable Center Tasks Included</text>
+  <rect x="640" y="504" width="450" height="66" rx="20" fill="#ffbf54" fill-opacity="0.2"/>
+  <text x="670" y="547" fill="#a66a00" font-family="Plus Jakarta Sans, Arial, sans-serif" font-size="30" font-weight="800">Teacher Approved Format</text>
+</svg>
