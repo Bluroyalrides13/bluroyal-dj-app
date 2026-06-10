@@ -539,6 +539,18 @@
           <div class="kpi-card__value" id="kpi-payments">—</div>
           <div class="kpi-card__label">Payments Due</div>
         </div>
+        <div class="kpi-card">
+          <div class="kpi-card__value" id="kpi-sales-clicks">—</div>
+          <div class="kpi-card__label">Sales Clicks</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-card__value" id="kpi-sales-closed">—</div>
+          <div class="kpi-card__label">Closed Deals</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-card__value" id="kpi-sales-revenue">—</div>
+          <div class="kpi-card__label">Sales Revenue</div>
+        </div>
       </div>
 
       <!-- Upcoming Events Table -->
@@ -2977,6 +2989,10 @@ POST-EVENT
       document.getElementById('kpi-new-leads').textContent = d.new_leads ?? 0;
       document.getElementById('kpi-contracts').textContent = d.contracts_outstanding ?? 0;
       document.getElementById('kpi-payments').textContent = d.payments_due ?? 0;
+      document.getElementById('kpi-sales-clicks').textContent = d.sales_clicks ?? 0;
+      document.getElementById('kpi-sales-closed').textContent = d.sales_closed ?? 0;
+      document.getElementById('kpi-sales-revenue').textContent =
+        '$' + (d.sales_revenue || 0).toLocaleString('en-US', {minimumFractionDigits: 0});
 
       // Upcoming events table
       const upWrap = document.getElementById('admin-upcoming-wrap');
