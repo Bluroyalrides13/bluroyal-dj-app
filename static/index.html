@@ -445,9 +445,13 @@
         container.innerHTML = resourceCards
           .map((item) => {
             const safeCoverUrl = item.coverUrl && item.coverUrl.trim() ? item.coverUrl : DEFAULT_COVER_URL;
-            const downloadButton = item.pdfUrl && item.pdfUrl.trim()
+            const hasPdf = item.pdfUrl && item.pdfUrl.trim();
+            const downloadButton = hasPdf
               ? `<a class="button button--secondary" href="${item.pdfUrl}" target="_blank" rel="noopener">Download PDF</a>`
               : "";
+            const comingSoonBadge = hasPdf
+              ? ""
+              : `<div class="resource-coming-soon">Coming Soon</div>`;
 
             return `
               <article class="sample-card">
@@ -464,6 +468,7 @@
                 <h3>${item.title}</h3>
                 <p>${item.description}</p>
                 ${downloadButton ? `<div class="sample-actions">${downloadButton}</div>` : ""}
+                ${comingSoonBadge}
               </article>
             `;
           })
