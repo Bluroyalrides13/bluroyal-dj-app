@@ -299,176 +299,219 @@
       loadOfferLinks();
 
       const DEFAULT_COVER_URL = "/static/samples/thumb-all-about-me.svg";
-      const FALLBACK_COVERS = [
+      const COVER_POOL = [
         "/static/samples/thumb-all-about-me.svg",
         "/static/samples/thumb-community-helpers.svg",
         "/static/samples/thumb-seasons-weather.svg",
+        "/static/samples/29_daily_routine.png",
+        "/static/samples/balloons.png",
+        "/static/samples/bear.png",
+        "/static/samples/bunny.png",
+        "/static/samples/cat.png",
+        "/static/samples/elephant.png",
+        "/static/samples/fox.png",
+        "/static/samples/kite.png",
+        "/static/samples/lion.png",
+        "/static/samples/owl.png",
+        "/static/samples/train.png",
       ];
-      const AVAILABLE_PDFS = new Set([
+      const RESOURCE_FILES = [
+        "Lesson Plan Printable Bound Notebook in Olive White Illustrative Style .pdf",
+        "Jungle Adventure Activity Book For Kids Ages 3-6-2.pdf",
+        "1. 🏫 Welcome to School 21. 🦕 Dinosaurs 2. 👤 All About Me 22. 🚗 Transportation 3. 💜 My Family 23. ❤️ Friendship & Kindness 4. 😊 Friends & Feelings 24. 🦷 Dental Health 5. 🌈 Colors All Around-4.pdf",
         "all-about-me-en.pdf",
         "all-about-me-es.pdf",
         "community-helpers-en.pdf",
         "community-helpers-es.pdf",
         "seasons-weather-en.pdf",
         "seasons-weather-es.pdf",
-      ]);
+        "Little-Learners-6-Week-Program.pdf",
+        "Little-Learners-Preschool-Pack.pdf",
+        "Little-Learners-Routines-Ideas.pdf",
+        "Little-Learners-Worksheets.pdf",
+        "Ocean Animal Worksheets.pdf",
+        "Pequenos-Aprendices-Hojas-Imprimibles.pdf",
+        "Pequenos-Aprendices-Paquete-Preescolar.pdf",
+        "Pequenos-Aprendices-Programa-6-Semanas.pdf",
+        "Pequenos-Aprendices-Rutinas-Ideas.pdf",
+        "Dungaree-Gang-Coloring-Book.pdf-2.pdf",
+        "BLU ROYALADVENTURES   FREE EMERGENCY TOOL KIT.pdf",
+        "Untitled design-4.pdf",
+      ];
+      const AVAILABLE_PDFS = new Set(RESOURCE_FILES.map((file) => file.toLowerCase()));
 
       function getFallbackCover(index) {
-        return FALLBACK_COVERS[index % FALLBACK_COVERS.length] || DEFAULT_COVER_URL;
+        return COVER_POOL[index % COVER_POOL.length] || DEFAULT_COVER_URL;
       }
 
-      function getResourceTier(title) {
-        if (title.includes("40 Weeks")) return "Full Program";
-        if (title.includes("Space") || title.includes("Weather") || title.includes("Ocean") || title.includes("Zoo") || title.includes("Bugs") || title.includes("Transportation") || title.includes("Jungle")) {
-          return "Intermediate + Full";
+      function humanizeText(value) {
+        return value
+          .replace(/[_-]+/g, " ")
+          .replace(/\s+/g, " ")
+          .trim();
+      }
+
+      function getResourceTitle(pdfFile) {
+        const slug = pdfFile.toLowerCase();
+
+        if (slug.includes("lesson plan printable bound notebook")) return "Pre-K Lesson Plan Book";
+        if (slug.includes("jungle adventure activity book")) return "Jungle Adventure Activity Book";
+        if (slug.includes("welcome to school")) return "Preschool Theme Sampler Pack";
+        if (slug.includes("all-about-me-en")) return "All About Me Theme Pack";
+        if (slug.includes("all-about-me-es")) return "All About Me Theme Pack (Spanish)";
+        if (slug.includes("community-helpers-en")) return "Community Helpers Pack";
+        if (slug.includes("community-helpers-es")) return "Community Helpers Pack (Spanish)";
+        if (slug.includes("seasons-weather-en")) return "Weather & Sky Activity Pack";
+        if (slug.includes("seasons-weather-es")) return "Weather & Sky Activity Pack (Spanish)";
+        if (slug.includes("little-learners-6-week-program")) return "Little Learners 6-Week Program";
+        if (slug.includes("little-learners-preschool-pack")) return "Little Learners Preschool Pack";
+        if (slug.includes("little-learners-routines-ideas")) return "Little Learners Routines Ideas";
+        if (slug.includes("little-learners-worksheets")) return "Little Learners Worksheets";
+        if (slug.includes("ocean animal worksheets")) return "Ocean Animal Worksheets";
+        if (slug.includes("pequenos-aprendices-hojas-imprimibles")) return "Pequeños Aprendices Hojas Imprimibles";
+        if (slug.includes("pequenos-aprendices-paquete-preescolar")) return "Pequeños Aprendices Paquete Preescolar";
+        if (slug.includes("pequenos-aprendices-programa-6-semanas")) return "Pequeños Aprendices Programa 6 Semanas";
+        if (slug.includes("pequenos-aprendices-rutinas-ideas")) return "Pequeños Aprendices Rutinas Ideas";
+        if (slug.includes("dungaree-gang-coloring-book")) return "Dungaree Gang Coloring Book";
+        if (slug.includes("free emergency tool kit")) return "Free Emergency Tool Kit";
+        if (slug.includes("untitled design")) return "Untitled Design Pack";
+
+        return humanizeText(pdfFile.replace(/\.pdf$/i, ""));
+      }
+
+      function getResourceCategory(pdfFile, title) {
+        const slug = `${pdfFile} ${title}`.toLowerCase();
+
+        if (slug.includes("lesson plan")) return "Lesson Plan Book";
+        if (slug.includes("6-week program")) return "Program";
+        if (slug.includes("worksheets")) return "Worksheet Pack";
+        if (slug.includes("routines ideas")) return "Routine Resource";
+        if (slug.includes("coloring book")) return "Coloring Book";
+        if (slug.includes("tool kit")) return "Support Resource";
+        if (slug.includes("preschool pack")) return "Preschool Pack";
+        if (slug.includes("theme pack")) return "Theme Pack";
+        if (slug.includes("activity book")) return "Activity Book";
+        if (slug.includes("activity pack")) return "Activity Pack";
+        if (slug.includes("sampler")) return "Sampler Pack";
+
+        return "Resource Pack";
+      }
+
+      function getResourceAgeRange(pdfFile, title) {
+        const slug = `${pdfFile} ${title}`.toLowerCase();
+
+        if (slug.includes("lesson plan") || slug.includes("program") || slug.includes("routines") || slug.includes("worksheets") || slug.includes("tool kit")) {
+          return "Ages 3-5";
         }
-        return "Basic + higher tiers";
+        if (slug.includes("jungle") || slug.includes("ocean") || slug.includes("zoo") || slug.includes("bugs") || slug.includes("transportation") || slug.includes("weather") || slug.includes("space") || slug.includes("dungaree") || slug.includes("animal")) {
+          return "Ages 3-6";
+        }
+
+        return "Ages 3-5";
       }
 
-      function getResourcePrice(item) {
-        if (item.title.includes("40 Weeks")) return "$497";
-        if (item.category.includes("Activity Book")) return "$97";
-        if (item.category.includes("Science")) return "$67";
-        return "$47";
+      function getResourceDescription(pdfFile, title, category) {
+        const slug = `${pdfFile} ${title}`.toLowerCase();
+
+        if (slug.includes("lesson plan printable bound notebook")) {
+          return "Printable preschool lesson planning book with weekly themes, objectives, materials, songs, and teacher notes.";
+        }
+        if (slug.includes("jungle adventure")) {
+          return "Jungle-themed printable activity book with coloring, tracing, matching, counting, and preschool learning fun.";
+        }
+        if (slug.includes("welcome to school")) {
+          return "First-week preschool sampler with routines, classroom rules, names, greetings, and community-building activities.";
+        }
+        if (slug.includes("all about me")) {
+          return "Activities for self-awareness, body parts, feelings, favorites, and building confidence in young learners.";
+        }
+        if (slug.includes("community helpers")) {
+          return "Vocabulary and classroom activities focused on community helpers, role-play, and early learning centers.";
+        }
+        if (slug.includes("seasons-weather")) {
+          return "Weather and sky activities with charts, sorting, science exploration, and preschool routines.";
+        }
+        if (slug.includes("little learners 6-week program")) {
+          return "A six-week preschool program with structured weekly themes and ready-to-use planning support.";
+        }
+        if (slug.includes("preschool pack")) {
+          return "General preschool pack with core early learning activities and printable practice pages.";
+        }
+        if (slug.includes("routines ideas")) {
+          return "Routine ideas for classroom flow, morning routines, and home learning structure.";
+        }
+        if (slug.includes("worksheets")) {
+          return "Printable worksheets for tracing, matching, counting, and early literacy practice.";
+        }
+        if (slug.includes("ocean animal")) {
+          return "Ocean animal printable activities with matching, coloring, counting, and early science fun.";
+        }
+        if (slug.includes("coloring book")) {
+          return "Black-and-white preschool coloring pages and simple practice sheets for young learners.";
+        }
+        if (slug.includes("tool kit")) {
+          return "Quick-use support toolkit for preschool classrooms and homeschool planning.";
+        }
+        if (slug.includes("sampler")) {
+          return "Multi-theme preschool sampler with a variety of learning topics and printable activities.";
+        }
+
+        return `Printable preschool ${category.toLowerCase()} with ready-to-use activities.`;
       }
 
-      const resourceCards = [
-        {
-          title: "Pre-K Lesson Plan Book - 40 Weeks",
-          category: "Lesson Plan Book",
-          ageRange: "Ages 3-5",
-          description:
-            "Complete preschool lesson plan book with 40 ready-to-teach weekly themes, learning objectives, materials, songs, read-alouds, daily activities, family notes, and teacher tips.",
-          pdfUrl: "/static/samples/PreK_Lesson_Plan_Book_EN.pdf",
-          coverUrl: "/static/samples/prek_lesson_plan_cover.png",
-        },
-        {
-          title: "Jungle Adventure Activity Book",
-          category: "Activity Book",
-          ageRange: "Ages 3-6",
-          description:
-            "Jungle-themed printable activity book with fun pages for coloring, tracing, matching, counting, puzzles, and early learning skills.",
-          pdfUrl: "/static/samples/Jungle_Adventure_Activity_Book_EN.pdf",
-          coverUrl: "/static/samples/jungle_adventure_cover.png",
-        },
-        {
-          title: "Welcome to School Theme Pack",
-          category: "Theme Pack",
-          ageRange: "Ages 3-5",
-          description:
-            "First-week-of-school activities focused on routines, classroom rules, names, greetings, friends, and building classroom community.",
-          pdfUrl: "/static/samples/Welcome_To_School_EN.pdf",
-          coverUrl: "/static/samples/welcome_to_school_cover.png",
-        },
-        {
-          title: "All About Me Theme Pack",
-          category: "Theme Pack",
-          ageRange: "Ages 3-5",
-          description:
-            "Activities for self-awareness, body parts, feelings, favorites, self-portraits, and building confidence in young learners.",
-          pdfUrl: "/static/samples/all-about-me-en.pdf",
-          coverUrl: "/static/samples/all_about_me_cover.png",
-        },
-        {
-          title: "My Family Theme Pack",
-          category: "Theme Pack",
-          ageRange: "Ages 3-5",
-          description:
-            "Family-themed preschool activities about family members, family traditions, love, counting family members, and family crafts.",
-          pdfUrl: "/static/samples/My_Family_EN.pdf",
-          coverUrl: "/static/samples/my_family_cover.png",
-        },
-        {
-          title: "Friends & Feelings Theme Pack",
-          category: "SEL Theme Pack",
-          ageRange: "Ages 3-5",
-          description:
-            "Social-emotional learning activities that help children identify emotions, practice kindness, and learn friendship skills.",
-          pdfUrl: "/static/samples/Friends_And_Feelings_EN.pdf",
-          coverUrl: "/static/samples/friends_feelings_cover.png",
-        },
-        {
-          title: "Colors All Around Theme Pack",
-          category: "Theme Pack",
-          ageRange: "Ages 3-5",
-          description:
-            "Color recognition activities, sorting, matching, art projects, songs, and hands-on preschool learning centers.",
-          pdfUrl: "/static/samples/Colors_All_Around_EN.pdf",
-          coverUrl: "/static/samples/colors_all_around_cover.png",
-        },
-        {
-          title: "Numbers 1-10 Activity Pack",
-          category: "Math Activity Pack",
-          ageRange: "Ages 3-5",
-          description:
-            "Early math printables for counting, number recognition, matching, tracing numbers, and hands-on number practice.",
-          pdfUrl: "/static/samples/community-helpers-en.pdf",
-          coverUrl: "/static/samples/numbers_1_10_cover.png",
-        },
-        {
-          title: "Alphabet Review Activity Pack",
-          category: "Literacy Activity Pack",
-          ageRange: "Ages 3-5",
-          description:
-            "ABC review activities with letter recognition, tracing, beginning sounds, matching, and preschool literacy practice.",
-          pdfUrl: "/static/samples/Alphabet_Review_EN.pdf",
-          coverUrl: "/static/samples/alphabet_review_cover.png",
-        },
-        {
-          title: "Bugs & Butterflies Activity Pack",
-          category: "Science Activity Pack",
-          ageRange: "Ages 3-6",
-          description:
-            "Science and nature activities featuring bugs, butterflies, counting, coloring, matching, and hands-on exploration.",
-          pdfUrl: "/static/samples/Bugs_And_Butterflies_EN.pdf",
-          coverUrl: "/static/samples/bugs_butterflies_cover.png",
-        },
-        {
-          title: "Ocean Animals Activity Pack",
-          category: "Science Activity Pack",
-          ageRange: "Ages 3-6",
-          description:
-            "Ocean-themed printable activities with sea animals, coloring pages, tracing, counting, matching, and preschool learning fun.",
-          pdfUrl: "/static/samples/Ocean_Animals_EN.pdf",
-          coverUrl: "/static/samples/ocean_animals_cover.png",
-        },
-        {
-          title: "Zoo Animals Activity Pack",
-          category: "Science Activity Pack",
-          ageRange: "Ages 3-6",
-          description:
-            "Zoo animal activities for preschoolers including animal names, matching, coloring, counting, and early vocabulary practice.",
-          pdfUrl: "/static/samples/Zoo_Animals_EN.pdf",
-          coverUrl: "/static/samples/zoo_animals_cover.png",
-        },
-        {
-          title: "Transportation Activity Pack",
-          category: "Theme Pack",
-          ageRange: "Ages 3-5",
-          description:
-            "Printable activities about cars, buses, planes, trains, and community travel with matching, sorting, coloring, and counting.",
-          pdfUrl: "/static/samples/Transportation_EN.pdf",
-          coverUrl: "/static/samples/transportation_cover.png",
-        },
-        {
-          title: "Weather & Sky Activity Pack",
-          category: "Science Theme Pack",
-          ageRange: "Ages 3-5",
-          description:
-            "Preschool weather activities about clouds, rain, sun, wind, sky, daily weather charts, and science exploration.",
-          pdfUrl: "/static/samples/seasons-weather-en.pdf",
-          coverUrl: "/static/samples/weather_sky_cover.png",
-        },
-        {
-          title: "Space, Stars & Moon Activity Pack",
-          category: "Science Theme Pack",
-          ageRange: "Ages 3-6",
-          description:
-            "Space-themed preschool activities with stars, planets, moon, rockets, coloring, counting, and early science learning.",
-          pdfUrl: "/static/samples/Space_Stars_Moon_EN.pdf",
-          coverUrl: "/static/samples/space_stars_moon_cover.png",
-        },
-      ];
+      function getResourceTier(title, category) {
+        const slug = `${title} ${category}`.toLowerCase();
+
+        if (slug.includes("lesson plan")) return "Full Program";
+        if (slug.includes("6-week program")) return "Intermediate + Full";
+        if (slug.includes("tool kit")) return "Basic + higher tiers";
+        if (slug.includes("sampler")) return "Basic + higher tiers";
+        if (slug.includes("routines ideas")) return "Basic + higher tiers";
+        if (slug.includes("worksheet")) return "Basic + higher tiers";
+        if (slug.includes("coloring book")) return "Basic";
+
+        return "Included in a tier";
+      }
+
+      function getResourcePrice(title, category) {
+        const slug = `${title} ${category}`.toLowerCase();
+
+        if (slug.includes("lesson plan")) return "$497";
+        if (slug.includes("6-week program")) return "$147";
+        if (slug.includes("preschool sampler")) return "$67";
+        if (slug.includes("preschool pack")) return "$47";
+        if (slug.includes("tool kit")) return "$37";
+        if (slug.includes("routines ideas")) return "$37";
+        if (slug.includes("worksheet")) return "$37";
+        if (slug.includes("coloring book")) return "$27";
+        if (slug.includes("activity book")) return "$47";
+        if (slug.includes("activity pack")) return "$47";
+        if (slug.includes("theme pack")) return "$47";
+
+        return "$37";
+      }
+
+      function buildResourceCatalog() {
+        return RESOURCE_FILES.map((pdfFile, index) => {
+          const title = getResourceTitle(pdfFile);
+          const category = getResourceCategory(pdfFile, title);
+          const ageRange = getResourceAgeRange(pdfFile, title);
+          const description = getResourceDescription(pdfFile, title, category);
+          return {
+            title,
+            category,
+            ageRange,
+            description,
+            pdfFile,
+            pdfUrl: encodeURI(`/static/samples/${pdfFile}`),
+            coverUrl: getFallbackCover(index),
+            tierLabel: getResourceTier(title, category),
+            priceLabel: getResourcePrice(title, category),
+          };
+        });
+      }
+
+      const resourceCards = buildResourceCatalog();
 
       function renderResourceCards() {
         const container = document.getElementById("resource-cards");
@@ -476,23 +519,20 @@
 
         container.innerHTML = resourceCards
           .map((item, index) => {
-            const safeCoverUrl = item.coverUrl && item.coverUrl.trim() ? item.coverUrl : getFallbackCover(index);
-            const pdfFilename = item.pdfUrl ? item.pdfUrl.split("/").pop().toLowerCase() : "";
-            const hasPdf = item.pdfUrl && item.pdfUrl.trim() && AVAILABLE_PDFS.has(pdfFilename);
-            const tierLabel = getResourceTier(item.title);
-            const priceLabel = getResourcePrice(item);
+            const pdfFilename = item.pdfFile ? item.pdfFile.trim().toLowerCase() : "";
+            const hasPdf = Boolean(pdfFilename && AVAILABLE_PDFS.has(pdfFilename));
             const downloadButton = hasPdf
               ? `<a class="button button--secondary" href="${item.pdfUrl}" target="_blank" rel="noopener">Download PDF</a>`
               : "";
-            const comingSoonBadge = hasPdf
-              ? ""
-              : `<div class="resource-coming-soon">Included in ${tierLabel}</div>`;
+            const statusBadge = hasPdf
+              ? `<div class="resource-coming-soon">Included in ${item.tierLabel}</div>`
+              : `<div class="resource-coming-soon">Included in ${item.tierLabel}</div>`;
 
             return `
               <article class="sample-card">
                 <div class="sample-badge">Resource Pack</div>
                 <div class="sample-preview sample-preview--about-me">
-                  <img src="${safeCoverUrl}" alt="${item.title} cover" loading="lazy" onerror="this.onerror=null;this.src='${getFallbackCover(index)}';" />
+                  <img src="${item.coverUrl}" alt="${item.title} cover" loading="lazy" onerror="this.onerror=null;this.src='${getFallbackCover(index + 1)}';" />
                   <div style="display:flex;gap:6px;flex-wrap:wrap;">
                     <div class="sample-preview__tag">${item.ageRange}</div>
                     <div class="sample-preview__tag">${item.category}</div>
@@ -503,11 +543,11 @@
                 <h3>${item.title}</h3>
                 <p>${item.description}</p>
                 <div class="resource-meta">
-                  <span class="resource-meta__tier">Included: ${tierLabel}</span>
-                  <span class="resource-meta__price">A la carte: ${priceLabel}</span>
+                  <span class="resource-meta__tier">Included: ${item.tierLabel}</span>
+                  <span class="resource-meta__price">A la carte: ${item.priceLabel}</span>
                 </div>
                 ${downloadButton ? `<div class="sample-actions">${downloadButton}</div>` : ""}
-                ${comingSoonBadge}
+                ${statusBadge}
               </article>
             `;
           })
