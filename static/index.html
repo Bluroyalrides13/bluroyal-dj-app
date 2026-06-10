@@ -323,6 +323,21 @@
         "Untitled design-4.pdf",
       ];
       const AVAILABLE_PDFS = new Set(RESOURCE_FILES.map((file) => file.toLowerCase()));
+      const DEFAULT_IMAGE_FALLBACK = "/static/samples/29_daily_routine.png";
+      const COVER_POOL = [
+        "balloons.png",
+        "bear.png",
+        "bunny.png",
+        "cat.png",
+        "elephant.png",
+        "fox.png",
+        "kite.png",
+        "lion.png",
+        "owl.png",
+        "train.png",
+        "ChatGPT Image May 22, 2026 at 06_46_09 PM.png",
+        "ChatGPT Image May 22, 2026 at 07_24_11 PM.png",
+      ];
 
       function createFallbackCoverDataUri(title, category, index) {
         const palette = [
@@ -593,7 +608,16 @@
       }
 
       function getResourceCoverUrl(pdfFile, title, category, index) {
-        return createFallbackCoverDataUri(title, category, index);
+        const slug = `${pdfFile} ${title} ${category}`.toLowerCase();
+
+        if (slug.includes("all about me")) return "/static/samples/thumb-all-about-me.svg";
+        if (slug.includes("community helpers")) return "/static/samples/thumb-community-helpers.svg";
+        if (slug.includes("seasons") || slug.includes("weather")) return "/static/samples/thumb-seasons-weather.svg";
+
+        const pooled = COVER_POOL[index % COVER_POOL.length];
+        if (pooled) return encodeURI(`/static/samples/${pooled}`);
+
+        return DEFAULT_IMAGE_FALLBACK;
       }
 
       function buildResourceCatalog() {
@@ -650,7 +674,7 @@
               <article class="sample-card">
                 <div class="sample-badge">Resource Pack</div>
                 <div class="sample-preview ${previewClass}">
-                  <img src="${coverUrl}" alt="${item.title} cover" loading="lazy" />
+                  <img src="${coverUrl}" alt="${item.title} cover" loading="lazy" onerror="this.onerror=null;this.src='${DEFAULT_IMAGE_FALLBACK}';" />
                   <div style="display:flex;gap:6px;flex-wrap:wrap;">
                     <div class="sample-preview__tag">${item.ageRange}</div>
                     <div class="sample-preview__tag">${item.category}</div>
