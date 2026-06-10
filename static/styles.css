@@ -457,6 +457,33 @@ h1 {
   font-weight: 800;
 }
 
+.sample-pages {
+  margin-top: 6px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 0 4px 2px;
+}
+
+.sample-pages__link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  border: 1px solid rgba(18, 34, 74, 0.22);
+  background: rgba(255, 255, 255, 0.84);
+  color: #1b356f;
+  font-size: 0.73rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  padding: 6px 10px;
+}
+
+.sample-pages__link:hover {
+  background: #ffffff;
+  border-color: rgba(18, 34, 74, 0.35);
+}
+
 .sample-preview__tag {
   width: fit-content;
   font-size: 0.7rem;

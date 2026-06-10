@@ -623,7 +623,14 @@
             const pdfFilename = item.pdfFile ? item.pdfFile.trim().toLowerCase() : "";
             const hasPdf = Boolean(pdfFilename && AVAILABLE_PDFS.has(pdfFilename));
             const downloadButton = hasPdf
-              ? `<a class="button button--secondary" href="${item.pdfUrl}" target="_blank" rel="noopener">Download PDF</a>`
+              ? `<a class="button button--secondary" href="${item.pdfUrl}" target="_blank" rel="noopener">Open Full PDF</a>`
+              : "";
+            const samplePageLinks = hasPdf
+              ? `<div class="sample-pages">
+                  <a class="sample-pages__link" href="${item.pdfUrl}#page=1" target="_blank" rel="noopener">Sample Page 1</a>
+                  <a class="sample-pages__link" href="${item.pdfUrl}#page=2" target="_blank" rel="noopener">Sample Page 2</a>
+                  <a class="sample-pages__link" href="${item.pdfUrl}#page=3" target="_blank" rel="noopener">Sample Page 3</a>
+                </div>`
               : "";
             const statusBadge = hasPdf
               ? `<div class="resource-coming-soon">Included in ${item.tierLabel}</div>`
@@ -647,6 +654,7 @@
                   <ul class="sample-preview__list">
                     ${previewPoints.map((point, pointIndex) => `<li><strong>Page ${pointIndex + 1}:</strong> ${point}</li>`).join("")}
                   </ul>
+                  ${samplePageLinks}
                 </div>
                 <h3>${item.title}</h3>
                 <p>${item.description}</p>
