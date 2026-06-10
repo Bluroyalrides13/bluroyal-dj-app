@@ -632,6 +632,17 @@
                   <a class="sample-pages__link" href="${item.pdfUrl}#page=3" target="_blank" rel="noopener">Sample Page 3</a>
                 </div>`
               : "";
+            const inlinePreview = hasPdf
+              ? `<details class="sample-inline-preview">
+                  <summary class="sample-inline-preview__toggle">Show sample preview</summary>
+                  <iframe
+                    class="sample-inline-preview__frame"
+                    src="${item.pdfUrl}#page=1"
+                    title="${item.title} sample preview"
+                    loading="lazy"
+                  ></iframe>
+                </details>`
+              : "";
             const statusBadge = hasPdf
               ? `<div class="resource-coming-soon">Included in ${item.tierLabel}</div>`
               : `<div class="resource-coming-soon">Included in ${item.tierLabel}</div>`;
@@ -654,6 +665,7 @@
                   <ul class="sample-preview__list">
                     ${previewPoints.map((point, pointIndex) => `<li><strong>Page ${pointIndex + 1}:</strong> ${point}</li>`).join("")}
                   </ul>
+                  ${inlinePreview}
                   ${samplePageLinks}
                 </div>
                 <h3>${item.title}</h3>
