@@ -2862,88 +2862,80 @@ POST-EVENT
     weeksEl.innerHTML = '';
     const sampleLabel = document.getElementById('lp-sample-label').value || 'Teacher Approved';
 
-    // PROFESSIONAL COMPREHENSIVE FORMAT
+    // PROFESSIONAL COMPREHENSIVE FORMAT - KID FRIENDLY & COLORFUL
     if (d.is_comprehensive) {
       weeksEl.innerHTML = `
-        <div class="dm-card" style="border-left: 4px solid #4da6ff; padding: 20px;">
-          <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
-            <span style="font-size: 28px;">${d.emoji || '📚'}</span>
+        <div class="dm-card" style="border: 3px solid #ff6b9d; padding: 20px; background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 50%, #ff7675 100%); border-radius: 15px;">
+          <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 20px; background: white; padding: 15px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+            <span style="font-size: 40px; filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.2));">${d.emoji || '📚'}</span>
             <div>
-              <strong style="font-size: 20px; display: block;">${d.theme}</strong>
-              <span style="color: #666; font-size: 13px;">${d.month}</span>
+              <strong style="font-size: 22px; background: linear-gradient(135deg, #ff6b9d, #4ecdc4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; display: block;">🎨 ${d.theme} 🎨</strong>
+              <span style="color: #555; font-weight: bold; font-size: 12px;">📅 ${d.month}</span>
             </div>
           </div>
 
-          <div class="dm-card" style="background: #f0f4ff; margin-bottom: 12px;">
-            <strong>Overview</strong>
-            <div style="margin: 8px 0; line-height: 1.6; font-size: 13px;">${d.overview}</div>
+          <div class="dm-card" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); margin-bottom: 14px; border: 2px dashed #ff6b9d; border-radius: 10px;">
+            <strong style="color: #d63031; font-size: 14px;">📖 Overview</strong>
+            <div style="margin: 8px 0; line-height: 1.6; color: #2d3436; font-weight: 500; font-size: 12px;">${d.overview}</div>
           </div>
 
-          <strong style="display: block; margin-bottom: 8px;">Learning Objectives</strong>
-          <div style="margin-bottom: 12px;">
-            ${Object.entries(d.learning_objectives || {}).map(([subject, goals]) => `
-              <div style="margin-bottom: 8px;">
-                <strong style="color: #2c5aa0; font-size: 13px;">${subject}</strong>
-                <ul style="margin: 4px 0 0 20px; padding: 0; font-size: 12px;">
-                  ${goals.map(g => `<li style="margin: 2px 0;">${g}</li>`).join('')}
-                </ul>
-              </div>
-            `).join('')}
-          </div>
-
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 12px 0;">
-            <div class="dm-card" style="background: #fff9e6;">
-              <strong style="color: #cc8800; font-size: 13px;">Key Vocabulary</strong>
-              <div style="margin: 6px 0; font-size: 12px; line-height: 1.4;">${d.key_vocabulary}</div>
-            </div>
-
-            <div class="dm-card" style="background: #e6f2ff;">
-              <strong style="color: #2c5aa0; font-size: 13px;">Materials Needed</strong>
-              <ul style="margin: 4px 0 0 16px; padding: 0; font-size: 12px;">
-                ${(d.materials_needed || []).slice(0, 4).map(m => `<li>${m}</li>`).join('')}
-                ${(d.materials_needed || []).length > 4 ? `<li><em>+ ${d.materials_needed.length - 4} more</em></li>` : ''}
-              </ul>
-            </div>
-          </div>
-
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 12px 0;">
-            <div class="dm-card" style="background: #ffe6e6;">
-              <strong style="color: #cc4444; font-size: 13px;">Songs & Plays</strong>
-              <ul style="margin: 4px 0 0 16px; padding: 0; font-size: 12px;">
-                ${(d.songs_and_fingerplays || []).map(s => `<li>${s}</li>`).join('')}
-              </ul>
-            </div>
-
-            <div class="dm-card" style="background: #e6e6ff;">
-              <strong style="color: #5555cc; font-size: 13px;">Read Alouds</strong>
-              <ul style="margin: 4px 0 0 16px; padding: 0; font-size: 12px;">
-                ${(d.read_alouds || []).map(b => `<li>${b}</li>`).join('')}
-              </ul>
-            </div>
-          </div>
-
-          <strong style="display: block; margin: 12px 0 8px 0; font-size: 13px;">Daily Activities</strong>
-          <div style="margin: 8px 0;">
-            ${(d.daily_activities || []).map(day => `
-              <div class="dm-card" style="background: linear-gradient(135deg, #4da6ff 0%, #66b3ff 100%); color: white; margin-bottom: 8px; padding: 10px;">
-                <strong style="font-size: 13px;">⭐ ${day.day} - ${day.title}</strong>
-                <div style="margin-top: 8px; font-size: 12px; line-height: 1.5;">
-                  ${Object.entries(day.activities || {}).map(([type, content]) => `
-                    <div><strong>${type}:</strong> ${content}</div>
-                  `).join('')}
+          <strong style="font-size: 14px; color: #d63031; display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">🎯 Learning Objectives</strong>
+          <div style="margin-bottom: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            ${Object.entries(d.learning_objectives || {}).map(([subject, goals], idx) => {
+              const colors = ['#ff7675', '#a29bfe', '#00b894', '#fdcb6e'];
+              const subjectEmojis = {'Literacy': '📚', 'Math': '🔢', 'Science': '🔬', 'Social-Emotional': '💖'};
+              const color = colors[idx % colors.length];
+              return `
+                <div style="background: white; padding: 10px; border-radius: 8px; border-left: 4px solid ${color}; box-shadow: 0 2px 6px rgba(0,0,0,0.08);">
+                  <strong style="color: ${color}; font-size: 12px;">${subjectEmojis[subject] || '✨'} ${subject}</strong>
+                  <ul style="margin: 6px 0 0 14px; padding: 0;">
+                    ${goals.slice(0, 2).map(g => `<li style="margin: 3px 0; font-size: 11px; color: #2d3436;">✓ ${g}</li>`).join('')}
+                  </ul>
                 </div>
-              </div>
-            `).join('')}
+              `;
+            }).join('')}
           </div>
 
-          <div class="dm-card" style="background: #fff0e6; border-left: 4px solid #ff9900; margin-top: 12px;">
-            <strong style="color: #ff9900; font-size: 13px;">💡 Teacher Tip</strong>
-            <div style="margin: 6px 0; font-size: 12px; line-height: 1.5;">${d.teacher_tip}</div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 12px 0;">
+            <div class="dm-card" style="background: linear-gradient(135deg, #fffacd 0%, #ffe66d 100%); border-radius: 8px; border: 2px solid #f1c40f; box-shadow: 0 3px 10px rgba(241, 196, 15, 0.2);">
+              <strong style="color: #e67e22; font-size: 12px;">🗣️ Vocabulary</strong>
+              <p style="margin: 6px 0; font-size: 11px; line-height: 1.4; color: #2d3436;">${d.key_vocabulary.substring(0, 80)}...</p>
+            </div>
+
+            <div class="dm-card" style="background: linear-gradient(135deg, #b4e7ff 0%, #81ecec 100%); border-radius: 8px; border: 2px solid #0984e3; box-shadow: 0 3px 10px rgba(9, 132, 227, 0.2);">
+              <strong style="color: #0984e3; font-size: 12px;">📦 Materials</strong>
+              <ul style="margin: 6px 0 0 14px; padding: 0; font-size: 11px;">
+                ${(d.materials_needed || []).slice(0, 2).map(m => `<li style="margin: 2px 0; color: #2d3436;">🎁 ${m}</li>`).join('')}
+                ${(d.materials_needed || []).length > 2 ? `<li style="color: #636e72;"><em>+ ${d.materials_needed.length - 2} more</em></li>` : ''}
+              </ul>
+            </div>
           </div>
 
-          <div class="dm-card" style="background: #fff0f0; border-left: 4px solid #ff6666; margin-top: 8px;">
-            <strong style="color: #ff6666; font-size: 13px;">👨‍👩‍👧 Family Note</strong>
-            <div style="margin: 6px 0; font-size: 12px; line-height: 1.5; font-style: italic;">${d.family_take_home_note}</div>
+          <strong style="font-size: 14px; color: #d63031; display: flex; align-items: center; gap: 8px; margin: 12px 0 8px 0;">⭐ Daily Activities</strong>
+          <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 12px;">
+            ${(d.daily_activities || []).map((day, idx) => {
+              const dayEmojis = ['🌅', '🌤️', '☀️', '🌞', '🌅'];
+              const dayColors = ['#fab1a0', '#ffbe76', '#74b9ff', '#a29bfe', '#ff7675'];
+              return `
+                <div class="dm-card" style="background: linear-gradient(135deg, ${dayColors[idx]} 0%, ${dayColors[(idx+1) % 5]} 100%); color: white; margin-bottom: 0; padding: 10px; border-radius: 8px; box-shadow: 0 3px 10px rgba(0,0,0,0.12); border: 2px solid white; text-align: center;">
+                  <div style="font-size: 20px; margin-bottom: 4px;">${dayEmojis[idx]}</div>
+                  <strong style="font-size: 12px; display: block;">${day.day}</strong>
+                  <div style="font-size: 10px; margin-top: 4px; background: rgba(255,255,255,0.9); color: #2d3436; padding: 4px; border-radius: 4px; font-weight: bold;">${day.title}</div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+
+          <div class="dm-card" style="background: linear-gradient(135deg, #ffcccc 0%, #ffb3b3 100%); border-radius: 8px; border: 2px solid #ff6b6b; box-shadow: 0 3px 10px rgba(255, 107, 107, 0.2); margin-bottom: 8px;">
+            <strong style="color: #c92a2a; font-size: 12px;">🎵 Songs</strong>
+            <ul style="margin: 4px 0 0 14px; padding: 0; font-size: 10px;">
+              ${(d.songs_and_fingerplays || []).slice(0, 2).map(s => `<li style="margin: 2px 0; color: #2d3436;">🎶 ${s}</li>`).join('')}
+            </ul>
+          </div>
+
+          <div class="dm-card" style="background: linear-gradient(135deg, #fff0e6 0%, #ffe5cc 100%); border-left: 4px solid #ff9800; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.08);">
+            <strong style="color: #e65100; font-size: 12px;">💡 Teacher Tip</strong>
+            <p style="margin: 6px 0; font-size: 11px; line-height: 1.5; color: #2d3436;">${d.teacher_tip.substring(0, 100)}...</p>
           </div>
         </div>
       `;
