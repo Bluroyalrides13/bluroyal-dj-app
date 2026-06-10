@@ -17,6 +17,12 @@ services:
         sync: false
       - key: DASHBOARD_PASSWORD
         sync: false
+      - key: ACADEMY_APP_USERNAME
+        sync: false
+      - key: ACADEMY_APP_PASSWORD
+        sync: false
+      - key: POST_PURCHASE_LOGIN_URL
+        value: https://app.bluroyaladventures.com/academy/login
       - key: ANTHROPIC_API_KEY
         sync: false
       - key: SQUARE_ACCESS_TOKEN
