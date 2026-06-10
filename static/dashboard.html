@@ -162,6 +162,15 @@
       transition: width 180ms ease;
       background: linear-gradient(90deg, var(--accent), var(--accent2));
     }
+    .q-item--missing input,
+    .q-item--missing textarea,
+    .q-item--missing select {
+      border-color: #ff6b7d !important;
+      box-shadow: 0 0 0 1px rgba(255, 107, 125, 0.28);
+    }
+    .q-item--missing .q-label-row label {
+      color: #ff9aaa;
+    }
 
     /* ── Buttons ── */
     .btn {
@@ -729,6 +738,34 @@
     if (fillEl) fillEl.style.width = `${percent}%`;
   }
 
+  function validateRequiredQuestions() {
+    const type = document.getElementById('q-type').value;
+    const requiredIds = REQUIRED_FIELDS_BY_EVENT[type] || [];
+    const missingLabels = [];
+
+    // Clear previous highlights.
+    document.querySelectorAll('.q-item--missing').forEach((el) => el.classList.remove('q-item--missing'));
+
+    requiredIds.forEach((id) => {
+      const field = document.getElementById(`qf-${id}`);
+      if (!field) return;
+
+      const value = (field.value || '').trim();
+      if (!value) {
+        const wrapper = field.closest('.q-item');
+        if (wrapper) wrapper.classList.add('q-item--missing');
+
+        const q = qQuestions.find((item) => item.id === id);
+        missingLabels.push(q ? q.label : id);
+      }
+    });
+
+    return {
+      isValid: missingLabels.length === 0,
+      missingLabels,
+    };
+  }
+
   async function loadQuestionnaire() {
     const type = document.getElementById('q-type').value;
     const r = await fetch(`/api/tools/questionnaire/${type}`);
@@ -763,6 +800,17 @@
 
   async function submitQuestionnaire() {
     const type = document.getElementById('q-type').value;
+
+    const validation = validateRequiredQuestions();
+    if (!validation.isValid) {
+      const message = `Please complete required fields:\n- ${validation.missingLabels.join('\n- ')}`;
+      alert(message);
+
+      const firstMissing = document.querySelector('.q-item--missing [id^="qf-"]');
+      if (firstMissing) firstMissing.focus();
+      return;
+    }
+
     const answers = {};
     document.querySelectorAll('[id^="qf-"]').forEach(el => {
       answers[el.id.replace('qf-', '')] = el.value;
