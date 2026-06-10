@@ -139,6 +139,221 @@ CLUB_MOMENTS = [
     ("Closing Set", 180),
 ]
 
+GRADUATION_PARTY_MOMENTS = [
+    ("Guest Arrival", 0),
+    ("Graduate Grand Entrance", 20),
+    ("Welcome / Introductions", 30),
+    ("Awards & Accomplishments", 45),
+    ("Slideshow / Video", 65),
+    ("Family Speeches", 85),
+    ("Open Dancing", 110),
+    ("Final Song", 180),
+]
+
+BABY_SHOWER_MOMENTS = [
+    ("Guest Arrival / Brunch", 0),
+    ("Welcome", 20),
+    ("Games", 40),
+    ("Family Recognitions", 70),
+    ("Gift Opening", 90),
+    ("Cake / Dessert", 120),
+    ("Closing Music", 150),
+]
+
+GENDER_REVEAL_MOMENTS = [
+    ("Guest Arrival", 0),
+    ("Family Welcome", 20),
+    ("Games / Activities", 35),
+    ("Photographer Setup", 55),
+    ("Reveal Countdown", 70),
+    ("Gender Reveal Moment", 75),
+    ("Family Announcements", 85),
+    ("Celebration Music", 95),
+]
+
+BRIDAL_SHOWER_MOMENTS = [
+    ("Guest Arrival", 0),
+    ("Bride Entrance", 20),
+    ("Welcome Toast", 30),
+    ("Games", 50),
+    ("Gift Opening", 80),
+    ("Toasts", 110),
+    ("Closing Celebration", 140),
+]
+
+RETIREMENT_PARTY_MOMENTS = [
+    ("Guest Arrival", 0),
+    ("Honoree Entrance", 20),
+    ("Recognition Ceremony", 35),
+    ("Awards Presentation", 55),
+    ("Video Tribute", 75),
+    ("Speeches", 95),
+    ("Open Celebration", 120),
+]
+
+PROM_MOMENTS = [
+    ("Student Arrival", 0),
+    ("Grand Entrance", 20),
+    ("Opening Dance", 35),
+    ("Dance Set 1", 50),
+    ("Prom Court Announcement", 90),
+    ("King & Queen Crowning", 105),
+    ("Dance Set 2", 120),
+    ("Closing Song", 200),
+]
+
+HOMECOMING_DANCE_MOMENTS = [
+    ("Student Arrival", 0),
+    ("Theme Welcome", 20),
+    ("Dance Set 1", 35),
+    ("School Announcements", 70),
+    ("Dance Contest", 90),
+    ("Dance Set 2", 110),
+    ("Closing Song", 180),
+]
+
+SCHOOL_DANCE_MOMENTS = [
+    ("Student Arrival", 0),
+    ("Welcome / Rules", 15),
+    ("Dance Set 1", 30),
+    ("Group Activity", 60),
+    ("Dance Set 2", 80),
+    ("Final Requests", 110),
+    ("Closing Song", 130),
+]
+
+FUNDRAISER_CHARITY_GALA_MOMENTS = [
+    ("Guest Check-in", 0),
+    ("Welcome / Mission Intro", 20),
+    ("Dinner Service", 40),
+    ("Sponsor Recognition", 70),
+    ("Silent Auction Close", 95),
+    ("Live Auction", 110),
+    ("Donation Announcements", 140),
+    ("Closing Remarks", 170),
+]
+
+COMMUNITY_FESTIVAL_MOMENTS = [
+    ("Opening Announcements", 0),
+    ("Stage Set 1", 20),
+    ("Vendor / Sponsor Mentions", 45),
+    ("Entertainment Set 2", 70),
+    ("Community Announcements", 95),
+    ("Entertainment Set 3", 120),
+    ("Closing Announcements", 160),
+]
+
+CAR_SHOW_MOMENTS = [
+    ("Registration Opens", 0),
+    ("Welcome / Rules", 20),
+    ("Vehicle Announcements", 40),
+    ("Judging Window", 70),
+    ("Sponsor Recognition", 95),
+    ("Trophy Presentation", 120),
+    ("Closing Music", 145),
+]
+
+GRAND_OPENING_MOMENTS = [
+    ("Guest Arrival", 0),
+    ("Welcome", 20),
+    ("VIP Introductions", 30),
+    ("Ribbon Cutting", 45),
+    ("Promotions & Giveaways", 60),
+    ("Networking", 80),
+    ("Closing Announcements", 120),
+]
+
+NETWORKING_EVENT_MOMENTS = [
+    ("Guest Check-in", 0),
+    ("Welcome", 15),
+    ("Company Introductions", 25),
+    ("Networking Block 1", 40),
+    ("Sponsor Mentions", 75),
+    ("Networking Block 2", 90),
+    ("Closing Remarks", 130),
+]
+
+TRADE_SHOW_EXPO_MOMENTS = [
+    ("Doors Open", 0),
+    ("Exhibitor Announcements", 20),
+    ("Presentation Block 1", 35),
+    ("Sponsor Mentions", 60),
+    ("Presentation Block 2", 85),
+    ("Crowd Engagement Segment", 110),
+    ("Closing Announcements", 150),
+]
+
+KARAOKE_NIGHT_MOMENTS = [
+    ("Check-in / Signup", 0),
+    ("Host Welcome", 15),
+    ("Karaoke Round 1", 25),
+    ("Karaoke Round 2", 65),
+    ("Contest Finals", 110),
+    ("Prize Awards", 135),
+    ("Closing Songs", 155),
+]
+
+MUSIC_BINGO_SINGO_MOMENTS = [
+    ("Welcome / Rules", 0),
+    ("Round 1", 20),
+    ("Round 2", 45),
+    ("Prize Break", 70),
+    ("Theme Round", 85),
+    ("Final Round", 110),
+    ("Winners Announcement", 130),
+]
+
+TRIVIA_NIGHT_MOMENTS = [
+    ("Welcome / Team Setup", 0),
+    ("Round 1", 20),
+    ("Round 2", 45),
+    ("Break", 70),
+    ("Round 3", 85),
+    ("Final Round", 110),
+    ("Score + Prizes", 135),
+]
+
+CHRISTMAS_PARTY_MOMENTS = [
+    ("Guest Arrival", 0),
+    ("Holiday Welcome", 20),
+    ("Gift Exchange", 45),
+    ("Santa Arrival (Optional)", 70),
+    ("Dinner / Refreshments", 90),
+    ("Holiday Dance Set", 120),
+    ("Closing Song", 170),
+]
+
+NEW_YEARS_EVE_PARTY_MOMENTS = [
+    ("Guest Arrival", 0),
+    ("Warm-up Set", 25),
+    ("Main Dance Set", 60),
+    ("Champagne Toast Prep", 115),
+    ("Countdown", 120),
+    ("Midnight Song", 121),
+    ("Balloon Drop (Optional)", 122),
+    ("After-Midnight Set", 130),
+]
+
+HALLOWEEN_PARTY_MOMENTS = [
+    ("Guest Arrival", 0),
+    ("Costume Showcase", 20),
+    ("Dance Set 1", 35),
+    ("Costume Contest", 70),
+    ("Prize Announcements", 90),
+    ("Dance Set 2", 110),
+    ("Closing Song", 150),
+]
+
+FOURTH_OF_JULY_EVENT_MOMENTS = [
+    ("Guest Arrival", 0),
+    ("Family Activities", 25),
+    ("Patriotic Music Set", 50),
+    ("Community Announcements", 75),
+    ("Fireworks Prep", 105),
+    ("Fireworks", 120),
+    ("Closing Song", 130),
+]
+
 GENERAL_PARTY_MOMENTS = [
     ("Guest Arrival", 0),
     ("Grand Intro", 15),
@@ -164,6 +379,27 @@ TIMELINE_BY_EVENT = {
     "anniversary": ANNIVERSARY_MOMENTS,
     "anniversay": ANNIVERSARY_MOMENTS,
     "club": CLUB_MOMENTS,
+    "graduation_party": GRADUATION_PARTY_MOMENTS,
+    "baby_shower": BABY_SHOWER_MOMENTS,
+    "gender_reveal": GENDER_REVEAL_MOMENTS,
+    "bridal_shower": BRIDAL_SHOWER_MOMENTS,
+    "retirement_party": RETIREMENT_PARTY_MOMENTS,
+    "prom": PROM_MOMENTS,
+    "homecoming_dance": HOMECOMING_DANCE_MOMENTS,
+    "school_dance": SCHOOL_DANCE_MOMENTS,
+    "fundraiser_charity_gala": FUNDRAISER_CHARITY_GALA_MOMENTS,
+    "community_festival": COMMUNITY_FESTIVAL_MOMENTS,
+    "car_show": CAR_SHOW_MOMENTS,
+    "grand_opening": GRAND_OPENING_MOMENTS,
+    "networking_event": NETWORKING_EVENT_MOMENTS,
+    "trade_show_expo": TRADE_SHOW_EXPO_MOMENTS,
+    "karaoke_night": KARAOKE_NIGHT_MOMENTS,
+    "music_bingo_singo": MUSIC_BINGO_SINGO_MOMENTS,
+    "trivia_night": TRIVIA_NIGHT_MOMENTS,
+    "christmas_party": CHRISTMAS_PARTY_MOMENTS,
+    "new_years_eve_party": NEW_YEARS_EVE_PARTY_MOMENTS,
+    "halloween_party": HALLOWEEN_PARTY_MOMENTS,
+    "fourth_of_july_event": FOURTH_OF_JULY_EVENT_MOMENTS,
 }
 
 
@@ -439,6 +675,210 @@ CLUB_QUESTIONS = [
     {"id": "special_requests",  "label": "Anything else?",                                  "type": "textarea"},
 ]
 
+GRADUATION_PARTY_QUESTIONS = [
+    {"id": "graduate_name", "label": "Graduate full name", "type": "text"},
+    {"id": "school_name", "label": "School name", "type": "text"},
+    {"id": "future_plans", "label": "Graduate's future plans", "type": "textarea"},
+    {"id": "event_date", "label": "Event date", "type": "date"},
+    {"id": "venue_name", "label": "Venue name & address", "type": "text"},
+    {"id": "awards", "label": "Awards/accomplishments to announce", "type": "textarea"},
+    {"id": "special_intros", "label": "Special introductions", "type": "textarea"},
+    {"id": "slideshow", "label": "Slide show planned? Timing details", "type": "textarea"},
+    {"id": "favorite_music", "label": "Graduate's favorite music", "type": "textarea"},
+    {"id": "must_play", "label": "Must-play songs", "type": "textarea"},
+    {"id": "do_not_play", "label": "Do-NOT-play songs", "type": "textarea"},
+]
+
+BABY_SHOWER_QUESTIONS = [
+    {"id": "mom_name", "label": "Mom's name", "type": "text"},
+    {"id": "theme", "label": "Shower theme", "type": "text"},
+    {"id": "event_date", "label": "Event date", "type": "date"},
+    {"id": "venue_name", "label": "Venue name & address", "type": "text"},
+    {"id": "games_planned", "label": "Games planned", "type": "textarea"},
+    {"id": "gift_opening", "label": "Gift opening time", "type": "time"},
+    {"id": "family_recognitions", "label": "Family recognitions", "type": "textarea"},
+    {"id": "music_preferences", "label": "Background music preferences", "type": "textarea"},
+]
+
+GENDER_REVEAL_QUESTIONS = [
+    {"id": "event_date", "label": "Event date", "type": "date"},
+    {"id": "venue_name", "label": "Venue name & address", "type": "text"},
+    {"id": "reveal_method", "label": "Reveal method", "type": "textarea"},
+    {"id": "countdown_timing", "label": "Countdown timing", "type": "text"},
+    {"id": "photographer_coordination", "label": "Photographer coordination", "type": "textarea"},
+    {"id": "special_music", "label": "Special music for reveal", "type": "textarea"},
+    {"id": "family_announcements", "label": "Family announcements", "type": "textarea"},
+]
+
+BRIDAL_SHOWER_QUESTIONS = [
+    {"id": "bride_name", "label": "Bride name", "type": "text"},
+    {"id": "event_date", "label": "Event date", "type": "date"},
+    {"id": "venue_name", "label": "Venue name & address", "type": "text"},
+    {"id": "favorite_music", "label": "Bride's favorite music", "type": "textarea"},
+    {"id": "games", "label": "Games planned", "type": "textarea"},
+    {"id": "gift_opening_schedule", "label": "Gift opening schedule", "type": "textarea"},
+    {"id": "special_guests", "label": "Special guests to recognize", "type": "textarea"},
+    {"id": "toasts", "label": "Toast schedule", "type": "textarea"},
+]
+
+RETIREMENT_PARTY_QUESTIONS = [
+    {"id": "honoree_name", "label": "Retiree full name", "type": "text"},
+    {"id": "years_of_service", "label": "Years of service", "type": "text"},
+    {"id": "event_date", "label": "Event date", "type": "date"},
+    {"id": "venue_name", "label": "Venue name & address", "type": "text"},
+    {"id": "favorite_music_era", "label": "Favorite music era", "type": "text"},
+    {"id": "awards", "label": "Awards to present", "type": "textarea"},
+    {"id": "speeches", "label": "Speech order", "type": "textarea"},
+    {"id": "recognition_ceremony", "label": "Recognition ceremony details", "type": "textarea"},
+    {"id": "video_tribute", "label": "Video tribute timing", "type": "textarea"},
+]
+
+PROM_QUESTIONS = [
+    {"id": "school_name", "label": "School name", "type": "text"},
+    {"id": "theme", "label": "Prom theme", "type": "text"},
+    {"id": "event_date", "label": "Event date", "type": "date"},
+    {"id": "song_requests", "label": "Song requests", "type": "textarea"},
+    {"id": "prom_court", "label": "Prom King & Queen timing", "type": "textarea"},
+    {"id": "school_rules", "label": "School rules", "type": "textarea"},
+    {"id": "clean_music", "label": "Clean music requirements", "type": "textarea"},
+]
+
+HOMECOMING_DANCE_QUESTIONS = [
+    {"id": "school_name", "label": "School name", "type": "text"},
+    {"id": "theme", "label": "Theme", "type": "text"},
+    {"id": "event_date", "label": "Event date", "type": "date"},
+    {"id": "student_age_group", "label": "Student age group", "type": "text"},
+    {"id": "announcement_requirements", "label": "Announcement requirements", "type": "textarea"},
+    {"id": "dance_contests", "label": "Dance contests", "type": "textarea"},
+    {"id": "school_restrictions", "label": "School restrictions", "type": "textarea"},
+]
+
+SCHOOL_DANCE_QUESTIONS = [
+    {"id": "school_name", "label": "School name", "type": "text"},
+    {"id": "grade_levels", "label": "Grade levels", "type": "text"},
+    {"id": "event_date", "label": "Event date", "type": "date"},
+    {"id": "clean_edit_requirements", "label": "Clean edit requirements", "type": "textarea"},
+    {"id": "school_rules", "label": "School rules", "type": "textarea"},
+    {"id": "chaperone_contact", "label": "Chaperone contact", "type": "text"},
+    {"id": "trending_music", "label": "Current trending music", "type": "textarea"},
+]
+
+FUNDRAISER_CHARITY_GALA_QUESTIONS = [
+    {"id": "organization", "label": "Organization", "type": "text"},
+    {"id": "mission", "label": "Mission", "type": "textarea"},
+    {"id": "event_date", "label": "Event date", "type": "date"},
+    {"id": "venue_name", "label": "Venue name & address", "type": "text"},
+    {"id": "silent_auction", "label": "Silent auction details", "type": "textarea"},
+    {"id": "live_auction", "label": "Live auction details", "type": "textarea"},
+    {"id": "sponsors", "label": "Sponsors", "type": "textarea"},
+    {"id": "donation_announcements", "label": "Donation announcements", "type": "textarea"},
+]
+
+COMMUNITY_FESTIVAL_QUESTIONS = [
+    {"id": "event_name", "label": "Festival name", "type": "text"},
+    {"id": "event_date", "label": "Event date", "type": "date"},
+    {"id": "audience_demographics", "label": "Audience demographics", "type": "textarea"},
+    {"id": "stage_schedule", "label": "Stage schedule", "type": "textarea"},
+    {"id": "sponsors", "label": "Sponsors", "type": "textarea"},
+    {"id": "vendors", "label": "Vendors", "type": "textarea"},
+    {"id": "announcements", "label": "Announcements", "type": "textarea"},
+    {"id": "entertainment_schedule", "label": "Entertainment schedule", "type": "textarea"},
+]
+
+CAR_SHOW_QUESTIONS = [
+    {"id": "event_date", "label": "Event date", "type": "date"},
+    {"id": "venue_name", "label": "Venue name & address", "type": "text"},
+    {"id": "registration_time", "label": "Registration time", "type": "time"},
+    {"id": "judging_categories", "label": "Judging categories", "type": "textarea"},
+    {"id": "sponsor_recognition", "label": "Sponsor recognition", "type": "textarea"},
+    {"id": "trophy_presentation", "label": "Trophy presentation timing", "type": "textarea"},
+    {"id": "vehicle_announcements", "label": "Vehicle announcements", "type": "textarea"},
+]
+
+GRAND_OPENING_QUESTIONS = [
+    {"id": "business_name", "label": "Business name", "type": "text"},
+    {"id": "event_date", "label": "Event date", "type": "date"},
+    {"id": "venue_name", "label": "Venue name & address", "type": "text"},
+    {"id": "ribbon_cutting_time", "label": "Ribbon cutting time", "type": "time"},
+    {"id": "vip_guests", "label": "VIP guests", "type": "textarea"},
+    {"id": "sponsor_recognition", "label": "Sponsor recognition", "type": "textarea"},
+    {"id": "promotions", "label": "Promotions", "type": "textarea"},
+    {"id": "giveaways", "label": "Giveaways", "type": "textarea"},
+]
+
+NETWORKING_EVENT_QUESTIONS = [
+    {"id": "event_name", "label": "Event name", "type": "text"},
+    {"id": "event_date", "label": "Event date", "type": "date"},
+    {"id": "background_music_only", "label": "Background music only?", "type": "text"},
+    {"id": "company_introductions", "label": "Company introductions", "type": "textarea"},
+    {"id": "sponsor_recognition", "label": "Sponsor recognition", "type": "textarea"},
+    {"id": "announcements", "label": "Announcements", "type": "textarea"},
+]
+
+TRADE_SHOW_EXPO_QUESTIONS = [
+    {"id": "expo_name", "label": "Trade show / expo name", "type": "text"},
+    {"id": "event_date", "label": "Event date", "type": "date"},
+    {"id": "booth_announcements", "label": "Booth announcements", "type": "textarea"},
+    {"id": "presentation_schedule", "label": "Presentation schedule", "type": "textarea"},
+    {"id": "sponsor_mentions", "label": "Sponsor mentions", "type": "textarea"},
+    {"id": "crowd_engagement", "label": "Crowd engagement plan", "type": "textarea"},
+]
+
+KARAOKE_NIGHT_QUESTIONS = [
+    {"id": "public_or_private", "label": "Public or private event?", "type": "text"},
+    {"id": "age_group", "label": "Age group", "type": "text"},
+    {"id": "event_date", "label": "Event date", "type": "date"},
+    {"id": "contest_prizes", "label": "Contest prizes", "type": "textarea"},
+    {"id": "rotation_preferences", "label": "Rotation preferences", "type": "textarea"},
+    {"id": "clean_music", "label": "Clean music required?", "type": "text"},
+]
+
+MUSIC_BINGO_SINGO_QUESTIONS = [
+    {"id": "event_date", "label": "Event date", "type": "date"},
+    {"id": "number_of_rounds", "label": "Number of rounds", "type": "number"},
+    {"id": "prize_structure", "label": "Prize structure", "type": "textarea"},
+    {"id": "theme_rounds", "label": "Theme rounds", "type": "textarea"},
+    {"id": "audience_demographics", "label": "Audience demographics", "type": "textarea"},
+]
+
+TRIVIA_NIGHT_QUESTIONS = [
+    {"id": "event_date", "label": "Event date", "type": "date"},
+    {"id": "categories", "label": "Categories", "type": "textarea"},
+    {"id": "number_of_rounds", "label": "Number of rounds", "type": "number"},
+    {"id": "prizes", "label": "Prizes", "type": "textarea"},
+    {"id": "team_or_individual", "label": "Team or individual play", "type": "text"},
+]
+
+CHRISTMAS_PARTY_QUESTIONS = [
+    {"id": "event_type", "label": "Family or corporate event?", "type": "text"},
+    {"id": "event_date", "label": "Event date", "type": "date"},
+    {"id": "gift_exchange", "label": "Gift exchange details", "type": "textarea"},
+    {"id": "santa_arrival", "label": "Santa arrival planned?", "type": "text"},
+    {"id": "holiday_music_preferences", "label": "Holiday music preferences", "type": "textarea"},
+]
+
+NEW_YEARS_EVE_PARTY_QUESTIONS = [
+    {"id": "event_date", "label": "Event date", "type": "date"},
+    {"id": "countdown_timing", "label": "Countdown timing", "type": "text"},
+    {"id": "champagne_toast", "label": "Champagne toast details", "type": "textarea"},
+    {"id": "midnight_song", "label": "Midnight song", "type": "text"},
+    {"id": "balloon_drop", "label": "Balloon drop planned?", "type": "text"},
+]
+
+HALLOWEEN_PARTY_QUESTIONS = [
+    {"id": "event_date", "label": "Event date", "type": "date"},
+    {"id": "costume_contest", "label": "Costume contest planned?", "type": "text"},
+    {"id": "contest_categories", "label": "Contest categories", "type": "textarea"},
+    {"id": "prize_announcements", "label": "Prize announcements", "type": "textarea"},
+]
+
+FOURTH_OF_JULY_EVENT_QUESTIONS = [
+    {"id": "event_date", "label": "Event date", "type": "date"},
+    {"id": "fireworks_timing", "label": "Fireworks timing", "type": "text"},
+    {"id": "patriotic_music", "label": "Patriotic music preferences", "type": "textarea"},
+    {"id": "family_activities", "label": "Family activities", "type": "textarea"},
+]
+
 QUESTIONNAIRE_BY_EVENT = {
     "wedding": WEDDING_QUESTIONS,
     "same_sex_wedding_lgbtq": SAME_SEX_WEDDING_QUESTIONS,
@@ -452,6 +892,27 @@ QUESTIONNAIRE_BY_EVENT = {
     "anniversary": ANNIVERSARY_QUESTIONS,
     "anniversay": ANNIVERSARY_QUESTIONS,
     "club": CLUB_QUESTIONS,
+    "graduation_party": GRADUATION_PARTY_QUESTIONS,
+    "baby_shower": BABY_SHOWER_QUESTIONS,
+    "gender_reveal": GENDER_REVEAL_QUESTIONS,
+    "bridal_shower": BRIDAL_SHOWER_QUESTIONS,
+    "retirement_party": RETIREMENT_PARTY_QUESTIONS,
+    "prom": PROM_QUESTIONS,
+    "homecoming_dance": HOMECOMING_DANCE_QUESTIONS,
+    "school_dance": SCHOOL_DANCE_QUESTIONS,
+    "fundraiser_charity_gala": FUNDRAISER_CHARITY_GALA_QUESTIONS,
+    "community_festival": COMMUNITY_FESTIVAL_QUESTIONS,
+    "car_show": CAR_SHOW_QUESTIONS,
+    "grand_opening": GRAND_OPENING_QUESTIONS,
+    "networking_event": NETWORKING_EVENT_QUESTIONS,
+    "trade_show_expo": TRADE_SHOW_EXPO_QUESTIONS,
+    "karaoke_night": KARAOKE_NIGHT_QUESTIONS,
+    "music_bingo_singo": MUSIC_BINGO_SINGO_QUESTIONS,
+    "trivia_night": TRIVIA_NIGHT_QUESTIONS,
+    "christmas_party": CHRISTMAS_PARTY_QUESTIONS,
+    "new_years_eve_party": NEW_YEARS_EVE_PARTY_QUESTIONS,
+    "halloween_party": HALLOWEEN_PARTY_QUESTIONS,
+    "fourth_of_july_event": FOURTH_OF_JULY_EVENT_QUESTIONS,
 }
 
 
