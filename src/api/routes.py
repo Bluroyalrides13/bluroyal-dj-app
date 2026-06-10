@@ -30,6 +30,7 @@ from src.dj_tools.engine import (
     save_dj_profile,
     get_lead_crm_template,
     save_lead_crm_record,
+        get_admin_stats,
 )
 from config.settings import Settings
 
@@ -559,6 +560,19 @@ async def create_payment(
 
 
 # ===================== Health/Status Endpoints =====================
+
+@router.get("/status")
+@router.get("/api/admin/stats")
+async def admin_dashboard_stats(request: Request):
+    """Aggregated stats for the admin dashboard."""
+    _require_dashboard_auth(request)
+    try:
+        stats = get_admin_stats()
+        return ApiResponse(success=True, message="Admin stats loaded", data=stats)
+    except Exception as e:
+        logger.error(f"Error loading admin stats: {e}")
+        raise HTTPException(status_code=500, detail="Error loading admin stats")
+
 
 @router.get("/status")
 async def api_status():

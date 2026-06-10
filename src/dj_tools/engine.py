@@ -15,6 +15,42 @@ from __future__ import annotations
 import uuid
 from datetime import datetime, timedelta
 from typing import Dict, List, Optional
+import json
+import threading
+from pathlib import Path
+
+
+# ─────────────────────────────────────────────
+# 1. EVENT TIMELINE BUILDER
+# ─────────────────────────────────────────────
+# DATA PERSISTENCE HELPERS
+# ─────────────────────────────────────────────
+
+DATA_DIR = Path(__file__).resolve().parent.parent.parent / "data"
+LEADS_FILE = DATA_DIR / "crm_leads.json"
+BRIEFS_FILE = DATA_DIR / "questionnaire_briefs.json"
+QUOTES_FILE = DATA_DIR / "pricing_quotes.json"
+
+_json_lock = threading.Lock()
+
+
+def _load_json(filepath: Path) -> List[Dict]:
+    if not filepath.exists():
+        return []
+    try:
+        with open(filepath, "r") as f:
+            return json.load(f)
+    except (json.JSONDecodeError, OSError):
+        return []
+
+
+def _append_record(filepath: Path, record: Dict) -> None:
+    DATA_DIR.mkdir(parents=True, exist_ok=True)
+    with _json_lock:
+        records = _load_json(filepath)
+        records.append(record)
+        with open(filepath, "w") as f:
+            json.dump(records, f, indent=2)
 
 
 # ─────────────────────────────────────────────
@@ -957,13 +993,15 @@ def get_questionnaire_template(event_type: str) -> Dict:
 
 def save_questionnaire_answers(portal_id: str, event_type: str, answers: Dict) -> Dict:
     """Package the answers into a structured event brief."""
-    return {
+    result = {
         "portal_id": portal_id,
         "event_type": event_type,
         "answers": answers,
         "brief_id": str(uuid.uuid4()),
         "submitted_at": datetime.utcnow().isoformat(),
     }
+    _append_record(BRIEFS_FILE, result)
+    return result
 
 
 # ─────────────────────────────────────────────
@@ -1071,7 +1109,7 @@ def calculate_booking_price(
     discount_amount = subtotal * (discount_percent / 100.0)
     total = subtotal - discount_amount
 
-    return {
+    result = {
         "event_type": event_type,
         "hours": hours,
         "base_rate": base,
@@ -1087,7 +1125,10 @@ def calculate_booking_price(
         "currency": "USD",
         "quote_id": str(uuid.uuid4()),
         "valid_until": (datetime.utcnow() + timedelta(days=7)).isoformat(),
+        "quoted_at": datetime.utcnow().isoformat(),
     }
+    _append_record(QUOTES_FILE, result)
+    return result
 
 
 # ─────────────────────────────────────────────
@@ -1499,9 +1540,86 @@ def get_lead_crm_template() -> Dict:
 
 def save_lead_crm_record(lead_id: str, lead: Dict) -> Dict:
     """Package lead details into a structured CRM record."""
-    return {
+    result = {
         "lead_id": lead_id,
         "lead": lead,
         "record_id": str(uuid.uuid4()),
         "saved_at": datetime.utcnow().isoformat(),
+    }
+    _append_record(LEADS_FILE, result)
+    return result
+
+
+# ─────────────────────────────────────────────
+# 9. ADMIN DASHBOARD STATS
+# ─────────────────────────────────────────────
+
+def get_admin_stats() -> Dict:
+    """Aggregate data from all saved records for the admin dashboard."""
+    leads = _load_json(LEADS_FILE)
+    quotes = _load_json(QUOTES_FILE)
+    now = datetime.utcnow()
+    current_month = now.strftime("%Y-%m")
+
+    # Monthly revenue — sum quotes generated this calendar month
+    monthly_revenue = sum(
+        q.get("total", 0) for q in quotes
+        if q.get("quoted_at", "").startswith(current_month)
+    )
+
+    # Aggregate lead data
+    upcoming_events: List[Dict] = []
+    new_leads_count = 0
+    contracts_outstanding = 0
+    payments_due = 0
+    event_type_counts: Dict[str, int] = {}
+    referral_counts: Dict[str, int] = {}
+
+    for record in leads:
+        data = record.get("lead", {})
+        status = data.get("lead_status", "").strip()
+        event_date_str = data.get("event_date", "")
+        event_type = data.get("event_type", "").strip() or "Unknown"
+        referral = data.get("referral_source", "").strip() or "Unknown"
+
+        if status == "New Lead":
+            new_leads_count += 1
+        if status == "Proposal Sent":
+            contracts_outstanding += 1
+        if status == "Booked":
+            payments_due += 1
+
+        # Upcoming booked events with a future date
+        if status == "Booked" and event_date_str:
+            try:
+                evt_date = datetime.strptime(event_date_str, "%Y-%m-%d")
+                if evt_date >= now:
+                    upcoming_events.append({
+                        "name": data.get("name", "—"),
+                        "event_type": event_type,
+                        "event_date": event_date_str,
+                        "venue": data.get("venue", "—"),
+                    })
+            except ValueError:
+                pass
+
+        # Tally event types and referral sources for all leads
+        event_type_counts[event_type] = event_type_counts.get(event_type, 0) + 1
+        referral_counts[referral] = referral_counts.get(referral, 0) + 1
+
+    upcoming_events.sort(key=lambda x: x["event_date"])
+
+    top_referrals = sorted(referral_counts.items(), key=lambda x: x[1], reverse=True)[:5]
+
+    return {
+        "monthly_revenue": round(monthly_revenue, 2),
+        "upcoming_events_count": len(upcoming_events),
+        "upcoming_events": upcoming_events[:5],
+        "new_leads": new_leads_count,
+        "contracts_outstanding": contracts_outstanding,
+        "payments_due": payments_due,
+        "total_quotes": len(quotes),
+        "total_leads": len(leads),
+        "event_types_booked": event_type_counts,
+        "top_referral_sources": [{"source": s, "count": c} for s, c in top_referrals],
     }
