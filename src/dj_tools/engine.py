@@ -2354,43 +2354,155 @@ def generate_lesson_plan(
         "is_comprehensive": False,
         "instagram_promo_hooks": [
             _bilingual(
-                f"REEL HOOK: Parents keep asking how we plan {normalized_theme.lower()} without late-night prep. This {weeks}-week kit is how.",
-                f"GANCHO REEL: Las familias preguntan como planificamos {normalized_theme.lower()} sin desvelarnos. Este kit de {weeks} semanas es la clave.",
+                f"REEL 1: Parents ask how we teach {normalized_theme.lower()} without burnout. We use a done-for-you {weeks}-week structure.",
+                f"REEL 1: Las familias preguntan como ensenamos {normalized_theme.lower()} sin agotamiento. Usamos una estructura lista para {weeks} semanas.",
                 normalized_language,
             ),
             _bilingual(
-                f"REEL CTA: Save this and comment LESSONS to get the exact {normalized_theme.lower()} plan we use for premium outcomes.",
-                f"CTA REEL: Guarda esto y comenta LECCIONES para recibir el plan exacto de {normalized_theme.lower()} que usamos para resultados premium.",
+                f"REEL 2: Stop planning from scratch. This {normalized_theme.lower()} system gives you weekly lessons + printables in one flow.",
+                f"REEL 2: Deja de planificar desde cero. Este sistema de {normalized_theme.lower()} te da lecciones semanales + printables en un solo flujo.",
                 normalized_language,
             ),
             _bilingual(
-                f"STORY FRAME 1: We turned {normalized_theme.lower()} planning into a done-for-you system for busy educators.",
-                f"HISTORIA 1: Convertimos la planificacion de {normalized_theme.lower()} en un sistema listo para usar para educadores ocupados.",
+                f"REEL 3: Premium classrooms are built on repeatable systems. Here is our {normalized_theme.lower()} lesson engine.",
+                f"REEL 3: Las aulas premium se construyen con sistemas repetibles. Este es nuestro motor de lecciones de {normalized_theme.lower()}.",
                 normalized_language,
             ),
             _bilingual(
-                "STORY FRAME 2: Poll - Want weekly lesson plans + printable activities ready to teach? YES / SEND IT",
-                "HISTORIA 2: Encuesta - Quieres planes semanales + actividades imprimibles listas para usar? SI / ENVIAMELO",
+                f"REEL 4: If you teach preschool or homeschool, this {normalized_theme.lower()} pack saves hours every week.",
+                f"REEL 4: Si ensenas preescolar o homeschool, este paquete de {normalized_theme.lower()} te ahorra horas cada semana.",
                 normalized_language,
             ),
             _bilingual(
-                "STORY FRAME 3: DM us LESSONS and we will recommend your best-fit tier: Basic, Intermediate, or Full.",
-                "HISTORIA 3: Envia LECCIONES por DM y te recomendaremos tu nivel ideal: Basico, Intermedio o Completo.",
+                "REEL 5: We turned teacher overwhelm into a clear weekly plan parents love.",
+                "REEL 5: Convertimos el estres docente en un plan semanal claro que las familias aman.",
                 normalized_language,
             ),
             _bilingual(
-                f"DM OPENER: Thanks for reaching out! Are you teaching preschool or homeschool, and what is your monthly resource budget for {normalized_theme.lower()} planning?",
-                f"APERTURA DM: Gracias por escribir! Ensenas preescolar o homeschool, y cual es tu presupuesto mensual para recursos de {normalized_theme.lower()}?",
+                "REEL 6: Basic tier starts at $497 for fast implementation with ready-to-use assets.",
+                "REEL 6: El nivel Basico inicia en $497 para una implementacion rapida con recursos listos.",
                 normalized_language,
             ),
             _bilingual(
-                "DM QUALIFIER: Perfect. Based on your goals, I can send Basic ($497), Intermediate ($1,500), or Full ($3,500). Which level of support do you want?",
-                "DM CALIFICACION: Perfecto. Segun tus metas, puedo enviarte Basico ($497), Intermedio ($1,500) o Completo ($3,500). Que nivel de apoyo quieres?",
+                "REEL 7: Intermediate tier at $1,500 is for educators ready to scale quality and consistency.",
+                "REEL 7: El nivel Intermedio de $1,500 es para educadores listos para escalar calidad y consistencia.",
                 normalized_language,
             ),
             _bilingual(
-                "DM CLOSE: I can send checkout now so you can start immediately with lesson plans and printables. Reply START and I will send your link.",
-                "CIERRE DM: Puedo enviarte el checkout ahora para que inicies hoy con planes y printables. Responde EMPEZAR y te envio el enlace.",
+                "REEL 8: Full implementation at $3,500 is for premium positioning and complete rollout.",
+                "REEL 8: La implementacion completa de $3,500 es para posicionamiento premium y despliegue total.",
+                normalized_language,
+            ),
+            _bilingual(
+                "REEL 9 CTA: Comment LESSONS and I will send the exact tier that matches your goals.",
+                "REEL 9 CTA: Comenta LECCIONES y te envio el nivel exacto que coincide con tus metas.",
+                normalized_language,
+            ),
+            _bilingual(
+                "REEL 10 CTA: Save this, share with a teacher friend, then DM LESSONS for pricing + checkout links.",
+                "REEL 10 CTA: Guarda esto, compartelo con una maestra amiga y luego envia LECCIONES por DM para precios + checkout.",
+                normalized_language,
+            ),
+
+            _bilingual(
+                "STORY 1: Behind the scenes - this is how we map weekly learning in minutes, not hours.",
+                "HISTORIA 1: Detras de camara - asi mapeamos aprendizaje semanal en minutos, no horas.",
+                normalized_language,
+            ),
+            _bilingual(
+                f"STORY 2: Theme spotlight: {normalized_theme.title()} with classroom-ready activities.",
+                f"HISTORIA 2: Tema destacado: {normalized_theme.title()} con actividades listas para el aula.",
+                normalized_language,
+            ),
+            _bilingual(
+                "STORY 3 POLL: Do you want done-for-you weekly plans? YES / SEND IT",
+                "HISTORIA 3 ENCUESTA: Quieres planes semanales listos? SI / ENVIAMELO",
+                normalized_language,
+            ),
+            _bilingual(
+                "STORY 4 POLL: Biggest challenge? Planning time / Parent engagement",
+                "HISTORIA 4 ENCUESTA: Tu mayor reto? Tiempo de planificacion / Participacion de familias",
+                normalized_language,
+            ),
+            _bilingual(
+                "STORY 5: We have 3 tiers: Basic $497, Intermediate $1,500, Full $3,500.",
+                "HISTORIA 5: Tenemos 3 niveles: Basico $497, Intermedio $1,500, Completo $3,500.",
+                normalized_language,
+            ),
+            _bilingual(
+                "STORY 6: Basic is ideal when you need quick wins and ready resources now.",
+                "HISTORIA 6: Basico es ideal cuando necesitas avances rapidos y recursos listos ahora.",
+                normalized_language,
+            ),
+            _bilingual(
+                "STORY 7: Intermediate is for stronger systems and more complete implementation.",
+                "HISTORIA 7: Intermedio es para sistemas mas solidos e implementacion mas completa.",
+                normalized_language,
+            ),
+            _bilingual(
+                "STORY 8: Full is for founders building a premium education offer end-to-end.",
+                "HISTORIA 8: Completo es para fundadores que construyen una oferta educativa premium de inicio a fin.",
+                normalized_language,
+            ),
+            _bilingual(
+                "STORY 9 CTA: Reply LESSONS and I will send your best-fit recommendation.",
+                "HISTORIA 9 CTA: Responde LECCIONES y te envio la recomendacion ideal para ti.",
+                normalized_language,
+            ),
+            _bilingual(
+                "STORY 10 CTA: Want checkout now? DM START and I will send your private link.",
+                "HISTORIA 10 CTA: Quieres checkout ahora? Envia EMPEZAR por DM y te envio tu enlace privado.",
+                normalized_language,
+            ),
+
+            _bilingual(
+                "DM 1 OPENER: Thanks for reaching out. Are you serving preschool classrooms, homeschool families, or both?",
+                "DM 1 APERTURA: Gracias por escribir. Atiendes aulas de preescolar, familias homeschool o ambos?",
+                normalized_language,
+            ),
+            _bilingual(
+                "DM 2 QUALIFIER: What is your main goal right now: save planning time, improve outcomes, or sell a premium offer?",
+                "DM 2 CALIFICACION: Cual es tu meta principal ahora: ahorrar tiempo, mejorar resultados o vender una oferta premium?",
+                normalized_language,
+            ),
+            _bilingual(
+                "DM 3 QUALIFIER: What is your monthly budget for curriculum and printable resources?",
+                "DM 3 CALIFICACION: Cual es tu presupuesto mensual para curriculum y recursos imprimibles?",
+                normalized_language,
+            ),
+            _bilingual(
+                "DM 4 ROUTING: Great. Basic ($497) fits quick-start needs with ready-to-teach assets.",
+                "DM 4 RUTA: Excelente. Basico ($497) encaja para iniciar rapido con recursos listos para ensenar.",
+                normalized_language,
+            ),
+            _bilingual(
+                "DM 5 ROUTING: Intermediate ($1,500) is best when you want stronger structure and expansion.",
+                "DM 5 RUTA: Intermedio ($1,500) es ideal cuando quieres estructura mas solida y expansion.",
+                normalized_language,
+            ),
+            _bilingual(
+                "DM 6 ROUTING: Full ($3,500) is for complete implementation and premium positioning.",
+                "DM 6 RUTA: Completo ($3,500) es para implementacion total y posicionamiento premium.",
+                normalized_language,
+            ),
+            _bilingual(
+                "DM 7 PROOF: Clients choose this because it replaces guesswork with a repeatable teaching system.",
+                "DM 7 PRUEBA: Clientes eligen esto porque reemplaza improvisacion con un sistema repetible de ensenanza.",
+                normalized_language,
+            ),
+            _bilingual(
+                "DM 8 OBJECTION: If timing is your concern, you can start with Basic and upgrade later.",
+                "DM 8 OBJECION: Si te preocupa el momento, puedes iniciar con Basico y subir de nivel despues.",
+                normalized_language,
+            ),
+            _bilingual(
+                "DM 9 CLOSE: I can send checkout now and you can start today with lesson plans + printables.",
+                "DM 9 CIERRE: Puedo enviarte checkout ahora y puedes iniciar hoy con planes + printables.",
+                normalized_language,
+            ),
+            _bilingual(
+                "DM 10 CLOSE: Reply START and I will send your direct payment link.",
+                "DM 10 CIERRE: Responde EMPEZAR y te envio tu enlace directo de pago.",
                 normalized_language,
             ),
         ],
