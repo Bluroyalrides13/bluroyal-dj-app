@@ -173,7 +173,7 @@
 
           <div class="sample-grid" id="resource-cards"></div>
 
-          <p style="margin-top:16px;">Each resource includes bilingual download buttons so teachers and homeschool parents can access English and Spanish versions quickly.</p>
+          <p style="margin-top:16px;">Download buttons are shown only when a PDF URL is available, and missing covers automatically use the default Blu Royal image.</p>
         </div>
       </section>
 
@@ -298,141 +298,143 @@
 
       loadOfferLinks();
 
+      const DEFAULT_COVER_URL = "/static/samples/thumb-all-about-me.svg";
+
       const resourceCards = [
         {
           title: "Pre-K Lesson Plan Book - 40 Weeks",
+          category: "Lesson Plan Book",
           ageRange: "Ages 3-5",
           description:
             "Complete preschool lesson plan book with 40 ready-to-teach weekly themes, learning objectives, materials, songs, read-alouds, daily activities, family notes, and teacher tips.",
-          enFile: "PreK_Lesson_Plan_Book_EN.pdf",
-          esFile: "PreK_Lesson_Plan_Book_ES.pdf",
-          coverFile: "prek_lesson_plan_cover.png",
+          pdfUrl: "/static/samples/PreK_Lesson_Plan_Book_EN.pdf",
+          coverUrl: "/static/samples/prek_lesson_plan_cover.png",
         },
         {
           title: "Jungle Adventure Activity Book",
+          category: "Activity Book",
           ageRange: "Ages 3-6",
           description:
             "Jungle-themed printable activity book with fun pages for coloring, tracing, matching, counting, puzzles, and early learning skills.",
-          enFile: "Jungle_Adventure_Activity_Book_EN.pdf",
-          esFile: "Jungle_Adventure_Activity_Book_ES.pdf",
-          coverFile: "jungle_adventure_cover.png",
+          pdfUrl: "/static/samples/Jungle_Adventure_Activity_Book_EN.pdf",
+          coverUrl: "/static/samples/jungle_adventure_cover.png",
         },
         {
           title: "Welcome to School Theme Pack",
+          category: "Theme Pack",
           ageRange: "Ages 3-5",
           description:
             "First-week-of-school activities focused on routines, classroom rules, names, greetings, friends, and building classroom community.",
-          enFile: "Welcome_To_School_EN.pdf",
-          esFile: "Welcome_To_School_ES.pdf",
-          coverFile: "welcome_to_school_cover.png",
+          pdfUrl: "/static/samples/Welcome_To_School_EN.pdf",
+          coverUrl: "/static/samples/welcome_to_school_cover.png",
         },
         {
           title: "All About Me Theme Pack",
+          category: "Theme Pack",
           ageRange: "Ages 3-5",
           description:
             "Activities for self-awareness, body parts, feelings, favorites, self-portraits, and building confidence in young learners.",
-          enFile: "All_About_Me_EN.pdf",
-          esFile: "All_About_Me_ES.pdf",
-          coverFile: "all_about_me_cover.png",
+          pdfUrl: "/static/samples/All_About_Me_EN.pdf",
+          coverUrl: "/static/samples/all_about_me_cover.png",
         },
         {
           title: "My Family Theme Pack",
+          category: "Theme Pack",
           ageRange: "Ages 3-5",
           description:
             "Family-themed preschool activities about family members, family traditions, love, counting family members, and family crafts.",
-          enFile: "My_Family_EN.pdf",
-          esFile: "My_Family_ES.pdf",
-          coverFile: "my_family_cover.png",
+          pdfUrl: "/static/samples/My_Family_EN.pdf",
+          coverUrl: "/static/samples/my_family_cover.png",
         },
         {
           title: "Friends & Feelings Theme Pack",
+          category: "SEL Theme Pack",
           ageRange: "Ages 3-5",
           description:
             "Social-emotional learning activities that help children identify emotions, practice kindness, and learn friendship skills.",
-          enFile: "Friends_And_Feelings_EN.pdf",
-          esFile: "Friends_And_Feelings_ES.pdf",
-          coverFile: "friends_feelings_cover.png",
+          pdfUrl: "/static/samples/Friends_And_Feelings_EN.pdf",
+          coverUrl: "/static/samples/friends_feelings_cover.png",
         },
         {
           title: "Colors All Around Theme Pack",
+          category: "Theme Pack",
           ageRange: "Ages 3-5",
           description:
             "Color recognition activities, sorting, matching, art projects, songs, and hands-on preschool learning centers.",
-          enFile: "Colors_All_Around_EN.pdf",
-          esFile: "Colors_All_Around_ES.pdf",
-          coverFile: "colors_all_around_cover.png",
+          pdfUrl: "/static/samples/Colors_All_Around_EN.pdf",
+          coverUrl: "/static/samples/colors_all_around_cover.png",
         },
         {
           title: "Numbers 1-10 Activity Pack",
+          category: "Math Activity Pack",
           ageRange: "Ages 3-5",
           description:
             "Early math printables for counting, number recognition, matching, tracing numbers, and hands-on number practice.",
-          enFile: "Numbers_1_10_EN.pdf",
-          esFile: "Numbers_1_10_ES.pdf",
-          coverFile: "numbers_1_10_cover.png",
+          pdfUrl: "/static/samples/Numbers_1_10_EN.pdf",
+          coverUrl: "/static/samples/numbers_1_10_cover.png",
         },
         {
           title: "Alphabet Review Activity Pack",
+          category: "Literacy Activity Pack",
           ageRange: "Ages 3-5",
           description:
             "ABC review activities with letter recognition, tracing, beginning sounds, matching, and preschool literacy practice.",
-          enFile: "Alphabet_Review_EN.pdf",
-          esFile: "Alphabet_Review_ES.pdf",
-          coverFile: "alphabet_review_cover.png",
+          pdfUrl: "/static/samples/Alphabet_Review_EN.pdf",
+          coverUrl: "/static/samples/alphabet_review_cover.png",
         },
         {
           title: "Bugs & Butterflies Activity Pack",
+          category: "Science Activity Pack",
           ageRange: "Ages 3-6",
           description:
             "Science and nature activities featuring bugs, butterflies, counting, coloring, matching, and hands-on exploration.",
-          enFile: "Bugs_And_Butterflies_EN.pdf",
-          esFile: "Bugs_And_Butterflies_ES.pdf",
-          coverFile: "bugs_butterflies_cover.png",
+          pdfUrl: "/static/samples/Bugs_And_Butterflies_EN.pdf",
+          coverUrl: "/static/samples/bugs_butterflies_cover.png",
         },
         {
           title: "Ocean Animals Activity Pack",
+          category: "Science Activity Pack",
           ageRange: "Ages 3-6",
           description:
             "Ocean-themed printable activities with sea animals, coloring pages, tracing, counting, matching, and preschool learning fun.",
-          enFile: "Ocean_Animals_EN.pdf",
-          esFile: "Ocean_Animals_ES.pdf",
-          coverFile: "ocean_animals_cover.png",
+          pdfUrl: "/static/samples/Ocean_Animals_EN.pdf",
+          coverUrl: "/static/samples/ocean_animals_cover.png",
         },
         {
           title: "Zoo Animals Activity Pack",
+          category: "Science Activity Pack",
           ageRange: "Ages 3-6",
           description:
             "Zoo animal activities for preschoolers including animal names, matching, coloring, counting, and early vocabulary practice.",
-          enFile: "Zoo_Animals_EN.pdf",
-          esFile: "Zoo_Animals_ES.pdf",
-          coverFile: "zoo_animals_cover.png",
+          pdfUrl: "/static/samples/Zoo_Animals_EN.pdf",
+          coverUrl: "/static/samples/zoo_animals_cover.png",
         },
         {
           title: "Transportation Activity Pack",
+          category: "Theme Pack",
           ageRange: "Ages 3-5",
           description:
             "Printable activities about cars, buses, planes, trains, and community travel with matching, sorting, coloring, and counting.",
-          enFile: "Transportation_EN.pdf",
-          esFile: "Transportation_ES.pdf",
-          coverFile: "transportation_cover.png",
+          pdfUrl: "/static/samples/Transportation_EN.pdf",
+          coverUrl: "/static/samples/transportation_cover.png",
         },
         {
           title: "Weather & Sky Activity Pack",
+          category: "Science Theme Pack",
           ageRange: "Ages 3-5",
           description:
             "Preschool weather activities about clouds, rain, sun, wind, sky, daily weather charts, and science exploration.",
-          enFile: "Weather_And_Sky_EN.pdf",
-          esFile: "Weather_And_Sky_ES.pdf",
-          coverFile: "weather_sky_cover.png",
+          pdfUrl: "/static/samples/Weather_And_Sky_EN.pdf",
+          coverUrl: "/static/samples/weather_sky_cover.png",
         },
         {
           title: "Space, Stars & Moon Activity Pack",
+          category: "Science Theme Pack",
           ageRange: "Ages 3-6",
           description:
             "Space-themed preschool activities with stars, planets, moon, rockets, coloring, counting, and early science learning.",
-          enFile: "Space_Stars_Moon_EN.pdf",
-          esFile: "Space_Stars_Moon_ES.pdf",
-          coverFile: "space_stars_moon_cover.png",
+          pdfUrl: "/static/samples/Space_Stars_Moon_EN.pdf",
+          coverUrl: "/static/samples/space_stars_moon_cover.png",
         },
       ];
 
@@ -441,25 +443,30 @@
         if (!container) return;
 
         container.innerHTML = resourceCards
-          .map(
-            (item) => `
+          .map((item) => {
+            const safeCoverUrl = item.coverUrl && item.coverUrl.trim() ? item.coverUrl : DEFAULT_COVER_URL;
+            const downloadButton = item.pdfUrl && item.pdfUrl.trim()
+              ? `<a class="button button--secondary" href="${item.pdfUrl}" target="_blank" rel="noopener">Download PDF</a>`
+              : "";
+
+            return `
               <article class="sample-card">
                 <div class="sample-badge">Resource Pack</div>
                 <div class="sample-preview sample-preview--about-me">
-                  <img src="/static/samples/${item.coverFile}" alt="${item.title} cover" loading="lazy" onerror="this.onerror=null;this.src='/static/samples/thumb-all-about-me.svg';" />
-                  <div class="sample-preview__tag">${item.ageRange}</div>
+                  <img src="${safeCoverUrl}" alt="${item.title} cover" loading="lazy" onerror="this.onerror=null;this.src='${DEFAULT_COVER_URL}';" />
+                  <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                    <div class="sample-preview__tag">${item.ageRange}</div>
+                    <div class="sample-preview__tag">${item.category}</div>
+                  </div>
                   <strong>${item.title}</strong>
                   <span>${item.description}</span>
                 </div>
                 <h3>${item.title}</h3>
                 <p>${item.description}</p>
-                <div class="sample-actions">
-                  <a class="button button--secondary" href="/static/samples/${item.enFile}" target="_blank" rel="noopener">View Sample PDF (EN)</a>
-                  <a class="button button--secondary" href="/static/samples/${item.esFile}" target="_blank" rel="noopener">Ver PDF de muestra (ES)</a>
-                </div>
+                ${downloadButton ? `<div class="sample-actions">${downloadButton}</div>` : ""}
               </article>
-            `
-          )
+            `;
+          })
           .join("");
       }
 
