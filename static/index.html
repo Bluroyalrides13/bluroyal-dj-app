@@ -616,12 +616,23 @@
         return `${encodeURI(DEFAULT_IMAGE_FALLBACK)}?v=${COVER_VERSION}`;
       }
 
+      function getResourcePreviewSource(pdfFile, title, category) {
+        const slug = `${pdfFile} ${title} ${category}`.toLowerCase();
+
+        if (slug.includes("preschool pack") || slug.includes("little learners preschool pack")) {
+          return encodeURI(`/static/samples/cover-preschool-pack.pdf`);
+        }
+
+        return null;
+      }
+
       function buildResourceCatalog() {
         return RESOURCE_FILES.map((pdfFile, index) => {
           const title = getResourceTitle(pdfFile);
           const category = getResourceCategory(pdfFile, title);
           const ageRange = getResourceAgeRange(pdfFile, title);
           const description = getResourceDescription(pdfFile, title, category);
+          const previewSource = getResourcePreviewSource(pdfFile, title, category);
           return {
             title,
             category,
@@ -630,6 +641,7 @@
             pdfFile,
             pdfUrl: encodeURI(`/static/samples/${pdfFile}`),
             coverUrl: getResourceCoverUrl(pdfFile, title, category, index),
+            previewSource,
             tierLabel: getResourceTier(title, category),
             priceLabel: getResourcePrice(title, category),
           };
@@ -665,12 +677,15 @@
             const coverUrl = item.coverUrl || DEFAULT_COVER_URL || createFallbackCoverDataUri(item.title, item.category, index);
             const previewClass = getResourcePreviewClass(item.title, item.category);
             const previewPoints = getResourcePreviewPoints(item.title, item.category);
+            const previewVisual = item.previewSource
+              ? `<iframe class="sample-preview__frame" src="${item.previewSource}#page=1&view=FitH" title="${item.title} preview" loading="lazy"></iframe>`
+              : `<img src="${coverUrl}" alt="${item.title} cover" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='${encodeURI(DEFAULT_IMAGE_FALLBACK)}?v=${COVER_VERSION}';" />`;
 
             return `
               <article class="sample-card">
                 <div class="sample-badge">Resource Pack</div>
                 <div class="sample-preview ${previewClass}">
-                  <img src="${coverUrl}" alt="${item.title} cover" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='${encodeURI(DEFAULT_IMAGE_FALLBACK)}?v=${COVER_VERSION}';" />
+                  ${previewVisual}
                   <div style="display:flex;gap:6px;flex-wrap:wrap;">
                     <div class="sample-preview__tag">${item.ageRange}</div>
                     <div class="sample-preview__tag">${item.category}</div>
