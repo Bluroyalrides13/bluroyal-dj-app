@@ -78,12 +78,52 @@
       color: var(--accent3);
       border: 1px solid rgba(201,168,109,0.3);
     }
-    .nav-icon { font-size: 1.1rem; width: 22px; text-align: center; }
+    .nav-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 999px;
+      border: 1px solid rgba(201,168,109,0.35);
+      display: inline-grid;
+      place-items: center;
+      font-size: 0.68rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      color: var(--accent3);
+      background: rgba(201,168,109,0.08);
+    }
 
     /* ── Main ── */
     .main { padding: 32px; overflow-y: auto; }
     .page { display: none; }
     .page.active { display: block; }
+
+    .lux-strip {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(140px, 1fr));
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    .lux-chip {
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(19,35,49,0.86), rgba(11,21,31,0.9));
+      border-radius: 14px;
+      padding: 10px 12px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+    }
+    .lux-chip__kicker {
+      color: var(--muted);
+      font-size: 0.66rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 3px;
+      font-weight: 700;
+    }
+    .lux-chip__value {
+      color: var(--accent3);
+      font-size: 0.9rem;
+      font-weight: 800;
+      letter-spacing: 0.03em;
+    }
 
     /* ── Page header ── */
     .page-header { margin-bottom: 28px; }
@@ -318,6 +358,7 @@
       .sidebar__brand { display: none; }
       .form-2col, .form-3col { grid-template-columns: 1fr; }
       .main { padding: 18px; }
+      .lux-strip { grid-template-columns: 1fr 1fr; }
     }
 
     .page.active .panel,
@@ -344,24 +385,42 @@
       </div>
     </div>
     <button class="nav-item active" onclick="showPage('timeline', this)">
-      <span class="nav-icon">📋</span> Event Timeline
+      <span class="nav-icon">I</span> Event Timeline
     </button>
     <button class="nav-item" onclick="showPage('questionnaire', this)">
-      <span class="nav-icon">📝</span> Client Questionnaire
+      <span class="nav-icon">II</span> Client Questionnaire
     </button>
     <button class="nav-item" onclick="showPage('setlist', this)">
-      <span class="nav-icon">🎵</span> Setlist Organizer
+      <span class="nav-icon">III</span> Setlist Organizer
     </button>
     <button class="nav-item" onclick="showPage('pricing', this)">
-      <span class="nav-icon">💰</span> Pricing Calculator
+      <span class="nav-icon">IV</span> Pricing Calculator
     </button>
     <button class="nav-item" onclick="showPage('content', this)">
-      <span class="nav-icon">📱</span> Instagram Pack
+      <span class="nav-icon">V</span> Instagram Pack
     </button>
   </nav>
 
   <!-- ── Main content ── -->
   <main class="main">
+    <div class="lux-strip">
+      <div class="lux-chip">
+        <div class="lux-chip__kicker">Brand Standard</div>
+        <div class="lux-chip__value">Blu Bloods Luxury</div>
+      </div>
+      <div class="lux-chip">
+        <div class="lux-chip__kicker">Planning Suite</div>
+        <div class="lux-chip__value">Event-Specific Forms</div>
+      </div>
+      <div class="lux-chip">
+        <div class="lux-chip__kicker">Delivery Mode</div>
+        <div class="lux-chip__value">Client-Ready Briefs</div>
+      </div>
+      <div class="lux-chip">
+        <div class="lux-chip__kicker">Positioning</div>
+        <div class="lux-chip__value">Premium Operator</div>
+      </div>
+    </div>
     <div style="display:flex;justify-content:flex-end;margin-bottom:12px;">
       <form method="post" action="/dashboard/logout">
         <button class="btn btn-secondary" type="submit">Log out</button>
@@ -413,11 +472,11 @@
             <textarea id="tl-notes" placeholder="Any special details for this event..."></textarea>
           </div>
         </div>
-        <button class="btn btn-primary" onclick="buildTimeline()">📋 Generate Timeline</button>
+        <button class="btn btn-primary" onclick="buildTimeline()">Generate Timeline</button>
       </div>
       <div class="result-box" id="tl-result">
         <div class="print-bar">
-          <button class="btn btn-print" onclick="printSection('tl-result', 'Event Timeline')">🖨️ Print / Save PDF</button>
+          <button class="btn btn-print" onclick="printSection('tl-result', 'Event Timeline')">Print / Save PDF</button>
         </div>
         <table class="timeline-table">
           <thead><tr><th>Time</th><th>Moment</th><th>Song</th><th>Notes</th></tr></thead>
@@ -451,7 +510,7 @@
             </select>
           </div>
         </div>
-        <button class="btn btn-secondary" onclick="loadQuestionnaire()">📝 Load Questions</button>
+        <button class="btn btn-secondary" onclick="loadQuestionnaire()">Load Questions</button>
       </div>
       <div id="q-form-wrap" style="margin-top:18px;display:none;">
         <div class="panel">
@@ -465,12 +524,12 @@
             </div>
           </div>
           <div id="q-fields"></div>
-          <button class="btn btn-green" onclick="submitQuestionnaire()" style="margin-top:16px;">✅ Save Brief</button>
+          <button class="btn btn-green" onclick="submitQuestionnaire()" style="margin-top:16px;">Save Brief</button>
         </div>
       </div>
       <div class="result-box" id="q-result">
         <div class="print-bar">
-          <button class="btn btn-print" onclick="printSection('q-result', 'Client Brief')">🖨️ Print / Save PDF</button>
+          <button class="btn btn-print" onclick="printSection('q-result', 'Client Brief')">Print / Save PDF</button>
         </div>
         <p style="font-weight:700;margin-bottom:10px;">Brief saved ✓</p>
         <div id="q-result-pre" style="font-size:0.9rem;line-height:1.8;"></div>
@@ -514,13 +573,13 @@
           </div>
         </div>
         <div style="display:flex;gap:10px;">
-          <button class="btn btn-secondary" onclick="addSong()">➕ Add Song</button>
-          <button class="btn btn-primary"   onclick="buildSetlist()">🎵 Build Setlist</button>
+          <button class="btn btn-secondary" onclick="addSong()">Add Song</button>
+          <button class="btn btn-primary"   onclick="buildSetlist()">Build Setlist</button>
         </div>
       </div>
       <div class="result-box" id="sl-result">
         <div class="print-bar">
-          <button class="btn btn-print" onclick="printSection('sl-result', 'Setlist')">🖨️ Print / Save PDF</button>
+          <button class="btn btn-print" onclick="printSection('sl-result', 'Setlist')">Print / Save PDF</button>
         </div>
         <div id="sl-output"></div>
       </div>
@@ -584,11 +643,11 @@
             </div>
           </div>
         </div>
-        <button class="btn btn-primary" onclick="calcPrice()">💰 Calculate Quote</button>
+        <button class="btn btn-primary" onclick="calcPrice()">Calculate Quote</button>
       </div>
       <div class="result-box" id="pr-result">
         <div class="print-bar">
-          <button class="btn btn-print" onclick="printSection('pr-result', 'Pricing Quote')">🖨️ Print / Save PDF</button>
+          <button class="btn btn-print" onclick="printSection('pr-result', 'Pricing Quote')">Print / Save PDF</button>
         </div>
         <div id="pr-breakdown"></div>
       </div>
@@ -620,12 +679,12 @@
             <input type="text" id="cp-cta" value="Link in bio to apply." />
           </div>
         </div>
-        <button class="btn btn-primary" onclick="buildContentPack()">📱 Generate 30-Day Pack</button>
+        <button class="btn btn-primary" onclick="buildContentPack()">Generate 30-Day Pack</button>
       </div>
 
       <div class="result-box" id="cp-result">
         <div class="print-bar">
-          <button class="btn btn-print" onclick="printSection('cp-result', 'Instagram Content Pack')">🖨️ Print / Save PDF</button>
+          <button class="btn btn-print" onclick="printSection('cp-result', 'Instagram Content Pack')">Print / Save PDF</button>
         </div>
         <div class="tabs">
           <button class="tab active" onclick="showTab('posts', this)">30-Day Posts</button>
@@ -655,8 +714,16 @@
     win.document.write(`<!doctype html><html><head>
       <title>${title} — DJ Blu Bloods</title>
       <style>
-        body { font-family: Inter, Arial, sans-serif; padding: 32px; color: #111; font-size: 14px; }
-        h1   { font-size: 1.4rem; margin-bottom: 20px; letter-spacing: -0.03em; }
+        body { font-family: "Manrope", Arial, sans-serif; padding: 32px; color: #1b1a18; font-size: 14px; background: #fffdf8; }
+        .print-head {
+          margin-bottom: 18px;
+          border: 1px solid #d4ba86;
+          border-radius: 14px;
+          padding: 14px 16px;
+          background: linear-gradient(135deg, #f4e8c9, #d2b47c);
+        }
+        .print-brand { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 800; color: #463114; }
+        h1   { font-family: "Cormorant Garamond", serif; font-size: 2rem; margin: 4px 0 0; letter-spacing: 0.02em; color: #2a1d0d; }
         table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
         th   { text-align: left; padding: 8px 10px; background: #f5f5f5; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; }
         td   { padding: 9px 10px; border-top: 1px solid #e5e5e5; vertical-align: top; }
@@ -674,7 +741,10 @@
         @media print { button { display:none; } }
       </style>
     </head><body>
-      <h1>${title}</h1>
+      <div class="print-head">
+        <div class="print-brand">DJ Blu Bloods • Luxury Event Intelligence</div>
+        <h1>${title}</h1>
+      </div>
       ${content}
       <script>window.onload = () => { window.print(); }<\/script>
     </body></html>`);
