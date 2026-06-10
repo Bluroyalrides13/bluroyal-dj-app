@@ -318,6 +318,18 @@ h1 {
   letter-spacing: -0.03em;
 }
 
+.sample-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.sample-actions .button {
+  padding: 10px 14px;
+  font-size: 0.8rem;
+}
+
 .sample-badge {
   display: inline-flex;
   border-radius: 999px;
