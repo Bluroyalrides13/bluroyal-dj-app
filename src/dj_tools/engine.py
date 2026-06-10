@@ -1847,20 +1847,61 @@ def _build_theme_printables(theme_data: Dict, language_mode: str, printable_coun
         <div class="section">
             <div class="section-title">
                 <span>✏️</span>
-                <span>{_bilingual("Activity 1: Draw or Write Your Answer", "Actividad 1: Dibuja o escribe tu respuesta", language_mode)}</span>
+                <span>{_bilingual("Activity 1: Letter Tracing Practice", "Actividad 1: Práctica de Trazado de Letras", language_mode)}</span>
             </div>
-            <div style="border: 2px dashed {color}; padding: 20px; min-height: 100px; border-radius: 8px; background: rgba({color}, 0.05);"></div>
+            <div style="margin: 15px 0; font-size: 14px; color: #666;">
+                {_bilingual("Trace the letters with your finger or pencil:", "Traza las letras con tu dedo o lápiz:", language_mode)}
+            </div>
+            <div style="border: 2px dashed {color}; padding: 30px 20px; border-radius: 8px; background: rgba({color}, 0.05); text-align: center; margin: 15px 0;">
+                <div style="font-family: cursive; font-size: 48px; letter-spacing: 30px; color: {color}; opacity: 0.3; font-weight: bold; margin-bottom: 20px;">A B C D E</div>
+                <div style="border-bottom: 2px dashed {color}; height: 40px; margin: 20px 0;"></div>
+                <div style="border-bottom: 2px dashed {color}; height: 40px; margin: 20px 0;"></div>
+            </div>
         </div>
 
         <div class="section">
             <div class="section-title">
                 <span>⭐</span>
-                <span>{_bilingual("Activity 2: Circle the Best Answer", "Actividad 2: Encierra la mejor respuesta", language_mode)}</span>
+                <span>{_bilingual("Activity 2: Letter Learning", "Actividad 2: Aprendizaje de Letras", language_mode)}</span>
             </div>
-            <div style="font-size: 18px; margin: 15px 0;">
-                <div class="checkbox">☑ {_bilingual("A", "A", language_mode)}</div>
-                <div class="checkbox">☐ {_bilingual("B", "B", language_mode)}</div>
-                <div class="checkbox">☐ {_bilingual("C", "C", language_mode)}</div>
+            <div style="background: linear-gradient(135deg, rgba({color}, 0.1) 0%, rgba({color}, 0.05) 100%); padding: 20px; border-radius: 8px; border: 2px solid {color}; margin: 15px 0;">
+                <div style="margin-bottom: 15px;">
+                    <div class="label" style="margin-bottom: 8px;">🔤 {_bilingual("Letter Sound:", "Sonido de la Letra:", language_mode)}</div>
+                    <div style="font-size: 18px; color: {color}; font-weight: bold; margin: 8px 0;">_____________________</div>
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <div class="label" style="margin-bottom: 8px;">✍️ {_bilingual("Write the Letter:", "Escribe la Letra:", language_mode)}</div>
+                    <div style="font-size: 40px; margin: 15px 0; text-align: center; color: {color};">__ __ __</div>
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <div class="label" style="margin-bottom: 8px;">🎯 {_bilingual("Circle Words that Start with This Letter:", "Encierra Palabras que Comienzan con Esta Letra:", language_mode)}</div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px;">
+                        <div style="padding: 10px; border: 2px solid #ddd; border-radius: 6px; text-align: center; cursor: pointer; background: white;">☐ Word 1</div>
+                        <div style="padding: 10px; border: 2px solid #ddd; border-radius: 6px; text-align: center; cursor: pointer; background: white;">☐ Word 2</div>
+                        <div style="padding: 10px; border: 2px solid #ddd; border-radius: 6px; text-align: center; cursor: pointer; background: white;">☐ Word 3</div>
+                        <div style="padding: 10px; border: 2px solid #ddd; border-radius: 6px; text-align: center; cursor: pointer; background: white;">☐ Word 4</div>
+                    </div>
+                </div>
+                    <div class="section">
+                        <div class="section-title">
+                            <span>🎨</span>
+                            <span>{_bilingual("Activity 3: Draw or Write Your Answer", "Actividad 3: Dibuja o escribe tu respuesta", language_mode)}</span>
+                        </div>
+                        <div style="border: 2px dashed {color}; padding: 20px; min-height: 100px; border-radius: 8px; background: rgba({color}, 0.05);"></div>
+                    </div>
+
+                    <div class="section">
+                        <div class="section-title">
+                            <span>🌟</span>
+                            <span>{_bilingual("Activity 4: Circle the Best Answer", "Actividad 4: Encierra la mejor respuesta", language_mode)}</span>
+                        </div>
+                        <div style="font-size: 18px; margin: 15px 0;">
+                            <div class="checkbox">☑ {_bilingual("A", "A", language_mode)}</div>
+                            <div class="checkbox">☐ {_bilingual("B", "B", language_mode)}</div>
+                            <div class="checkbox">☐ {_bilingual("C", "C", language_mode)}</div>
+                        </div>
+                    </div>
+
             </div>
         </div>
 
@@ -2025,20 +2066,61 @@ def _build_printable_documents(
         <div class="section">
             <div class="section-title">
                 <span>1️⃣</span>
-                <span>{_bilingual("Draw or Write Your Response", "Dibuja o escribe tu respuesta", language_mode)}</span>
+                <span>{_bilingual("Letter Tracing Practice", "Práctica de Trazado de Letras", language_mode)}</span>
             </div>
-            <div class="activity-box"></div>
+            <div style="margin: 15px 0; font-size: 14px; color: #666;">
+                {_bilingual("Trace the letters with your finger or pencil:", "Traza las letras con tu dedo o lápiz:", language_mode)}
+            </div>
+            <div style="border: 2px dashed {color}; padding: 30px 20px; border-radius: 8px; background: rgba({color}, 0.05); text-align: center; margin: 15px 0;">
+                <div style="font-family: cursive; font-size: 48px; letter-spacing: 30px; color: {color}; opacity: 0.3; font-weight: bold; margin-bottom: 20px;">A B C D E</div>
+                <div style="border-bottom: 2px dashed {color}; height: 40px; margin: 20px 0;"></div>
+                <div style="border-bottom: 2px dashed {color}; height: 40px; margin: 20px 0;"></div>
+            </div>
         </div>
 
         <div class="section">
             <div class="section-title">
                 <span>2️⃣</span>
-                <span>{_bilingual("Circle the Best Answer", "Encierra la mejor respuesta", language_mode)}</span>
+                <span>{_bilingual("Letter Learning", "Aprendizaje de Letras", language_mode)}</span>
             </div>
-            <div style="font-size: 16px; margin: 15px 0;">
-                <div class="checkbox">☐ A)</div>
-                <div class="checkbox">☐ B)</div>
-                <div class="checkbox">☐ C)</div>
+            <div style="background: linear-gradient(135deg, rgba({color}, 0.1) 0%, rgba({color}, 0.05) 100%); padding: 20px; border-radius: 8px; border: 2px solid {color}; margin: 15px 0;">
+                <div style="margin-bottom: 15px;">
+                    <div class="label" style="margin-bottom: 8px;">🔤 {_bilingual("Letter Sound:", "Sonido de la Letra:", language_mode)}</div>
+                    <div style="font-size: 18px; color: {color}; font-weight: bold; margin: 8px 0;">_____________________</div>
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <div class="label" style="margin-bottom: 8px;">✍️ {_bilingual("Write the Letter:", "Escribe la Letra:", language_mode)}</div>
+                    <div style="font-size: 40px; margin: 15px 0; text-align: center; color: {color};">__ __ __</div>
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <div class="label" style="margin-bottom: 8px;">🎯 {_bilingual("Circle Words that Start with This Letter:", "Encierra Palabras que Comienzan con Esta Letra:", language_mode)}</div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px;">
+                        <div style="padding: 10px; border: 2px solid #ddd; border-radius: 6px; text-align: center; cursor: pointer; background: white;">☐ Word 1</div>
+                        <div style="padding: 10px; border: 2px solid #ddd; border-radius: 6px; text-align: center; cursor: pointer; background: white;">☐ Word 2</div>
+                        <div style="padding: 10px; border: 2px solid #ddd; border-radius: 6px; text-align: center; cursor: pointer; background: white;">☐ Word 3</div>
+                        <div style="padding: 10px; border: 2px solid #ddd; border-radius: 6px; text-align: center; cursor: pointer; background: white;">☐ Word 4</div>
+                    </div>
+                </div>
+                    <div class="section">
+                        <div class="section-title">
+                            <span>3️⃣</span>
+                            <span>{_bilingual("Draw or Write Your Response", "Dibuja o escribe tu respuesta", language_mode)}</span>
+                        </div>
+                        <div class="activity-box"></div>
+                    </div>
+
+                    <div class="section">
+                        <div class="section-title">
+                            <span>4️⃣</span>
+                            <span>{_bilingual("Circle the Best Answer", "Encierra la mejor respuesta", language_mode)}</span>
+                        </div>
+                        <div style="font-size: 16px; margin: 15px 0;">
+                            <div class="checkbox">☐ A)</div>
+                            <div class="checkbox">☐ B)</div>
+                            <div class="checkbox">☐ C)</div>
+                        </div>
+                    </div>
+
             </div>
         </div>
 
