@@ -2352,23 +2352,6 @@ def generate_lesson_plan(
         "printable_resources": active_printables,
         "printable_documents": printable_documents,
         "is_comprehensive": False,
-        "instagram_promo_hooks": [
-            _bilingual(
-                f"Parents asked for done-for-you {normalized_theme.lower()} lesson plans, so we built them.",
-                f"Las familias pidieron planes de {normalized_theme.lower()} listos para usar, y por eso los creamos.",
-                normalized_language,
-            ),
-            _bilingual(
-                f"Stop planning from scratch: this {weeks}-week {normalized_theme.lower()} kit is classroom-ready.",
-                f"Deja de planear desde cero: este kit de {weeks} semanas sobre {normalized_theme.lower()} esta listo para clase.",
-                normalized_language,
-            ),
-            _bilingual(
-                "Comment LESSONS and we will send the tier that fits your school-year goals.",
-                "Comenta LECCIONES y te enviamos el nivel que mejor se adapta a tus metas escolares.",
-                normalized_language,
-            ),
-        ],
         "created_at": datetime.utcnow().isoformat(),
     }
 
