@@ -1,24 +1,33 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760" role="img" aria-labelledby="title desc">
-  <title id="title">Vehicles Coloring Book</title>
-  <desc id="desc">Placeholder inspired by black and white vehicle coloring cover.</desc>
-  <rect width="1200" height="760" fill="#f0f0f0"/>
-  <rect x="80" y="60" width="1040" height="640" fill="#fff" stroke="#111" stroke-width="3"/>
+  <title id="title">Blu Royal Academy Branded Fallback</title>
+  <desc id="desc">Brand-safe preschool resource placeholder with Blu Royal Academy styling.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f8fbff"/>
+      <stop offset="100%" stop-color="#eef6ff"/>
+    </linearGradient>
+    <linearGradient id="panel" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#f5f8ff"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="760" fill="url(#bg)"/>
+  <rect x="40" y="40" width="1120" height="680" rx="36" fill="url(#panel)" stroke="#143a7a" stroke-width="4"/>
 
-  <text x="600" y="170" text-anchor="middle" font-family="Arial, sans-serif" font-size="110" font-weight="900" fill="#222">VEHICLES</text>
-  <text x="600" y="245" text-anchor="middle" font-family="Arial, sans-serif" font-size="76" font-weight="700" fill="#222">COLORING BOOK</text>
+  <circle cx="176" cy="136" r="92" fill="#0b2f6f"/>
+  <text x="176" y="124" text-anchor="middle" font-family="Arial, sans-serif" font-size="30" font-weight="800" fill="#ffd15c">BLU ROYAL</text>
+  <text x="176" y="161" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#ffffff">ACADEMY</text>
 
-  <rect x="150" y="320" width="900" height="320" fill="#fafafa" stroke="#222" stroke-width="4"/>
-  <rect x="210" y="366" width="280" height="230" fill="none" stroke="#222" stroke-width="6"/>
-  <rect x="540" y="390" width="430" height="206" fill="none" stroke="#222" stroke-width="6"/>
+  <rect x="330" y="88" width="540" height="56" rx="18" fill="#2f6feb"/>
+  <text x="600" y="124" text-anchor="middle" font-family="Arial, sans-serif" font-size="28" font-weight="800" fill="#ffffff">BRANDED RESOURCE PREVIEW</text>
 
-  <g fill="none" stroke="#111" stroke-width="8">
-    <rect x="258" y="454" width="520" height="130" rx="24"/>
-    <rect x="760" y="474" width="120" height="88" rx="12"/>
-    <circle cx="350" cy="600" r="44"/>
-    <circle cx="470" cy="600" r="44"/>
-    <circle cx="610" cy="600" r="44"/>
-    <circle cx="730" cy="600" r="44"/>
-  </g>
+  <text x="600" y="228" text-anchor="middle" font-family="Arial, sans-serif" font-size="72" font-weight="900" fill="#11347a">SEASONS</text>
+  <text x="600" y="318" text-anchor="middle" font-family="Arial, sans-serif" font-size="104" font-weight="900" fill="#ea2f86">WEATHER</text>
+  <text x="600" y="398" text-anchor="middle" font-family="Arial, sans-serif" font-size="52" font-weight="800" fill="#1f2f55">Blue Royal style placeholder cover</text>
 
-  <text x="600" y="682" text-anchor="middle" font-family="Arial, sans-serif" font-size="34" font-weight="700" fill="#333">Printable black-and-white workbook style preview</text>
+  <rect x="120" y="470" width="960" height="150" rx="26" fill="#f4f9ff" stroke="#b8c9ea" stroke-width="2"/>
+  <text x="160" y="530" font-family="Arial, sans-serif" font-size="42" font-weight="800" fill="#48a33a">What you will see</text>
+  <text x="160" y="582" font-family="Arial, sans-serif" font-size="30" font-weight="700" fill="#1f2f55">Brand colors, a clean layout, and no blank image spaces.</text>
+
+  <rect x="40" y="688" width="1120" height="32" fill="#143a7a"/>
 </svg>

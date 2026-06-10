@@ -1,37 +1,33 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760" role="img" aria-labelledby="title desc">
-  <title id="title">El Rescate de los Colores</title>
-  <desc id="desc">Blu Royal style placeholder inspired by the uploaded rescue colors sheet.</desc>
+  <title id="title">Blu Royal Academy Branded Fallback</title>
+  <desc id="desc">Brand-safe preschool resource placeholder with Blu Royal Academy styling.</desc>
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#f8fcff"/>
-      <stop offset="100%" stop-color="#eef6ff"/>
+      <stop offset="0%" stop-color="#f7fbff"/>
+      <stop offset="100%" stop-color="#eef4ff"/>
+    </linearGradient>
+    <linearGradient id="card" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#f6f9ff"/>
     </linearGradient>
   </defs>
   <rect width="1200" height="760" fill="url(#bg)"/>
-  <rect x="40" y="40" width="1120" height="680" rx="34" fill="#ffffff" stroke="#2d5ba8" stroke-width="4"/>
+  <rect x="40" y="40" width="1120" height="680" rx="36" fill="url(#card)" stroke="#143a7a" stroke-width="4"/>
 
-  <rect x="74" y="72" width="260" height="70" rx="20" fill="#3c86d8"/>
-  <text x="204" y="118" text-anchor="middle" font-family="Arial, sans-serif" font-size="42" font-weight="800" fill="#fff">LUNES</text>
+  <circle cx="178" cy="140" r="92" fill="#0b2f6f"/>
+  <text x="178" y="128" text-anchor="middle" font-family="Arial, sans-serif" font-size="30" font-weight="800" fill="#ffd15c">BLU ROYAL</text>
+  <text x="178" y="165" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#ffffff">ACADEMY</text>
 
-  <text x="598" y="190" text-anchor="middle" font-family="Arial, sans-serif" font-size="72" font-weight="900" fill="#133b86">EL RESCATE DE</text>
-  <text x="598" y="276" text-anchor="middle" font-family="Arial, sans-serif" font-size="94" font-weight="900">
-    <tspan fill="#7e57c2">L</tspan><tspan fill="#3f51b5">O</tspan><tspan fill="#42a5f5">S</tspan>
-    <tspan fill="#ff9800"> </tspan><tspan fill="#ff9800">C</tspan><tspan fill="#ffca28">O</tspan><tspan fill="#66bb6a">L</tspan><tspan fill="#ec407a">O</tspan><tspan fill="#ab47bc">R</tspan><tspan fill="#29b6f6">E</tspan><tspan fill="#ef5350">S</tspan>
-  </text>
+  <rect x="330" y="86" width="540" height="56" rx="18" fill="#2f6feb"/>
+  <text x="600" y="122" text-anchor="middle" font-family="Arial, sans-serif" font-size="28" font-weight="800" fill="#ffffff">BRANDED RESOURCE PREVIEW</text>
 
-  <rect x="356" y="302" width="484" height="52" rx="16" fill="#ef3f8f"/>
-  <text x="598" y="336" text-anchor="middle" font-family="Arial, sans-serif" font-size="30" font-weight="700" fill="#fff">Motricidad fina • Reconocimiento de colores</text>
+  <text x="600" y="230" text-anchor="middle" font-family="Arial, sans-serif" font-size="70" font-weight="900" fill="#133b86">BUILT FOR</text>
+  <text x="600" y="322" text-anchor="middle" font-family="Arial, sans-serif" font-size="104" font-weight="900" fill="#ea2f86">PRESCHOOL</text>
+  <text x="600" y="402" text-anchor="middle" font-family="Arial, sans-serif" font-size="52" font-weight="800" fill="#1f2f55">Less blank space. More Blu Royal style.</text>
 
-  <rect x="90" y="390" width="500" height="280" rx="24" fill="#f4f9ff" stroke="#9ec0ea" stroke-width="2"/>
-  <text x="130" y="438" font-family="Arial, sans-serif" font-size="40" font-weight="800" fill="#48a33a">¿COMO JUGAR?</text>
-  <text x="130" y="488" font-family="Arial, sans-serif" font-size="30" font-weight="700" fill="#1f2f55">1) Crea una red con cinta en una bandeja.</text>
-  <text x="130" y="530" font-family="Arial, sans-serif" font-size="30" font-weight="700" fill="#1f2f55">2) Nombra un color para buscar.</text>
-  <text x="130" y="572" font-family="Arial, sans-serif" font-size="30" font-weight="700" fill="#1f2f55">3) Saca pompones sin romper la cinta.</text>
+  <rect x="120" y="470" width="960" height="150" rx="26" fill="#f4f9ff" stroke="#b8c9ea" stroke-width="2"/>
+  <text x="160" y="530" font-family="Arial, sans-serif" font-size="42" font-weight="800" fill="#48a33a">What you will see</text>
+  <text x="160" y="582" font-family="Arial, sans-serif" font-size="30" font-weight="700" fill="#1f2f55">Blue and pink brand styling, classroom-friendly layout, and a clear resource title area.</text>
 
-  <rect x="642" y="390" width="470" height="280" rx="24" fill="#fff8fb" stroke="#f2a6cb" stroke-width="2"/>
-  <text x="676" y="438" font-family="Arial, sans-serif" font-size="40" font-weight="800" fill="#ef3f8f">TIP MAESTROS Y PADRES</text>
-  <text x="676" y="490" font-family="Arial, sans-serif" font-size="34" font-weight="700" fill="#233b6b">"Los colores estan atrapados</text>
-  <text x="676" y="530" font-family="Arial, sans-serif" font-size="34" font-weight="700" fill="#233b6b">en la cueva. ¡Ayudalos a escapar!"</text>
-
-  <rect x="40" y="688" width="1120" height="32" fill="#0f3d8e"/>
+  <rect x="40" y="688" width="1120" height="32" fill="#143a7a"/>
 </svg>
