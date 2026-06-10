@@ -309,6 +309,26 @@
     .post-type { padding: 3px 10px; border-radius: 999px; font-size: 0.75rem; font-weight: 700; background: rgba(15,187,143,0.12); color: var(--accent2); }
     .post-caption { font-size: 0.85rem; color: var(--muted); white-space: pre-wrap; line-height: 1.6; }
 
+    /* ── Lesson plans ── */
+    .lesson-week {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+    .lesson-day {
+      margin-top: 10px;
+      padding: 10px;
+      border-radius: 10px;
+      background: rgba(10, 17, 24, 0.35);
+      border: 1px solid rgba(201, 168, 109, 0.14);
+      font-size: 0.84rem;
+    }
+    .lesson-day strong {
+      color: var(--accent3);
+    }
+
     /* ── DM scripts ── */
     .dm-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 14px; padding: 16px; margin-bottom: 12px; }
     .dm-label { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 8px; }
@@ -482,20 +502,23 @@
     <button class="nav-item" onclick="showPage('pricing', this)">
       <span class="nav-icon">IV</span> Pricing Calculator
     </button>
+    <button class="nav-item" onclick="showPage('lessonplan', this)">
+      <span class="nav-icon">V</span> Lesson Plans
+    </button>
     <button class="nav-item" onclick="showPage('content', this)">
-      <span class="nav-icon">V</span> Instagram Pack
+      <span class="nav-icon">VI</span> Instagram Pack
     </button>
     <button class="nav-item" onclick="showPage('profile', this); loadDjProfileTemplate();">
-      <span class="nav-icon">VI</span> DJ Profile Setup
+      <span class="nav-icon">VII</span> DJ Profile Setup
     </button>
     <button class="nav-item" onclick="showPage('crm', this); loadLeadCrmTemplate();">
-      <span class="nav-icon">VII</span> Lead Management
+      <span class="nav-icon">VIII</span> Lead Management
     </button>
     <button class="nav-item" onclick="showPage('agreements', this); loadServiceAgreementTemplate();">
       <span class="nav-icon">IX</span> Service Agreements
     </button>
     <button class="nav-item" onclick="showPage('resources', this);">
-      <span class="nav-icon">VIII</span> DJ Resources
+      <span class="nav-icon">X</span> DJ Resources
     </button>
   </nav>
 
@@ -852,6 +875,80 @@
           <button class="btn btn-print" onclick="printSection('pr-result', 'Pricing Quote')">Print / Save PDF</button>
         </div>
         <div id="pr-breakdown"></div>
+      </div>
+    </div>
+
+    <!-- ──────────── CONTENT PACK ──────────── -->
+    <div class="page" id="page-lessonplan">
+      <div class="page-header">
+        <h1>Lesson Plan Builder</h1>
+        <p>Generate school-year themed plans for preschool teachers and homeschool parents in minutes.</p>
+      </div>
+      <div class="panel">
+        <div class="form-row form-3col">
+          <div class="field">
+            <label>Theme</label>
+            <input type="text" id="lp-theme" value="All About Me" placeholder="Ocean Life, Community Helpers, Seasons..." />
+          </div>
+          <div class="field">
+            <label>Audience</label>
+            <select id="lp-audience">
+              <option value="preschool" selected>Preschool</option>
+              <option value="homeschool">Homeschool</option>
+              <option value="mixed">Mixed</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Focus area</label>
+            <select id="lp-focus">
+              <option value="mixed" selected>Mixed</option>
+              <option value="literacy">Literacy</option>
+              <option value="math">Math</option>
+              <option value="social_emotional">Social Emotional</option>
+              <option value="science">Science</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row form-3col">
+          <div class="field">
+            <label>Duration (weeks)</label>
+            <input type="number" id="lp-weeks" min="1" max="12" value="4" />
+          </div>
+          <div class="field">
+            <label>Session length (minutes)</label>
+            <input type="number" id="lp-minutes" min="20" max="120" value="45" />
+          </div>
+          <div class="field">
+            <label>Include printables</label>
+            <select id="lp-printables">
+              <option value="yes" selected>Yes</option>
+              <option value="no">No</option>
+            </select>
+          </div>
+        </div>
+
+        <button class="btn btn-primary" onclick="buildLessonPlan()">Generate Lesson Plan</button>
+      </div>
+
+      <div class="result-box" id="lp-result">
+        <div class="print-bar">
+          <button class="btn btn-print" onclick="printSection('lp-result', 'Lesson Plan')">Print / Save PDF</button>
+        </div>
+        <div class="tabs">
+          <button class="tab active" onclick="showTab('lesson-weeks', this)">Weekly Plans</button>
+          <button class="tab" onclick="showTab('lesson-printables', this)">Printables</button>
+          <button class="tab" onclick="showTab('lesson-hooks', this)">Instagram Hooks</button>
+        </div>
+        <div class="tab-panel active" id="tab-lesson-weeks">
+          <div id="lp-weeks-output"></div>
+        </div>
+        <div class="tab-panel" id="tab-lesson-printables">
+          <div id="lp-printables-output"></div>
+        </div>
+        <div class="tab-panel" id="tab-lesson-hooks">
+          <div id="lp-hooks-output"></div>
+        </div>
       </div>
     </div>
 
@@ -2013,9 +2110,11 @@ POST-EVENT
 
   // ── Tab navigation ──
   function showTab(name, btn) {
-    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
-    document.getElementById('tab-' + name).classList.add('active');
+    const scope = btn.closest('.result-box') || document;
+    scope.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    scope.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+    const panel = scope.querySelector('#tab-' + name);
+    if (panel) panel.classList.add('active');
     btn.classList.add('active');
   }
 
@@ -2729,6 +2828,65 @@ POST-EVENT
   }
 
   // ── CONTENT PACK ──
+  async function buildLessonPlan() {
+    const includePrintables = document.getElementById('lp-printables').value === 'yes';
+    const res = await post('/api/tools/lesson-plan', {
+      theme: document.getElementById('lp-theme').value,
+      audience_type: document.getElementById('lp-audience').value,
+      duration_weeks: document.getElementById('lp-weeks').value,
+      focus_area: document.getElementById('lp-focus').value,
+      session_length_minutes: document.getElementById('lp-minutes').value,
+      include_printables: includePrintables,
+    });
+
+    if (!res.success) return alert('Error generating lesson plan');
+    const d = res.data;
+
+    const weeksEl = document.getElementById('lp-weeks-output');
+    weeksEl.innerHTML = '';
+    d.weekly_plans.forEach((week) => {
+      weeksEl.innerHTML += `<div class="lesson-week">
+        <div style="display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:8px;">
+          <strong>${week.title}</strong>
+          <span style="font-size:0.75rem;color:var(--muted);">Assessment: ${week.assessment}</span>
+        </div>
+        <div style="color:var(--muted);font-size:0.85rem;margin-bottom:8px;">
+          Objectives: ${week.objectives.join(' • ')}
+        </div>
+        ${week.daily_plan.map((day) => `
+          <div class="lesson-day">
+            <strong>${day.day}</strong> - ${day.objective}<br />
+            ${day.schedule.map((block) => `${block.block} (${block.minutes}m): ${block.activity}`).join('<br />')}
+            <div style="margin-top:6px;color:var(--muted);"><em>Home extension:</em> ${day.home_extension}</div>
+          </div>
+        `).join('')}
+      </div>`;
+    });
+
+    const printablesEl = document.getElementById('lp-printables-output');
+    printablesEl.innerHTML = '';
+    if ((d.printable_resources || []).length === 0) {
+      printablesEl.innerHTML = '<div class="dm-card"><div class="dm-text">No printables selected for this plan.</div></div>';
+    } else {
+      d.printable_resources.forEach((item) => {
+        printablesEl.innerHTML += `<div class="dm-card"><div class="dm-text">${item}</div></div>`;
+      });
+    }
+
+    const hooksEl = document.getElementById('lp-hooks-output');
+    hooksEl.innerHTML = '';
+    (d.instagram_promo_hooks || []).forEach((hook) => {
+      hooksEl.innerHTML += `<div class="dm-card"><div class="dm-text">${hook}</div></div>`;
+    });
+
+    const panel = document.getElementById('lp-result');
+    panel.classList.add('show');
+    panel.querySelectorAll('.tab').forEach((tab) => tab.classList.remove('active'));
+    panel.querySelectorAll('.tab-panel').forEach((tab) => tab.classList.remove('active'));
+    panel.querySelector('.tab').classList.add('active');
+    panel.querySelector('#tab-lesson-weeks').classList.add('active');
+  }
+
   async function buildContentPack() {
     const res = await post('/api/tools/content-pack', {
       years_experience: document.getElementById('cp-years').value,

@@ -1444,7 +1444,186 @@ def generate_content_pack(
 
 
 # ─────────────────────────────────────────────
-# 6. DJ PROFILE SETUP
+# 6. LESSON PLAN BUILDER
+# ─────────────────────────────────────────────
+
+LESSON_PLAN_FOCUS_LIBRARY = {
+    "literacy": [
+        "Letter recognition and phonemic awareness",
+        "Vocabulary growth with read-alouds",
+        "Story sequencing and retell skills",
+    ],
+    "math": [
+        "Counting, one-to-one correspondence, and number sense",
+        "Pattern recognition and sorting",
+        "Shape identification and spatial language",
+    ],
+    "social_emotional": [
+        "Self-regulation and classroom routines",
+        "Friendship, empathy, and turn-taking",
+        "Emotional vocabulary and reflection",
+    ],
+    "science": [
+        "Observation, prediction, and inquiry",
+        "Life cycles, weather, and seasons",
+        "Hands-on exploration with simple tools",
+    ],
+    "mixed": [
+        "Integrated literacy and math routines",
+        "Theme-based exploration across subjects",
+        "Social-emotional learning through stories and play",
+    ],
+}
+
+LESSON_PRINTABLE_LIBRARY = {
+    "literacy": [
+        "Letter tracing worksheets",
+        "Beginning sound match cards",
+        "Sight word pocket chart cards",
+        "Story sequence cut-and-paste activity",
+    ],
+    "math": [
+        "Number tracing sheets",
+        "Counting clip cards",
+        "Pattern strip printable",
+        "Shape hunt checklist",
+    ],
+    "social_emotional": [
+        "Feelings wheel printable",
+        "Classroom expectations poster",
+        "Conflict-resolution prompt cards",
+        "Calm corner reflection sheet",
+    ],
+    "science": [
+        "Observation journal pages",
+        "Life-cycle sequencing cards",
+        "Weather tracking chart",
+        "Simple experiment recording sheet",
+    ],
+    "mixed": [
+        "Theme vocabulary cards",
+        "Hands-on center rotation board",
+        "At-home extension activity sheet",
+        "Weekly reflection page",
+    ],
+}
+
+
+def _normalize_focus(value: str) -> str:
+    focus = (value or "mixed").strip().lower()
+    return focus if focus in LESSON_PLAN_FOCUS_LIBRARY else "mixed"
+
+
+def _normalize_audience(value: str) -> str:
+    audience = (value or "preschool").strip().lower()
+    if audience in {"preschool", "homeschool", "mixed"}:
+        return audience
+    return "preschool"
+
+
+def generate_lesson_plan(
+    theme: str,
+    audience_type: str = "preschool",
+    duration_weeks: int = 4,
+    focus_area: str = "mixed",
+    session_length_minutes: int = 45,
+    include_printables: bool = True,
+) -> Dict:
+    """Generate a multi-week lesson plan framework with daily activities and printable suggestions."""
+
+    normalized_theme = (theme or "Seasonal Learning").strip() or "Seasonal Learning"
+    normalized_audience = _normalize_audience(audience_type)
+    normalized_focus = _normalize_focus(focus_area)
+    weeks = max(1, min(duration_weeks, 12))
+    minutes = max(20, min(session_length_minutes, 120))
+
+    focus_targets = LESSON_PLAN_FOCUS_LIBRARY[normalized_focus]
+    printable_pool = LESSON_PRINTABLE_LIBRARY[normalized_focus]
+    daily_blocks = [
+        "Morning meeting",
+        "Mini-lesson",
+        "Hands-on center",
+        "Movement or sensory",
+        "Wrap-up reflection",
+    ]
+
+    weekly_plans = []
+    for week in range(1, weeks + 1):
+        week_title = f"Week {week}: {normalized_theme}"
+        week_objectives = [
+            focus_targets[(week - 1) % len(focus_targets)],
+            focus_targets[week % len(focus_targets)],
+            f"Apply {normalized_theme.lower()} vocabulary through guided play and discussion",
+        ]
+
+        daily_plan = []
+        weekdays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+        for idx, day in enumerate(weekdays):
+            daily_plan.append(
+                {
+                    "day": day,
+                    "objective": week_objectives[idx % len(week_objectives)],
+                    "schedule": [
+                        {
+                            "block": daily_blocks[0],
+                            "minutes": max(8, round(minutes * 0.2)),
+                            "activity": f"Introduce {normalized_theme.lower()} question of the day and preview goals.",
+                        },
+                        {
+                            "block": daily_blocks[1],
+                            "minutes": max(10, round(minutes * 0.25)),
+                            "activity": f"Teach mini concept on {normalized_focus.replace('_', ' ')} using visuals and modeling.",
+                        },
+                        {
+                            "block": daily_blocks[2],
+                            "minutes": max(10, round(minutes * 0.25)),
+                            "activity": f"Center task: {printable_pool[(idx + week) % len(printable_pool)]}.",
+                        },
+                        {
+                            "block": daily_blocks[3],
+                            "minutes": max(8, round(minutes * 0.2)),
+                            "activity": f"Movement game tied to {normalized_theme.lower()} and collaborative play.",
+                        },
+                        {
+                            "block": daily_blocks[4],
+                            "minutes": max(6, round(minutes * 0.1)),
+                            "activity": "Quick check for understanding and send-home prompt.",
+                        },
+                    ],
+                    "home_extension": f"Family prompt: practice one {normalized_theme.lower()} activity at home for 10 minutes.",
+                }
+            )
+
+        weekly_plans.append(
+            {
+                "week": week,
+                "title": week_title,
+                "objectives": week_objectives,
+                "daily_plan": daily_plan,
+                "assessment": "Use observation checklist and student work samples to track progress.",
+            }
+        )
+
+    return {
+        "plan_id": str(uuid.uuid4()),
+        "theme": normalized_theme,
+        "audience_type": normalized_audience,
+        "focus_area": normalized_focus,
+        "duration_weeks": weeks,
+        "session_length_minutes": minutes,
+        "weekly_plans": weekly_plans,
+        "printable_resources": printable_pool if include_printables else [],
+        "instagram_promo_hooks": [
+            f"Parents asked for done-for-you {normalized_theme.lower()} lesson plans, so we built them.",
+            f"Stop planning from scratch: this {weeks}-week {normalized_theme.lower()} kit is classroom-ready.",
+            "Comment LESSONS and we will send the tier that fits your school-year goals.",
+        ],
+        "created_at": datetime.utcnow().isoformat(),
+    }
+
+
+# ─────────────────────────────────────────────
+# 7. DJ PROFILE SETUP
 # ─────────────────────────────────────────────
 
 DJ_PROFILE_TEMPLATE = {

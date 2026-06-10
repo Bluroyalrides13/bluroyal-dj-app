@@ -26,6 +26,7 @@ from src.dj_tools.engine import (
     build_setlist,
     calculate_booking_price,
     generate_content_pack,
+    generate_lesson_plan,
     get_dj_profile_template,
     save_dj_profile,
     get_lead_crm_template,
@@ -208,6 +209,26 @@ async def create_content_pack(request: Request):
         return ApiResponse(success=True, message="Content pack ready", data=result)
     except Exception as e:
         logger.error(f"Content pack error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/api/tools/lesson-plan")
+async def create_lesson_plan(request: Request):
+    """Generate a structured multi-week lesson plan with printable resource suggestions"""
+    _require_dashboard_auth(request)
+    try:
+        body = await request.json()
+        result = generate_lesson_plan(
+            theme=body.get("theme", "Seasonal Learning"),
+            audience_type=body.get("audience_type", "preschool"),
+            duration_weeks=int(body.get("duration_weeks", 4)),
+            focus_area=body.get("focus_area", "mixed"),
+            session_length_minutes=int(body.get("session_length_minutes", 45)),
+            include_printables=bool(body.get("include_printables", True)),
+        )
+        return ApiResponse(success=True, message="Lesson plan ready", data=result)
+    except Exception as e:
+        logger.error(f"Lesson plan error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 
