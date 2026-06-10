@@ -354,6 +354,36 @@ h1 {
   border: 1px solid rgba(166, 106, 0, 0.3);
 }
 
+.resource-meta {
+  margin-top: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.resource-meta__tier,
+.resource-meta__price {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+}
+
+.resource-meta__tier {
+  color: #2a426f;
+  background: rgba(90, 110, 160, 0.14);
+  border: 1px solid rgba(42, 66, 111, 0.2);
+}
+
+.resource-meta__price {
+  color: #7a4f00;
+  background: rgba(255, 191, 84, 0.24);
+  border: 1px solid rgba(166, 106, 0, 0.28);
+}
+
 .sample-badge {
   display: inline-flex;
   border-radius: 999px;

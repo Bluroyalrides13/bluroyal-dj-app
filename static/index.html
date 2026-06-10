@@ -325,6 +325,13 @@
         return "Basic + higher tiers";
       }
 
+      function getResourcePrice(item) {
+        if (item.title.includes("40 Weeks")) return "$497";
+        if (item.category.includes("Activity Book")) return "$97";
+        if (item.category.includes("Science")) return "$67";
+        return "$47";
+      }
+
       const resourceCards = [
         {
           title: "Pre-K Lesson Plan Book - 40 Weeks",
@@ -473,6 +480,7 @@
             const pdfFilename = item.pdfUrl ? item.pdfUrl.split("/").pop().toLowerCase() : "";
             const hasPdf = item.pdfUrl && item.pdfUrl.trim() && AVAILABLE_PDFS.has(pdfFilename);
             const tierLabel = getResourceTier(item.title);
+            const priceLabel = getResourcePrice(item);
             const downloadButton = hasPdf
               ? `<a class="button button--secondary" href="${item.pdfUrl}" target="_blank" rel="noopener">Download PDF</a>`
               : "";
@@ -494,6 +502,10 @@
                 </div>
                 <h3>${item.title}</h3>
                 <p>${item.description}</p>
+                <div class="resource-meta">
+                  <span class="resource-meta__tier">Included: ${tierLabel}</span>
+                  <span class="resource-meta__price">A la carte: ${priceLabel}</span>
+                </div>
                 ${downloadButton ? `<div class="sample-actions">${downloadButton}</div>` : ""}
                 ${comingSoonBadge}
               </article>
