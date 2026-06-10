@@ -199,9 +199,11 @@
       <div class="tabs">
         <button class="tab active" onclick="showTab('weeks', this)">Weekly Plans</button>
         <button class="tab" onclick="showTab('printables', this)">Printables</button>
+        <button class="tab" onclick="showTab('hooks', this)">Instagram Hooks</button>
       </div>
       <div class="tab-panel active" id="tab-weeks"></div>
       <div class="tab-panel" id="tab-printables"></div>
+      <div class="tab-panel" id="tab-hooks"></div>
     </section>
   </div>
 
@@ -243,6 +245,7 @@
       const d = res.data;
       const weeks = document.getElementById('tab-weeks');
       const printables = document.getElementById('tab-printables');
+      const hooks = document.getElementById('tab-hooks');
 
       // PROFESSIONAL COMPREHENSIVE FORMAT - KID FRIENDLY & COLORFUL
       if (d.is_comprehensive) {
@@ -381,6 +384,10 @@
           `;
         }).join('');
       }
+
+      hooks.innerHTML = (d.instagram_promo_hooks || []).map((h) => `
+        <div class="card small">${h}</div>
+      `).join('');
 
       window.lastPrintableDocs = docs;
       document.getElementById('lp-result').style.display = 'block';
