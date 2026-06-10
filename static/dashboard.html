@@ -2861,25 +2861,114 @@ POST-EVENT
     const weeksEl = document.getElementById('lp-weeks-output');
     weeksEl.innerHTML = '';
     const sampleLabel = document.getElementById('lp-sample-label').value || 'Teacher Approved';
-    weeksEl.innerHTML += `<div class="dm-card" style="margin-bottom:12px;"><div class="dm-label">${sampleLabel}</div><div class="dm-text">Language mode: ${d.language_mode || 'english'} | Audience: ${d.audience_type} | Focus: ${d.focus_area}</div></div>`;
-    d.weekly_plans.forEach((week) => {
-      weeksEl.innerHTML += `<div class="lesson-week">
-        <div style="display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:8px;">
-          <strong>${week.title}</strong>
-          <span style="font-size:0.75rem;color:var(--muted);">Assessment: ${week.assessment}</span>
-        </div>
-        <div style="color:var(--muted);font-size:0.85rem;margin-bottom:8px;">
-          Objectives: ${week.objectives.join(' • ')}
-        </div>
-        ${week.daily_plan.map((day) => `
-          <div class="lesson-day">
-            <strong>${day.day}</strong> - ${day.objective}<br />
-            ${day.schedule.map((block) => `${block.block} (${block.minutes}m): ${block.activity}`).join('<br />')}
-            <div style="margin-top:6px;color:var(--muted);"><em>Home extension:</em> ${day.home_extension}</div>
+
+    // PROFESSIONAL COMPREHENSIVE FORMAT
+    if (d.is_comprehensive) {
+      weeksEl.innerHTML = `
+        <div class="dm-card" style="border-left: 4px solid #4da6ff; padding: 20px;">
+          <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+            <span style="font-size: 28px;">${d.emoji || '📚'}</span>
+            <div>
+              <strong style="font-size: 20px; display: block;">${d.theme}</strong>
+              <span style="color: #666; font-size: 13px;">${d.month}</span>
+            </div>
           </div>
-        `).join('')}
-      </div>`;
-    });
+
+          <div class="dm-card" style="background: #f0f4ff; margin-bottom: 12px;">
+            <strong>Overview</strong>
+            <div style="margin: 8px 0; line-height: 1.6; font-size: 13px;">${d.overview}</div>
+          </div>
+
+          <strong style="display: block; margin-bottom: 8px;">Learning Objectives</strong>
+          <div style="margin-bottom: 12px;">
+            ${Object.entries(d.learning_objectives || {}).map(([subject, goals]) => `
+              <div style="margin-bottom: 8px;">
+                <strong style="color: #2c5aa0; font-size: 13px;">${subject}</strong>
+                <ul style="margin: 4px 0 0 20px; padding: 0; font-size: 12px;">
+                  ${goals.map(g => `<li style="margin: 2px 0;">${g}</li>`).join('')}
+                </ul>
+              </div>
+            `).join('')}
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 12px 0;">
+            <div class="dm-card" style="background: #fff9e6;">
+              <strong style="color: #cc8800; font-size: 13px;">Key Vocabulary</strong>
+              <div style="margin: 6px 0; font-size: 12px; line-height: 1.4;">${d.key_vocabulary}</div>
+            </div>
+
+            <div class="dm-card" style="background: #e6f2ff;">
+              <strong style="color: #2c5aa0; font-size: 13px;">Materials Needed</strong>
+              <ul style="margin: 4px 0 0 16px; padding: 0; font-size: 12px;">
+                ${(d.materials_needed || []).slice(0, 4).map(m => `<li>${m}</li>`).join('')}
+                ${(d.materials_needed || []).length > 4 ? `<li><em>+ ${d.materials_needed.length - 4} more</em></li>` : ''}
+              </ul>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 12px 0;">
+            <div class="dm-card" style="background: #ffe6e6;">
+              <strong style="color: #cc4444; font-size: 13px;">Songs & Plays</strong>
+              <ul style="margin: 4px 0 0 16px; padding: 0; font-size: 12px;">
+                ${(d.songs_and_fingerplays || []).map(s => `<li>${s}</li>`).join('')}
+              </ul>
+            </div>
+
+            <div class="dm-card" style="background: #e6e6ff;">
+              <strong style="color: #5555cc; font-size: 13px;">Read Alouds</strong>
+              <ul style="margin: 4px 0 0 16px; padding: 0; font-size: 12px;">
+                ${(d.read_alouds || []).map(b => `<li>${b}</li>`).join('')}
+              </ul>
+            </div>
+          </div>
+
+          <strong style="display: block; margin: 12px 0 8px 0; font-size: 13px;">Daily Activities</strong>
+          <div style="margin: 8px 0;">
+            ${(d.daily_activities || []).map(day => `
+              <div class="dm-card" style="background: linear-gradient(135deg, #4da6ff 0%, #66b3ff 100%); color: white; margin-bottom: 8px; padding: 10px;">
+                <strong style="font-size: 13px;">⭐ ${day.day} - ${day.title}</strong>
+                <div style="margin-top: 8px; font-size: 12px; line-height: 1.5;">
+                  ${Object.entries(day.activities || {}).map(([type, content]) => `
+                    <div><strong>${type}:</strong> ${content}</div>
+                  `).join('')}
+                </div>
+              </div>
+            `).join('')}
+          </div>
+
+          <div class="dm-card" style="background: #fff0e6; border-left: 4px solid #ff9900; margin-top: 12px;">
+            <strong style="color: #ff9900; font-size: 13px;">💡 Teacher Tip</strong>
+            <div style="margin: 6px 0; font-size: 12px; line-height: 1.5;">${d.teacher_tip}</div>
+          </div>
+
+          <div class="dm-card" style="background: #fff0f0; border-left: 4px solid #ff6666; margin-top: 8px;">
+            <strong style="color: #ff6666; font-size: 13px;">👨‍👩‍👧 Family Note</strong>
+            <div style="margin: 6px 0; font-size: 12px; line-height: 1.5; font-style: italic;">${d.family_take_home_note}</div>
+          </div>
+        </div>
+      `;
+    } else {
+      // LEGACY FORMAT
+      weeksEl.innerHTML += `<div class="dm-card" style="margin-bottom:12px;"><div class="dm-label">${sampleLabel}</div><div class="dm-text">Language mode: ${d.language_mode || 'english'} | Audience: ${d.audience_type} | Focus: ${d.focus_area}</div></div>`;
+      d.weekly_plans.forEach((week) => {
+        weeksEl.innerHTML += `<div class="lesson-week">
+          <div style="display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:8px;">
+            <strong>${week.title}</strong>
+            <span style="font-size:0.75rem;color:var(--muted);">Assessment: ${week.assessment}</span>
+          </div>
+          <div style="color:var(--muted);font-size:0.85rem;margin-bottom:8px;">
+            Objectives: ${week.objectives.join(' • ')}
+          </div>
+          ${week.daily_plan.map((day) => `
+            <div class="lesson-day">
+              <strong>${day.day}</strong> - ${day.objective}<br />
+              ${day.schedule.map((block) => `${block.block} (${block.minutes}m): ${block.activity}`).join('<br />')}
+              <div style="margin-top:6px;color:var(--muted);"><em>Home extension:</em> ${day.home_extension}</div>
+            </div>
+          `).join('')}
+        </div>`;
+      });
+    }
 
     const printablesEl = document.getElementById('lp-printables-output');
     printablesEl.innerHTML = '';

@@ -246,19 +246,107 @@
       const printables = document.getElementById('tab-printables');
       const hooks = document.getElementById('tab-hooks');
 
-      weeks.innerHTML = d.weekly_plans.map((week) => `
-        <div class="card">
-          <strong>${week.title}</strong>
-          <div class="small" style="margin-top:6px;">${week.objectives.join(' • ')}</div>
-          ${week.daily_plan.map((day) => `
-            <div class="card" style="margin-top:10px;background:#f8faff;">
-              <strong>${day.day}</strong><br />
-              <span class="small">${day.objective}</span><br />
-              <div class="small" style="margin-top:6px;">${day.schedule.map((b) => `${b.block} (${b.minutes}m): ${b.activity}`).join('<br />')}</div>
+      // PROFESSIONAL COMPREHENSIVE FORMAT
+      if (d.is_comprehensive) {
+        weeks.innerHTML = `
+          <div class="card" style="border-left: 4px solid #4da6ff; padding: 20px;">
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+              <span style="font-size: 32px;">${d.emoji || '📚'}</span>
+              <div>
+                <h2 style="margin: 0; font-size: 24px;">${d.theme}</h2>
+                <p style="margin: 4px 0; color: #666; font-style: italic;">${d.month}</p>
+              </div>
             </div>
-          `).join('')}
-        </div>
-      `).join('');
+
+            <div class="card" style="background: #f0f4ff; margin-bottom: 16px;">
+              <strong>Overview</strong>
+              <p style="margin: 8px 0; line-height: 1.6;">${d.overview}</p>
+            </div>
+
+            <strong>Learning Objectives</strong>
+            <div style="margin: 12px 0;">
+              ${Object.entries(d.learning_objectives || {}).map(([subject, goals]) => `
+                <div style="margin-bottom: 12px;">
+                  <strong style="color: #2c5aa0;">${subject}</strong>
+                  <ul style="margin: 6px 0 0 20px; padding: 0;">
+                    ${goals.map(g => `<li style="margin: 4px 0;">${g}</li>`).join('')}
+                  </ul>
+                </div>
+              `).join('')}
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; margin: 16px 0;">
+              <div class="card" style="background: #fff9e6;">
+                <strong style="color: #cc8800;">Key Vocabulary</strong>
+                <p style="margin: 8px 0; font-size: 13px; line-height: 1.5;">${d.key_vocabulary}</p>
+              </div>
+
+              <div class="card" style="background: #e6f2ff;">
+                <strong style="color: #2c5aa0;">Materials Needed</strong>
+                <ul style="margin: 6px 0 0 18px; padding: 0; font-size: 13px;">
+                  ${(d.materials_needed || []).slice(0, 5).map(m => `<li>${m}</li>`).join('')}
+                  ${(d.materials_needed || []).length > 5 ? `<li><em>+ ${d.materials_needed.length - 5} more</em></li>` : ''}
+                </ul>
+              </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin: 16px 0;">
+              <div class="card" style="background: #ffe6e6;">
+                <strong style="color: #cc4444;">Songs & Fingerplays</strong>
+                <ul style="margin: 6px 0 0 18px; padding: 0; font-size: 13px;">
+                  ${(d.songs_and_fingerplays || []).map(s => `<li>${s}</li>`).join('')}
+                </ul>
+              </div>
+
+              <div class="card" style="background: #e6e6ff;">
+                <strong style="color: #5555cc;">Read Alouds</strong>
+                <ul style="margin: 6px 0 0 18px; padding: 0; font-size: 13px;">
+                  ${(d.read_alouds || []).map(b => `<li>${b}</li>`).join('')}
+                </ul>
+              </div>
+            </div>
+
+            <strong>Daily Activities</strong>
+            <div style="margin: 12px 0;">
+              ${(d.daily_activities || []).map(day => `
+                <div class="card" style="background: linear-gradient(135deg, #4da6ff 0%, #66b3ff 100%); color: white; margin-bottom: 10px; padding: 12px;">
+                  <strong style="font-size: 16px;">⭐ ${day.day} - ${day.title}</strong>
+                  <div style="margin-top: 10px; font-size: 13px; line-height: 1.6;">
+                    ${Object.entries(day.activities || {}).map(([type, content]) => `
+                      <div><strong>${type}:</strong> ${content}</div>
+                    `).join('')}
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+
+            <div class="card" style="background: #fff0e6; border-left: 4px solid #ff9900; margin-top: 16px;">
+              <strong style="color: #ff9900;">💡 Teacher Tip</strong>
+              <p style="margin: 8px 0; font-size: 13px; line-height: 1.5;">${d.teacher_tip}</p>
+            </div>
+
+            <div class="card" style="background: #fff0f0; border-left: 4px solid #ff6666; margin-top: 12px;">
+              <strong style="color: #ff6666;">👨‍👩‍👧 Family Take-Home Note</strong>
+              <p style="margin: 8px 0; font-size: 13px; line-height: 1.5; font-style: italic;">${d.family_take_home_note}</p>
+            </div>
+          </div>
+        `;
+      } else {
+        // LEGACY FORMAT
+        weeks.innerHTML = d.weekly_plans.map((week) => `
+          <div class="card">
+            <strong>${week.title}</strong>
+            <div class="small" style="margin-top:6px;">${week.objectives.join(' • ')}</div>
+            ${week.daily_plan.map((day) => `
+              <div class="card" style="margin-top:10px;background:#f8faff;">
+                <strong>${day.day}</strong><br />
+                <span class="small">${day.objective}</span><br />
+                <div class="small" style="margin-top:6px;">${day.schedule.map((b) => `${b.block} (${b.minutes}m): ${b.activity}`).join('<br />')}</div>
+              </div>
+            `).join('')}
+          </div>
+        `).join('');
+      }
 
       const docs = d.printable_documents || [];
       if (!docs.length) {
