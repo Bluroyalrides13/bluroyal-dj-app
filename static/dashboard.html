@@ -836,40 +836,97 @@
 
   const REQUIRED_FIELDS_BY_EVENT = {
     wedding: [
-      'couple_names', 'wedding_date', 'venue_name', 'guest_count', 'ceremony_start', 'reception_start', 'must_play', 'do_not_play'
+      'couple_names', 'wedding_date', 'venue_name', 'guest_count', 'must_play'
     ],
     same_sex_wedding_lgbtq: [
-      'couple_names', 'event_date', 'venue_name', 'guest_count', 'ceremony_start', 'reception_start', 'must_play', 'do_not_play'
+      'couple_names', 'event_date', 'venue_name', 'guest_count', 'must_play'
     ],
     corporate: [
-      'company_name', 'event_date', 'venue_name', 'guest_count', 'start_time', 'end_time', 'event_goal'
+      'company_name', 'event_date', 'venue_name', 'guest_count', 'event_goal'
     ],
     sweet_16: [
-      'guest_name', 'event_date', 'venue_name', 'guest_count', 'start_time', 'end_time', 'must_play', 'do_not_play'
+      'guest_name', 'event_date', 'venue_name', 'guest_count', 'must_play'
     ],
     birthday: [
-      'guest_name', 'event_date', 'venue_name', 'guest_count', 'start_time', 'end_time', 'must_play', 'do_not_play'
+      'guest_name', 'event_date', 'venue_name', 'guest_count', 'must_play'
     ],
     quinceanera: [
-      'debutante_name', 'event_date', 'venue_name', 'guest_count', 'start_time', 'end_time', 'must_play', 'do_not_play'
+      'debutante_name', 'event_date', 'venue_name', 'guest_count', 'must_play'
     ],
     general_party: [
-      'client_name', 'event_date', 'venue_name', 'guest_count', 'start_time', 'end_time', 'must_play', 'do_not_play'
+      'client_name', 'event_date', 'venue_name', 'guest_count', 'must_play'
     ],
     bar_mitzvah: [
-      'celebrant_name', 'event_date', 'venue_name', 'guest_count', 'service_end', 'party_start', 'must_play', 'do_not_play'
+      'celebrant_name', 'event_date', 'venue_name', 'guest_count', 'must_play'
     ],
     bat_mitzvah: [
-      'celebrant_name', 'event_date', 'venue_name', 'guest_count', 'service_end', 'party_start', 'must_play', 'do_not_play'
+      'celebrant_name', 'event_date', 'venue_name', 'guest_count', 'must_play'
     ],
     anniversary: [
-      'couple_names', 'anniversary_year', 'event_date', 'venue_name', 'guest_count', 'start_time', 'end_time', 'must_play', 'do_not_play'
+      'anniversary_number', 'wedding_date', 'top_priority_moment'
     ],
     anniversay: [
-      'couple_names', 'anniversary_year', 'event_date', 'venue_name', 'guest_count', 'start_time', 'end_time', 'must_play', 'do_not_play'
+      'anniversary_number', 'wedding_date', 'top_priority_moment'
     ],
     club: [
-      'venue_name', 'event_date', 'set_start', 'set_end', 'expected_crowd', 'peak_genres', 'must_play', 'do_not_play'
+      'venue_name', 'event_date', 'set_start', 'set_end', 'peak_genres'
+    ],
+    graduation_party: [
+      'graduate_name', 'school_name', 'future_plans'
+    ],
+    baby_shower: [
+      'parents_to_be', 'due_date', 'theme'
+    ],
+    gender_reveal: [
+      'reveal_method', 'reveal_time'
+    ],
+    bridal_shower: [
+      'bride_name', 'event_date', 'venue_name', 'favorite_music'
+    ],
+    retirement_party: [
+      'retiree_name', 'company', 'years_of_service'
+    ],
+    prom: [
+      'school_name', 'theme', 'student_count', 'school_music_guidelines'
+    ],
+    homecoming_dance: [
+      'school_name', 'grade_levels', 'music_restrictions', 'chaperone_contact'
+    ],
+    school_dance: [
+      'school_name', 'grade_levels', 'music_restrictions', 'chaperone_contact'
+    ],
+    fundraiser_charity_gala: [
+      'organization_name', 'supported_cause', 'fundraising_goal', 'key_speakers'
+    ],
+    community_festival: [
+      'event_name', 'organization', 'estimated_attendance'
+    ],
+    grand_opening: [
+      'business_name', 'ribbon_cutting_time', 'promotional_announcements'
+    ],
+    networking_event: [
+      'organization', 'expected_attendance', 'networking_or_dancing'
+    ],
+    trade_show_expo: [
+      'expo_name', 'booth_announcements', 'presentation_schedule'
+    ],
+    karaoke_night: [
+      'public_or_private', 'guest_count', 'song_request_process'
+    ],
+    music_bingo_singo: [
+      'number_of_rounds', 'number_of_players', 'prize_structure'
+    ],
+    trivia_night: [
+      'number_of_rounds', 'categories', 'team_or_individual'
+    ],
+    christmas_party: [
+      'corporate_or_family', 'holiday_music_preferences'
+    ],
+    new_years_eve_party: [
+      'countdown_timing', 'midnight_song'
+    ],
+    halloween_party: [
+      'costume_contest', 'theme', 'audience_type'
     ]
   };
 
