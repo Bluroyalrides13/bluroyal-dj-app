@@ -51,6 +51,36 @@ OFFER_TIERS: List[OfferTier] = [
 ]
 
 
+TIER_FILE_BUNDLES: Dict[str, List[str]] = {
+    # $497: foundational starter files only
+    "vault": [
+        "Event Timeline Builder",
+        "Core Client Questionnaire Templates",
+        "Setlist Organizer",
+        "Pricing Calculator",
+        "Basic Instagram Content Pack",
+    ],
+    # $1500: starter + growth systems
+    "accelerator": [
+        "Everything in $497 Vault",
+        "DJ Profile Setup System",
+        "Lead Management CRM",
+        "Advanced Sales Scripts",
+        "Enhanced Follow-Up Workflows",
+        "Service Agreement Core Forms",
+    ],
+    # $3500: complete package
+    "vip": [
+        "Everything in $1500 Accelerator",
+        "Full Service Agreement Pack (all forms)",
+        "Complete DJ Resources Vault",
+        "Premium Sales Automation Assets",
+        "VIP Blueprint Intensive Deliverables",
+        "Done-with-you implementation playbook",
+    ],
+}
+
+
 class InfoProductFunnel:
     """Manages offer catalog, application scoring, and persistence."""
 
@@ -73,6 +103,7 @@ class InfoProductFunnel:
                 "access_level": tier.access_level,
                 "promise": tier.promise,
                 "outcome": tier.outcome,
+                "included_files": TIER_FILE_BUNDLES.get(tier.slug, []),
                 "purchase_link": payment_links.get(tier.slug, ""),
                 "post_purchase_login_url": self.settings.POST_PURCHASE_LOGIN_URL,
             }

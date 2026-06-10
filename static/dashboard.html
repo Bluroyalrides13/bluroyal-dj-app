@@ -1326,9 +1326,9 @@
       <div class="panel">
         <h2>Quick Sales Script</h2>
         <div style="font-size:0.92rem;color:var(--muted);line-height:1.8;">
-          Start with <strong>$497</strong> for self-paced execution.<br/>
-          Move to <strong>$1500</strong> when they want guided implementation.<br/>
-          Close <strong>$3500</strong> for done-with-you premium buildout.
+          Start with <strong>$497</strong> for basic core files.<br/>
+          Move to <strong>$1500</strong> for expanded systems and guided growth files.<br/>
+          Close <strong>$3500</strong> for the complete full package.
         </div>
       </div>
 
@@ -2941,6 +2941,12 @@ POST-EVENT
             <div style="font-size:1.8rem;font-weight:900;margin-top:8px;color:var(--accent3);">$${price.toLocaleString()}</div>
             <div style="font-size:0.86rem;color:var(--muted);margin-top:8px;line-height:1.6;">${offer.promise || ''}</div>
             <div style="font-size:0.84rem;color:var(--text);margin-top:8px;line-height:1.6;">${offer.outcome || ''}</div>
+            <div style="margin-top:10px;">
+              <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;font-weight:700;margin-bottom:6px;">Included Files</div>
+              <ul style="padding-left:18px;margin:0;color:var(--text);font-size:0.82rem;line-height:1.6;">
+                ${(offer.included_files || []).map((item) => `<li>${item}</li>`).join('') || '<li>Bundle details coming soon</li>'}
+              </ul>
+            </div>
             <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;">
               <a class="btn btn-primary" href="${offer.purchase_link || '#'}" target="_blank" rel="noopener noreferrer" onclick="recordCheckoutClick('${slug}', ${price})">Open Checkout</a>
               <button class="btn btn-secondary" type="button" onclick="navigator.clipboard.writeText('${(offer.purchase_link || '').replace(/'/g, "\\'")}').then(()=>showToast('Checkout link copied')).catch(()=>showToast('Clipboard blocked'))">Copy Link</button>
