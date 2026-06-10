@@ -1301,6 +1301,18 @@
         <p>Sell your three core offers: $497, $1500, and $3500 with direct purchase links.</p>
       </div>
 
+      <div class="panel" style="margin-bottom:18px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;">
+          <h2 style="margin:0;">Conversion Tracker</h2>
+          <button class="btn btn-secondary" onclick="resetSalesTracker()">Reset Tracker</button>
+        </div>
+        <div id="sales-tracker-summary" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-top:12px;">
+          <div class="panel" style="padding:14px;"><div style="font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;">Checkout Clicks</div><div id="sales-clicks" style="font-size:1.6rem;font-weight:900;">0</div></div>
+          <div class="panel" style="padding:14px;"><div style="font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;">Closed Deals</div><div id="sales-closed" style="font-size:1.6rem;font-weight:900;">0</div></div>
+          <div class="panel" style="padding:14px;"><div style="font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;">Tracked Revenue</div><div id="sales-revenue" style="font-size:1.6rem;font-weight:900;">$0</div></div>
+        </div>
+      </div>
+
       <div class="panel">
         <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px;">
           <h2 style="margin:0;">Offer Stack</h2>
@@ -1317,6 +1329,16 @@
           Start with <strong>$497</strong> for self-paced execution.<br/>
           Move to <strong>$1500</strong> when they want guided implementation.<br/>
           Close <strong>$3500</strong> for done-with-you premium buildout.
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>Upsell Follow-Up Timing</h2>
+        <div style="font-size:0.9rem;color:var(--muted);line-height:1.8;">
+          Day 0: Send checkout link + "best fit" reason.<br/>
+          Day 2: Share 1 quick-win case result.<br/>
+          Day 5: Offer implementation support (upsell to $1500).<br/>
+          Day 10: Invite to VIP done-with-you option ($3500).
         </div>
       </div>
     </div>
@@ -2826,10 +2848,75 @@ POST-EVENT
   }
 
   // ── SALES OFFERS ──
+  function updateSalesSummaryUI(tracker) {
+    tracker = tracker || { offers: {} };
+    const offers = Object.values(tracker.offers || {});
+    const clicks = offers.reduce((acc, o) => acc + Number(o.clicks || 0), 0);
+    const closed = offers.reduce((acc, o) => acc + Number(o.sold || 0), 0);
+    const revenue = offers.reduce((acc, o) => acc + Number(o.revenue || 0), 0);
+
+    const clicksEl = document.getElementById('sales-clicks');
+    const closedEl = document.getElementById('sales-closed');
+    const revEl = document.getElementById('sales-revenue');
+    if (clicksEl) clicksEl.textContent = clicks;
+    if (closedEl) closedEl.textContent = closed;
+    if (revEl) revEl.textContent = '$' + revenue.toLocaleString();
+  }
+
+  async function fetchSalesTracker() {
+    try {
+      const r = await fetch('/api/tools/sales-tracker');
+      const res = await r.json();
+      return res?.data || { offers: {} };
+    } catch {
+      return { offers: {} };
+    }
+  }
+
+  async function recordSalesEvent(slug, price, eventType) {
+    try {
+      const res = await post('/api/tools/sales-tracker', {
+        offer_slug: slug,
+        price,
+        event_type: eventType,
+      });
+      if (!res.success) return;
+      const tracker = res.data?.tracker || { offers: {} };
+      updateSalesSummaryUI(tracker);
+      if (eventType === 'sold') showToast('Sale logged');
+    } catch (err) {
+      console.error('recordSalesEvent error:', err);
+    }
+  }
+
+  async function recordCheckoutClick(slug, price) {
+    await recordSalesEvent(slug, price, 'click');
+  }
+
+  async function markSaleClosed(slug, price) {
+    await recordSalesEvent(slug, price, 'sold');
+  }
+
+  async function resetSalesTracker() {
+    showToast('Reset is not enabled yet in API');
+  }
+
+  async function copyTierScript(name, price) {
+    const script = `Hey! Based on what you shared, I'd recommend ${name} ($${price}).\n\nThis is the best fit if you want clear execution and faster results.\n\nIf you're ready, here is the secure checkout link:`;
+    try {
+      await navigator.clipboard.writeText(script);
+      showToast('Sales script copied');
+    } catch {
+      showToast('Clipboard blocked by browser');
+    }
+  }
+
   async function loadSalesOffers() {
     const wrap = document.getElementById('sales-offers-wrap');
     if (!wrap) return;
 
+    const tracker = await fetchSalesTracker();
+    updateSalesSummaryUI(tracker);
     wrap.innerHTML = '<div class="panel" style="padding:16px;opacity:.8;">Loading offers...</div>';
     try {
       const r = await fetch('/api/offers');
@@ -2844,6 +2931,7 @@ POST-EVENT
       offers.sort((a, b) => Number(a.price || 0) - Number(b.price || 0));
       wrap.innerHTML = offers.map((offer) => {
         const price = Number(offer.price || 0);
+        const slug = (offer.slug || 'offer').toString();
         const isTargetTier = [497, 1500, 3500].includes(price);
         const accent = isTargetTier ? 'var(--accent3)' : 'var(--muted)';
         return `
@@ -2854,8 +2942,10 @@ POST-EVENT
             <div style="font-size:0.86rem;color:var(--muted);margin-top:8px;line-height:1.6;">${offer.promise || ''}</div>
             <div style="font-size:0.84rem;color:var(--text);margin-top:8px;line-height:1.6;">${offer.outcome || ''}</div>
             <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;">
-              <a class="btn btn-primary" href="${offer.purchase_link || '#'}" target="_blank" rel="noopener noreferrer">Open Checkout</a>
+              <a class="btn btn-primary" href="${offer.purchase_link || '#'}" target="_blank" rel="noopener noreferrer" onclick="recordCheckoutClick('${slug}', ${price})">Open Checkout</a>
               <button class="btn btn-secondary" type="button" onclick="navigator.clipboard.writeText('${(offer.purchase_link || '').replace(/'/g, "\\'")}').then(()=>showToast('Checkout link copied')).catch(()=>showToast('Clipboard blocked'))">Copy Link</button>
+              <button class="btn btn-secondary" type="button" onclick="copyTierScript('${(offer.name || 'Offer').replace(/'/g, "\\'")}', ${price})">Copy Script</button>
+              <button class="btn btn-secondary" type="button" onclick="markSaleClosed('${slug}', ${price})">Mark Sold</button>
             </div>
           </div>
         `;
@@ -2939,6 +3029,7 @@ POST-EVENT
   document.addEventListener('DOMContentLoaded', () => {
     loadAdminStats();
     loadQuestionnaire();
+    fetchSalesTracker().then(updateSalesSummaryUI);
   });
 </script>
 </body>

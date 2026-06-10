@@ -31,6 +31,7 @@ LEADS_FILE = DATA_DIR / "crm_leads.json"
 BRIEFS_FILE = DATA_DIR / "questionnaire_briefs.json"
 QUOTES_FILE = DATA_DIR / "pricing_quotes.json"
 AGREEMENTS_FILE = DATA_DIR / "service_agreements.json"
+SALES_TRACKER_FILE = DATA_DIR / "sales_tracker.json"
 
 _json_lock = threading.Lock()
 
@@ -52,6 +53,24 @@ def _append_record(filepath: Path, record: Dict) -> None:
         records.append(record)
         with open(filepath, "w") as f:
             json.dump(records, f, indent=2)
+
+
+def _save_json(filepath: Path, payload: Dict) -> None:
+    DATA_DIR.mkdir(parents=True, exist_ok=True)
+    with _json_lock:
+        with open(filepath, "w") as f:
+            json.dump(payload, f, indent=2)
+
+
+def _load_json_object(filepath: Path) -> Dict:
+    if not filepath.exists():
+        return {}
+    try:
+        with open(filepath, "r") as f:
+            data = json.load(f)
+            return data if isinstance(data, dict) else {}
+    except (json.JSONDecodeError, OSError):
+        return {}
 
 
 # ─────────────────────────────────────────────
@@ -1755,6 +1774,43 @@ def save_service_agreement_pack(agreement_id: str, agreement_pack: Dict) -> Dict
     return result
 
 
+def save_sales_event(event: Dict) -> Dict:
+    """Persist sales tracker events by offer slug (clicks, sold, revenue)."""
+    slug = str(event.get("offer_slug") or "offer")
+    price = float(event.get("price") or 0)
+    event_type = str(event.get("event_type") or "click")
+
+    tracker = _load_json_object(SALES_TRACKER_FILE)
+    offers = tracker.get("offers", {})
+    if slug not in offers:
+        offers[slug] = {"clicks": 0, "sold": 0, "revenue": 0.0, "price": price}
+
+    if event_type == "click":
+        offers[slug]["clicks"] = int(offers[slug].get("clicks", 0)) + 1
+    elif event_type == "sold":
+        offers[slug]["sold"] = int(offers[slug].get("sold", 0)) + 1
+        offers[slug]["revenue"] = float(offers[slug].get("revenue", 0.0)) + price
+
+    tracker["offers"] = offers
+    tracker["updated_at"] = datetime.utcnow().isoformat()
+    _save_json(SALES_TRACKER_FILE, tracker)
+
+    return {
+        "success": True,
+        "offer_slug": slug,
+        "event_type": event_type,
+        "tracker": tracker,
+    }
+
+
+def get_sales_tracker() -> Dict:
+    """Return current sales tracker object."""
+    tracker = _load_json_object(SALES_TRACKER_FILE)
+    if "offers" not in tracker:
+        tracker["offers"] = {}
+    return tracker
+
+
 # ─────────────────────────────────────────────
 # 9. ADMIN DASHBOARD STATS
 # ─────────────────────────────────────────────
@@ -1816,6 +1872,12 @@ def get_admin_stats() -> Dict:
 
     top_referrals = sorted(referral_counts.items(), key=lambda x: x[1], reverse=True)[:5]
 
+    sales_tracker = get_sales_tracker()
+    sales_offers = sales_tracker.get("offers", {})
+    sales_clicks = sum(int(v.get("clicks", 0)) for v in sales_offers.values())
+    sales_closed = sum(int(v.get("sold", 0)) for v in sales_offers.values())
+    sales_revenue = sum(float(v.get("revenue", 0.0)) for v in sales_offers.values())
+
     return {
         "monthly_revenue": round(monthly_revenue, 2),
         "upcoming_events_count": len(upcoming_events),
@@ -1825,6 +1887,9 @@ def get_admin_stats() -> Dict:
         "payments_due": payments_due,
         "total_quotes": len(quotes),
         "total_leads": len(leads),
+        "sales_clicks": sales_clicks,
+        "sales_closed": sales_closed,
+        "sales_revenue": round(sales_revenue, 2),
         "event_types_booked": event_type_counts,
         "top_referral_sources": [{"source": s, "count": c} for s, c in top_referrals],
     }

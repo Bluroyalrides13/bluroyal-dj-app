@@ -32,6 +32,8 @@ from src.dj_tools.engine import (
     save_lead_crm_record,
     get_service_agreement_template,
     save_service_agreement_pack,
+    save_sales_event,
+    get_sales_tracker,
     get_admin_stats,
 )
 from config.settings import Settings
@@ -305,6 +307,37 @@ async def get_offer_catalog():
         message="Offer catalog retrieved",
         data={"offers": funnel.get_offer_catalog()},
     )
+
+
+@router.get("/api/tools/sales-tracker")
+async def sales_tracker(request: Request):
+    """Return sales tracker metrics for dashboard."""
+    _require_dashboard_auth(request)
+    try:
+        data = get_sales_tracker()
+        return ApiResponse(success=True, message="Sales tracker loaded", data=data)
+    except Exception as e:
+        logger.error(f"Sales tracker read error: {e}")
+        raise HTTPException(status_code=500, detail="Error loading sales tracker")
+
+
+@router.post("/api/tools/sales-tracker")
+async def update_sales_tracker(request: Request):
+    """Record sales events (click or sold) for offer tiers."""
+    _require_dashboard_auth(request)
+    try:
+        body = await request.json()
+        data = save_sales_event(
+            {
+                "offer_slug": body.get("offer_slug"),
+                "price": body.get("price", 0),
+                "event_type": body.get("event_type", "click"),
+            }
+        )
+        return ApiResponse(success=True, message="Sales tracker updated", data=data)
+    except Exception as e:
+        logger.error(f"Sales tracker update error: {e}")
+        raise HTTPException(status_code=500, detail="Error updating sales tracker")
 
 
 @router.post("/api/applications")
