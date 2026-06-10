@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DJ Blu Bloods — Sales Dashboard</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@500;600;700;800&display=swap');
+
+    :root {
+      --bg: #0a1118;
+      --surface: #0f1b26;
+      --surface2: #132331;
+      --border: rgba(201, 168, 109, 0.18);
+      --text: #f7f2e8;
+      --muted: #bcae93;
+      --accent: #c9a86d;
+      --accent2: #84b6a4;
+      --accent3: #e1c892;
+      --radius: 18px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Manrope", "Segoe UI", sans-serif;
+      background:
+        radial-gradient(1200px 500px at 85% -120px, rgba(201,168,109,0.15), transparent 55%),
+        radial-gradient(1000px 400px at -10% -60px, rgba(132,182,164,0.12), transparent 50%),
+        var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      letter-spacing: 0.01em;
+    }
+
+    .app { display: grid; grid-template-columns: 240px 1fr; min-height: 100vh; }
+    .sidebar {
+      background: linear-gradient(180deg, #10202d, #0c1823 60%, #0a151f);
+      border-right: 1px solid var(--border);
+      padding: 28px 18px;
+      display: flex; flex-direction: column; gap: 10px;
+      position: sticky; top: 0; height: 100vh;
+    }
+    .sidebar__brand {
+      display: flex; align-items: center; gap: 12px;
+      padding: 0 8px 24px; border-bottom: 1px solid var(--border);
+      margin-bottom: 10px;
+    }
+    .brand-mark {
+      width: 38px; height: 38px; border-radius: 12px;
+      background: linear-gradient(135deg, #d8b980, #b8904b);
+      display: grid; place-items: center;
+      font-weight: 900; font-size: 0.85rem;
+      color: #1d1205;
+    }
+    .brand-name {
+      font-family: "Cormorant Garamond", serif;
+      font-weight: 700;
+      font-size: 1.2rem;
+      letter-spacing: 0.04em;
+    }
+    .brand-sub { color: var(--muted); font-size: 0.75rem; }
+
+    .btn {
+      border: 1px solid transparent;
+      border-radius: 12px;
+      padding: 10px 14px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #c9a86d, #b88d47);
+      color: #221508;
+    }
+    .btn-secondary {
+      background: rgba(19,35,49,0.9);
+      color: var(--text);
+      border-color: var(--border);
+    }
+
+    .main { padding: 32px; overflow-y: auto; }
+    .page-header h1 {
+      font-family: "Cormorant Garamond", serif;
+      font-size: 2.2rem;
+    }
+    .page-header p { color: var(--muted); margin-top: 8px; }
+
+    .panel {
+      background: linear-gradient(180deg, rgba(19,35,49,0.92), rgba(15,27,38,0.92));
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: 0 18px 40px rgba(0,0,0,0.35);
+      margin-top: 18px;
+    }
+
+    .sales-grid {
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+      gap:14px;
+    }
+
+    .summary-grid {
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+      gap:12px;
+      margin-top: 12px;
+    }
+    .summary-card {
+      background: rgba(11, 21, 30, 0.85);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+    }
+    .summary-label {
+      font-size:0.75rem;
+      color:var(--muted);
+      text-transform:uppercase;
+      letter-spacing:0.06em;
+    }
+    .summary-value {
+      font-size:1.6rem;
+      font-weight:900;
+      margin-top: 4px;
+    }
+
+    ul.tier-files {
+      padding-left:18px;
+      margin:10px 0 0;
+      color:var(--text);
+      font-size:0.82rem;
+      line-height:1.6;
+    }
+
+    .top-actions {
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-bottom:14px;
+    }
+
+    .form-row { display: grid; gap: 14px; margin-top: 12px; }
+    .form-2col { grid-template-columns: 1fr 1fr; }
+    .field label { display: block; font-size: 0.82rem; font-weight: 700; color: var(--muted); margin-bottom: 7px; text-transform: uppercase; letter-spacing: 0.05em; }
+    .field input {
+      width: 100%;
+      background: rgba(12, 23, 33, 0.85);
+      border: 1px solid rgba(201,168,109,0.24);
+      border-radius: 12px;
+      color: var(--text);
+      font: inherit;
+      padding: 11px 14px;
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+  <nav class="sidebar">
+    <div class="sidebar__brand">
+      <div class="brand-mark">DB</div>
+      <div>
+        <div class="brand-name">Blu Bloods</div>
+        <div class="brand-sub">Private Sales</div>
+      </div>
+    </div>
+    <a class="btn btn-secondary" href="/dashboard">Back to Business Engine</a>
+    <form method="post" action="/dashboard/logout">
+      <button class="btn btn-secondary" type="submit" style="width:100%;">Log out</button>
+    </form>
+  </nav>
+
+  <main class="main">
+    <div class="page-header">
+      <h1>Sales Offers (Private)</h1>
+      <p>This page is your personal sales control room and is not part of the client-facing Business Engine workflow.</p>
+    </div>
+
+    <div class="panel">
+      <div class="top-actions">
+        <h2 style="margin:0;">Conversion Tracker</h2>
+        <button class="btn btn-secondary" onclick="resetSalesTracker()">Reset Tracker</button>
+      </div>
+      <div class="summary-grid">
+        <div class="summary-card"><div class="summary-label">Checkout Clicks</div><div id="sales-clicks" class="summary-value">0</div></div>
+        <div class="summary-card"><div class="summary-label">Closed Deals</div><div id="sales-closed" class="summary-value">0</div></div>
+        <div class="summary-card"><div class="summary-label">Tracked Revenue</div><div id="sales-revenue" class="summary-value">$0</div></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="top-actions">
+        <h2 style="margin:0;">Offer Stack (497 / 1500 / 3500)</h2>
+        <button class="btn btn-secondary" onclick="loadSalesOffers()">Refresh Offers</button>
+      </div>
+      <div id="sales-offers-wrap" class="sales-grid">
+        <div class="panel" style="padding:16px;opacity:.8;">Loading offers...</div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Quick Script</h2>
+      <p style="color:var(--muted);line-height:1.8;margin-top:8px;">
+        Start with <strong>$497</strong> for basics.<br/>
+        Move to <strong>$1500</strong> for expanded systems.<br/>
+        Close <strong>$3500</strong> for full package access.
+      </p>
+    </div>
+
+    <div class="panel">
+      <h2>Upsell Follow-Up Timing</h2>
+      <p style="color:var(--muted);line-height:1.8;margin-top:8px;">
+        Day 0: Send checkout link + best-fit reason.<br/>
+        Day 2: Send quick-win proof.<br/>
+        Day 5: Offer $1500 support upgrade.<br/>
+        Day 10: Invite $3500 full-package enrollment.
+      </p>
+    </div>
+  </main>
+</div>
+
+<script>
+  async function post(url, body) {
+    const r = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    return r.json();
+  }
+
+  function showToast(message) {
+    console.log(message);
+  }
+
+  function updateSalesSummaryUI(tracker) {
+    tracker = tracker || { offers: {} };
+    const offers = Object.values(tracker.offers || {});
+    const clicks = offers.reduce((acc, o) => acc + Number(o.clicks || 0), 0);
+    const closed = offers.reduce((acc, o) => acc + Number(o.sold || 0), 0);
+    const revenue = offers.reduce((acc, o) => acc + Number(o.revenue || 0), 0);
+
+    document.getElementById('sales-clicks').textContent = clicks;
+    document.getElementById('sales-closed').textContent = closed;
+    document.getElementById('sales-revenue').textContent = '$' + revenue.toLocaleString();
+  }
+
+  async function fetchSalesTracker() {
+    try {
+      const r = await fetch('/api/tools/sales-tracker');
+      const res = await r.json();
+      return res?.data || { offers: {} };
+    } catch {
+      return { offers: {} };
+    }
+  }
+
+  async function recordSalesEvent(slug, price, eventType) {
+    try {
+      const res = await post('/api/tools/sales-tracker', {
+        offer_slug: slug,
+        price,
+        event_type: eventType,
+      });
+      if (!res.success) return;
+      const tracker = res.data?.tracker || { offers: {} };
+      updateSalesSummaryUI(tracker);
+      if (eventType === 'sold') showToast('Sale logged');
+    } catch (err) {
+      console.error('recordSalesEvent error:', err);
+    }
+  }
+
+  async function recordCheckoutClick(slug, price) {
+    await recordSalesEvent(slug, price, 'click');
+  }
+
+  async function markSaleClosed(slug, price) {
+    await recordSalesEvent(slug, price, 'sold');
+  }
+
+  async function resetSalesTracker() {
+    showToast('Reset is not enabled yet in API');
+  }
+
+  async function copyTierScript(name, price) {
+    const script = `Hey! Based on what you shared, I'd recommend ${name} ($${price}).\n\nThis is the best fit if you want clear execution and faster results.\n\nIf you're ready, here is the secure checkout link:`;
+    try {
+      await navigator.clipboard.writeText(script);
+      showToast('Sales script copied');
+    } catch {
+      showToast('Clipboard blocked by browser');
+    }
+  }
+
+  async function loadSalesOffers() {
+    const wrap = document.getElementById('sales-offers-wrap');
+    if (!wrap) return;
+
+    const tracker = await fetchSalesTracker();
+    updateSalesSummaryUI(tracker);
+    wrap.innerHTML = '<div class="panel" style="padding:16px;opacity:.8;">Loading offers...</div>';
+
+    try {
+      const r = await fetch('/api/offers');
+      const res = await r.json();
+      const offers = res?.data?.offers || [];
+
+      if (!offers.length) {
+        wrap.innerHTML = '<div class="panel" style="padding:16px;opacity:.8;">No offers found.</div>';
+        return;
+      }
+
+      offers.sort((a, b) => Number(a.price || 0) - Number(b.price || 0));
+      wrap.innerHTML = offers.map((offer) => {
+        const price = Number(offer.price || 0);
+        const slug = (offer.slug || 'offer').toString();
+        return `
+          <div class="panel" style="padding:16px; border-color: rgba(201,168,109,0.32);">
+            <div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--accent3);font-weight:800;">${offer.access_level || 'offer'}</div>
+            <div style="font-family:'Cormorant Garamond',serif;font-size:1.35rem;margin-top:6px;">${offer.name || 'Offer'}</div>
+            <div style="font-size:1.8rem;font-weight:900;margin-top:8px;color:var(--accent3);">$${price.toLocaleString()}</div>
+            <div style="font-size:0.86rem;color:var(--muted);margin-top:8px;line-height:1.6;">${offer.promise || ''}</div>
+            <div style="font-size:0.84rem;color:var(--text);margin-top:8px;line-height:1.6;">${offer.outcome || ''}</div>
+            <div style="margin-top:10px;">
+              <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;font-weight:700;margin-bottom:6px;">Included Files</div>
+              <ul class="tier-files">
+                ${(offer.included_files || []).map((item) => `<li>${item}</li>`).join('') || '<li>Bundle details coming soon</li>'}
+              </ul>
+            </div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;">
+              <a class="btn btn-primary" href="${offer.purchase_link || '#'}" target="_blank" rel="noopener noreferrer" onclick="recordCheckoutClick('${slug}', ${price})">Open Checkout</a>
+              <button class="btn btn-secondary" type="button" onclick="navigator.clipboard.writeText('${(offer.purchase_link || '').replace(/'/g, "\\'")}').then(()=>showToast('Checkout link copied')).catch(()=>showToast('Clipboard blocked'))">Copy Link</button>
+              <button class="btn btn-secondary" type="button" onclick="copyTierScript('${(offer.name || 'Offer').replace(/'/g, "\\'")}', ${price})">Copy Script</button>
+              <button class="btn btn-secondary" type="button" onclick="markSaleClosed('${slug}', ${price})">Mark Sold</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    } catch (err) {
+      wrap.innerHTML = '<div class="panel" style="padding:16px;opacity:.8;">Error loading offers.</div>';
+      console.error('loadSalesOffers error:', err);
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    loadSalesOffers();
+  });
+</script>
+</body>
+</html>

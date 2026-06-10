@@ -101,6 +101,14 @@ async def dashboard_page(request: Request):
     return FileResponse(STATIC_DIR / "dashboard.html")
 
 
+@router.get("/dashboard/sales", include_in_schema=False)
+async def sales_dashboard_page(request: Request):
+    """Serve the private Sales dashboard (owner-only)."""
+    if not _is_dashboard_authenticated(request):
+        return RedirectResponse(url="/dashboard/login", status_code=303)
+    return FileResponse(STATIC_DIR / "sales-dashboard.html")
+
+
 # ===================== DJ Tool Endpoints =====================
 
 @router.post("/api/tools/timeline")
