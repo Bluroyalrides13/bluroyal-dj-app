@@ -584,6 +584,50 @@
   // ── QUESTIONNAIRE ──
   let qPortalId = '';
   let qQuestions = [];
+
+  const REQUIRED_FIELDS_BY_EVENT = {
+    wedding: [
+      'couple_names', 'wedding_date', 'venue_name', 'guest_count', 'ceremony_start', 'reception_start', 'must_play', 'do_not_play'
+    ],
+    same_sex_wedding_lgbtq: [
+      'couple_names', 'event_date', 'venue_name', 'guest_count', 'ceremony_start', 'reception_start', 'must_play', 'do_not_play'
+    ],
+    corporate: [
+      'company_name', 'event_date', 'venue_name', 'guest_count', 'start_time', 'end_time', 'event_goal'
+    ],
+    sweet_16: [
+      'guest_name', 'event_date', 'venue_name', 'guest_count', 'start_time', 'end_time', 'must_play', 'do_not_play'
+    ],
+    birthday: [
+      'guest_name', 'event_date', 'venue_name', 'guest_count', 'start_time', 'end_time', 'must_play', 'do_not_play'
+    ],
+    quinceanera: [
+      'debutante_name', 'event_date', 'venue_name', 'guest_count', 'start_time', 'end_time', 'must_play', 'do_not_play'
+    ],
+    general_party: [
+      'client_name', 'event_date', 'venue_name', 'guest_count', 'start_time', 'end_time', 'must_play', 'do_not_play'
+    ],
+    bar_mitzvah: [
+      'celebrant_name', 'event_date', 'venue_name', 'guest_count', 'service_end', 'party_start', 'must_play', 'do_not_play'
+    ],
+    bat_mitzvah: [
+      'celebrant_name', 'event_date', 'venue_name', 'guest_count', 'service_end', 'party_start', 'must_play', 'do_not_play'
+    ],
+    anniversary: [
+      'couple_names', 'anniversary_year', 'event_date', 'venue_name', 'guest_count', 'start_time', 'end_time', 'must_play', 'do_not_play'
+    ],
+    anniversay: [
+      'couple_names', 'anniversary_year', 'event_date', 'venue_name', 'guest_count', 'start_time', 'end_time', 'must_play', 'do_not_play'
+    ],
+    club: [
+      'venue_name', 'event_date', 'set_start', 'set_end', 'expected_crowd', 'peak_genres', 'must_play', 'do_not_play'
+    ]
+  };
+
+  function isRequiredQuestion(eventType, questionId) {
+    const required = REQUIRED_FIELDS_BY_EVENT[eventType] || [];
+    return required.includes(questionId);
+  }
   async function loadQuestionnaire() {
     const type = document.getElementById('q-type').value;
     const r = await fetch(`/api/tools/questionnaire/${type}`);
@@ -594,13 +638,16 @@
     const wrap = document.getElementById('q-fields');
     wrap.innerHTML = '';
     res.data.questions.forEach(q => {
+      const isRequired = isRequiredQuestion(type, q.id);
+      const tag = isRequired ? ' [Required]' : ' [Optional]';
+      const labelText = `${q.label}${tag}`;
       let input = '';
-      if (q.type === 'textarea') input = `<textarea id="qf-${q.id}" placeholder="${q.label}"></textarea>`;
+      if (q.type === 'textarea') input = `<textarea id="qf-${q.id}" placeholder="${labelText}"></textarea>`;
       else if (q.type === 'number') input = `<input type="number" id="qf-${q.id}" />`;
       else if (q.type === 'date')   input = `<input type="date" id="qf-${q.id}" />`;
       else if (q.type === 'time')   input = `<input type="time" id="qf-${q.id}" />`;
-      else input = `<input type="text" id="qf-${q.id}" placeholder="${q.label}" />`;
-      wrap.innerHTML += `<div class="q-item field"><label>${q.label}</label>${input}</div>`;
+      else input = `<input type="text" id="qf-${q.id}" placeholder="${labelText}" />`;
+      wrap.innerHTML += `<div class="q-item field"><label>${labelText}</label>${input}</div>`;
     });
     document.getElementById('q-form-wrap').style.display = 'block';
   }
