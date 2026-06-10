@@ -97,6 +97,72 @@
     .field select:focus,
     .field textarea:focus { outline: none; border-color: var(--accent); }
 
+    /* ── Questionnaire label badges / progress ── */
+    .q-label-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 7px;
+    }
+    .q-label-row label {
+      margin-bottom: 0;
+    }
+    .q-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 0.68rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      border: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    .q-badge--required {
+      background: rgba(255, 61, 141, 0.14);
+      color: var(--accent);
+      border-color: rgba(255, 61, 141, 0.35);
+    }
+    .q-badge--optional {
+      background: rgba(15, 187, 143, 0.14);
+      color: var(--accent2);
+      border-color: rgba(15, 187, 143, 0.35);
+    }
+    .q-progress {
+      margin-bottom: 14px;
+      padding: 12px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--surface2);
+    }
+    .q-progress__head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+      font-size: 0.78rem;
+      color: var(--muted);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .q-progress__bar {
+      width: 100%;
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      overflow: hidden;
+    }
+    .q-progress__fill {
+      height: 100%;
+      width: 0%;
+      transition: width 180ms ease;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+    }
+
     /* ── Buttons ── */
     .btn {
       display: inline-flex; align-items: center; gap: 8px;
@@ -319,6 +385,15 @@
       </div>
       <div id="q-form-wrap" style="margin-top:18px;display:none;">
         <div class="panel">
+          <div class="q-progress" id="q-progress-wrap" style="display:none;">
+            <div class="q-progress__head">
+              <span id="q-progress-text">Required fields: 0/0 complete</span>
+              <span id="q-progress-percent">0%</span>
+            </div>
+            <div class="q-progress__bar">
+              <div class="q-progress__fill" id="q-progress-fill"></div>
+            </div>
+          </div>
           <div id="q-fields"></div>
           <button class="btn btn-green" onclick="submitQuestionnaire()" style="margin-top:16px;">✅ Save Brief</button>
         </div>
@@ -628,6 +703,32 @@
     const required = REQUIRED_FIELDS_BY_EVENT[eventType] || [];
     return required.includes(questionId);
   }
+
+  function updateQuestionnaireProgress() {
+    const type = document.getElementById('q-type').value;
+    const requiredIds = REQUIRED_FIELDS_BY_EVENT[type] || [];
+    const totalRequired = requiredIds.length;
+
+    let completed = 0;
+    requiredIds.forEach((id) => {
+      const el = document.getElementById(`qf-${id}`);
+      if (!el) return;
+      const value = (el.value || '').trim();
+      if (value) completed += 1;
+    });
+
+    const percent = totalRequired > 0 ? Math.round((completed / totalRequired) * 100) : 100;
+    const textEl = document.getElementById('q-progress-text');
+    const pctEl = document.getElementById('q-progress-percent');
+    const fillEl = document.getElementById('q-progress-fill');
+    const wrapEl = document.getElementById('q-progress-wrap');
+
+    if (wrapEl) wrapEl.style.display = 'block';
+    if (textEl) textEl.textContent = `Required fields: ${completed}/${totalRequired} complete`;
+    if (pctEl) pctEl.textContent = `${percent}%`;
+    if (fillEl) fillEl.style.width = `${percent}%`;
+  }
+
   async function loadQuestionnaire() {
     const type = document.getElementById('q-type').value;
     const r = await fetch(`/api/tools/questionnaire/${type}`);
@@ -639,16 +740,24 @@
     wrap.innerHTML = '';
     res.data.questions.forEach(q => {
       const isRequired = isRequiredQuestion(type, q.id);
-      const tag = isRequired ? ' [Required]' : ' [Optional]';
-      const labelText = `${q.label}${tag}`;
+      const tagClass = isRequired ? 'q-badge q-badge--required' : 'q-badge q-badge--optional';
+      const tagText = isRequired ? 'Required' : 'Optional';
+      const labelText = q.label;
       let input = '';
       if (q.type === 'textarea') input = `<textarea id="qf-${q.id}" placeholder="${labelText}"></textarea>`;
       else if (q.type === 'number') input = `<input type="number" id="qf-${q.id}" />`;
       else if (q.type === 'date')   input = `<input type="date" id="qf-${q.id}" />`;
       else if (q.type === 'time')   input = `<input type="time" id="qf-${q.id}" />`;
       else input = `<input type="text" id="qf-${q.id}" placeholder="${labelText}" />`;
-      wrap.innerHTML += `<div class="q-item field"><label>${labelText}</label>${input}</div>`;
+      wrap.innerHTML += `<div class="q-item field"><div class="q-label-row"><label>${labelText}</label><span class="${tagClass}">${tagText}</span></div>${input}</div>`;
     });
+
+    document.querySelectorAll('[id^="qf-"]').forEach((el) => {
+      el.addEventListener('input', updateQuestionnaireProgress);
+      el.addEventListener('change', updateQuestionnaireProgress);
+    });
+
+    updateQuestionnaireProgress();
     document.getElementById('q-form-wrap').style.display = 'block';
   }
 
