@@ -514,20 +514,59 @@
       function getResourcePreviewPoints(title, category) {
         const slug = `${title} ${category}`.toLowerCase();
 
+        if (slug.includes("lesson plan printable bound notebook")) {
+          return ["Weekly theme planner", "Materials list", "Teacher notes pages"];
+        }
+        if (slug.includes("jungle adventure activity book")) {
+          return ["Jungle animals", "Tracing and counting", "Coloring pages"];
+        }
+        if (slug.includes("welcome to school")) {
+          return ["Classroom routines", "Name practice", "First-week activities"];
+        }
         if (slug.includes("all about me")) {
-          return ["Self-portrait page", "Feelings and favorites", "Body parts tracing"];
+          return ["Self-portrait page", "Family and favorites", "Body parts tracing"];
         }
         if (slug.includes("community helpers")) {
-          return ["Helper vocabulary cards", "Role-play prompts", "Community matching"];
+          return ["Helper vocabulary", "Role-play prompts", "Job matching activities"];
         }
         if (slug.includes("seasons-weather")) {
           return ["Weather chart", "Season sort", "Sky observation prompts"];
         }
-        if (slug.includes("lesson plan")) {
-          return ["Weekly theme overview", "Materials list", "Teacher notes"];
+        if (slug.includes("little learners 6-week program")) {
+          return ["Six-week theme arc", "Daily lesson flow", "Printable activities"];
         }
-        if (slug.includes("program")) {
-          return ["Week-by-week sequence", "Printable activity pages", "Parent-friendly wrap-up"];
+        if (slug.includes("little learners preschool pack")) {
+          return ["Colors and shapes", "Counting practice", "Early literacy pages"];
+        }
+        if (slug.includes("little learners routines ideas")) {
+          return ["Morning routine", "Cleanup routine", "Transition cards"];
+        }
+        if (slug.includes("little learners worksheets")) {
+          return ["Tracing practice", "Sorting pages", "Number work"];
+        }
+        if (slug.includes("ocean animal worksheets")) {
+          return ["Sea creature matching", "Counting pages", "Coloring sheets"];
+        }
+        if (slug.includes("pequeños aprendices hojas imprimibles")) {
+          return ["Tracing practice", "Counting pages", "Recognition activities"];
+        }
+        if (slug.includes("pequeños aprendices paquete preescolar")) {
+          return ["Color and shape work", "Beginning numbers", "Simple printable practice"];
+        }
+        if (slug.includes("pequeños aprendices programa 6 semanas")) {
+          return ["Six-week sequence", "Weekly activities", "Printable pages"];
+        }
+        if (slug.includes("pequeños aprendices rutinas ideas")) {
+          return ["Daily routine charts", "Schedule cards", "Transition support"];
+        }
+        if (slug.includes("dungaree gang coloring book")) {
+          return ["Bold outline art", "Coloring pages", "Fine motor practice"];
+        }
+        if (slug.includes("free emergency tool kit")) {
+          return ["Quick contact sheet", "Safety checklist", "Emergency prep pages"];
+        }
+        if (slug.includes("untitled design")) {
+          return ["Mixed preschool pages", "Reusable printables", "Starter activities"];
         }
         if (slug.includes("worksheet")) {
           return ["Tracing practice", "Counting pages", "Matching activities"];
