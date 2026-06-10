@@ -428,6 +428,30 @@ h1 {
   padding: 0 4px 2px;
 }
 
+.sample-preview__section-label {
+  margin-top: 4px;
+  padding: 0 4px;
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.sample-preview__list {
+  margin: 0;
+  padding: 0 4px 2px 20px;
+  display: grid;
+  gap: 6px;
+  color: rgba(18, 34, 74, 0.86);
+  font-size: 0.84rem;
+  line-height: 1.35;
+}
+
+.sample-preview__list li::marker {
+  color: var(--accent-2);
+}
+
 .sample-preview__tag {
   width: fit-content;
   font-size: 0.7rem;

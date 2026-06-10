@@ -511,6 +511,48 @@
         return "$37";
       }
 
+      function getResourcePreviewPoints(title, category) {
+        const slug = `${title} ${category}`.toLowerCase();
+
+        if (slug.includes("all about me")) {
+          return ["Self-portrait page", "Feelings and favorites", "Body parts tracing"];
+        }
+        if (slug.includes("community helpers")) {
+          return ["Helper vocabulary cards", "Role-play prompts", "Community matching"];
+        }
+        if (slug.includes("seasons-weather")) {
+          return ["Weather chart", "Season sort", "Sky observation prompts"];
+        }
+        if (slug.includes("lesson plan")) {
+          return ["Weekly theme overview", "Materials list", "Teacher notes"];
+        }
+        if (slug.includes("program")) {
+          return ["Week-by-week sequence", "Printable activity pages", "Parent-friendly wrap-up"];
+        }
+        if (slug.includes("worksheet")) {
+          return ["Tracing practice", "Counting pages", "Matching activities"];
+        }
+        if (slug.includes("coloring book")) {
+          return ["Bold outlines", "Simple coloring pages", "Fine motor practice"];
+        }
+        if (slug.includes("tool kit")) {
+          return ["Quick-start tools", "Routine supports", "Reusable templates"];
+        }
+        if (slug.includes("jungle") || slug.includes("ocean") || slug.includes("animal")) {
+          return ["Theme vocabulary", "Coloring and tracing", "Early science play"];
+        }
+
+        return ["Printable activities", "Early learning pages", "Easy classroom use"];
+      }
+
+      function getResourcePreviewClass(title, category) {
+        const slug = `${title} ${category}`.toLowerCase();
+
+        if (slug.includes("community helper")) return "sample-preview--helpers";
+        if (slug.includes("weather") || slug.includes("season")) return "sample-preview--weather";
+        return "sample-preview--about-me";
+      }
+
       function buildResourceCatalog() {
         return RESOURCE_FILES.map((pdfFile, index) => {
           const title = getResourceTitle(pdfFile);
@@ -548,11 +590,13 @@
               ? `<div class="resource-coming-soon">Included in ${item.tierLabel}</div>`
               : `<div class="resource-coming-soon">Included in ${item.tierLabel}</div>`;
             const coverUrl = item.coverUrl || DEFAULT_COVER_URL || createFallbackCoverDataUri(item.title, item.category, index);
+            const previewClass = getResourcePreviewClass(item.title, item.category);
+            const previewPoints = getResourcePreviewPoints(item.title, item.category);
 
             return `
               <article class="sample-card">
                 <div class="sample-badge">Resource Pack</div>
-                <div class="sample-preview sample-preview--about-me">
+                <div class="sample-preview ${previewClass}">
                   <img src="${coverUrl}" alt="${item.title} cover" loading="lazy" />
                   <div style="display:flex;gap:6px;flex-wrap:wrap;">
                     <div class="sample-preview__tag">${item.ageRange}</div>
@@ -560,6 +604,10 @@
                   </div>
                   <strong>${item.title}</strong>
                   <span>${item.description}</span>
+                  <div class="sample-preview__section-label">Inside this sample</div>
+                  <ul class="sample-preview__list">
+                    ${previewPoints.map((point) => `<li>${point}</li>`).join("")}
+                  </ul>
                 </div>
                 <h3>${item.title}</h3>
                 <p>${item.description}</p>
