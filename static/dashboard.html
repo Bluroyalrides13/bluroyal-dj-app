@@ -405,6 +405,9 @@
     <button class="nav-item" onclick="showPage('profile', this); loadDjProfileTemplate();">
       <span class="nav-icon">VI</span> DJ Profile Setup
     </button>
+    <button class="nav-item" onclick="showPage('crm', this); loadLeadCrmTemplate();">
+      <span class="nav-icon">VII</span> Lead Management
+    </button>
   </nav>
 
   <!-- ── Main content ── -->
@@ -851,6 +854,99 @@
       </div>
     </div>
 
+    <!-- ──────────── LEAD MANAGEMENT (CRM) ──────────── -->
+    <div class="page" id="page-crm">
+      <div class="page-header">
+        <h1>Lead Management (CRM)</h1>
+        <p>Track every incoming lead with status, context, and follow-up notes.</p>
+      </div>
+
+      <div class="panel">
+        <h2>Lead Information</h2>
+        <div class="form-row form-2col">
+          <div class="field">
+            <label>Name</label>
+            <input type="text" id="crm-name" />
+          </div>
+          <div class="field">
+            <label>Phone</label>
+            <input type="text" id="crm-phone" />
+          </div>
+        </div>
+        <div class="form-row form-2col">
+          <div class="field">
+            <label>Email</label>
+            <input type="text" id="crm-email" />
+          </div>
+          <div class="field">
+            <label>Event Date</label>
+            <input type="date" id="crm-event_date" />
+          </div>
+        </div>
+        <div class="form-row form-2col">
+          <div class="field">
+            <label>Venue</label>
+            <input type="text" id="crm-venue" />
+          </div>
+          <div class="field">
+            <label>Event Type</label>
+            <input type="text" id="crm-event_type" />
+          </div>
+        </div>
+        <div class="form-row form-2col">
+          <div class="field">
+            <label>Budget</label>
+            <input type="text" id="crm-budget" />
+          </div>
+          <div class="field">
+            <label>Referral Source</label>
+            <input type="text" id="crm-referral_source" />
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>Lead Status</h2>
+        <div class="form-row">
+          <div class="field">
+            <label>Status</label>
+            <select id="crm-status"></select>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>Notes Section</h2>
+        <div class="form-row">
+          <div class="field">
+            <label>Special requests</label>
+            <textarea id="crm-special_requests"></textarea>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="field">
+            <label>Concerns</label>
+            <textarea id="crm-concerns"></textarea>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="field">
+            <label>Follow-up history</label>
+            <textarea id="crm-follow_up_history"></textarea>
+          </div>
+        </div>
+        <button class="btn btn-primary" onclick="submitLeadCrm()">Save Lead</button>
+      </div>
+
+      <div class="result-box" id="crm-result">
+        <div class="print-bar">
+          <button class="btn btn-print" onclick="printSection('crm-result', 'Lead Management Record')">Print / Save PDF</button>
+        </div>
+        <p style="font-weight:700;margin-bottom:10px;">Lead record saved ✓</p>
+        <div id="crm-result-pre" style="font-size:0.9rem;line-height:1.8;"></div>
+      </div>
+    </div>
+
   </main>
 </div>
 
@@ -954,6 +1050,10 @@
   // ── DJ PROFILE SETUP ──
   let djProfileId = '';
   let djProfileTemplate = null;
+
+  // ── LEAD MANAGEMENT (CRM) ──
+  let crmLeadId = '';
+  let crmTemplate = null;
 
   const REQUIRED_FIELDS_BY_EVENT = {
     wedding: [
@@ -1333,6 +1433,72 @@
     document.getElementById('pf-result').classList.add('show');
     document.getElementById('pf-result').scrollIntoView({ behavior: 'smooth', block: 'start' });
     showToast('DJ profile saved');
+  }
+
+  async function loadLeadCrmTemplate() {
+    if (crmTemplate) return;
+
+    const r = await fetch('/api/tools/lead-crm/template');
+    const res = await r.json();
+    if (!res.success) return alert('Error loading Lead CRM template');
+
+    crmLeadId = res.data.lead_id;
+    crmTemplate = res.data.template;
+
+    const statusEl = document.getElementById('crm-status');
+    statusEl.innerHTML = '';
+    (crmTemplate.lead_status || []).forEach((status) => {
+      statusEl.innerHTML += `<option value="${status}">${status}</option>`;
+    });
+  }
+
+  async function submitLeadCrm() {
+    if (!crmTemplate) await loadLeadCrmTemplate();
+
+    const lead = {
+      lead_information: {
+        name: document.getElementById('crm-name').value.trim(),
+        phone: document.getElementById('crm-phone').value.trim(),
+        email: document.getElementById('crm-email').value.trim(),
+        event_date: document.getElementById('crm-event_date').value,
+        venue: document.getElementById('crm-venue').value.trim(),
+        event_type: document.getElementById('crm-event_type').value.trim(),
+        budget: document.getElementById('crm-budget').value.trim(),
+        referral_source: document.getElementById('crm-referral_source').value.trim(),
+      },
+      lead_status: document.getElementById('crm-status').value,
+      notes_section: {
+        special_requests: document.getElementById('crm-special_requests').value.trim(),
+        concerns: document.getElementById('crm-concerns').value.trim(),
+        follow_up_history: document.getElementById('crm-follow_up_history').value.trim(),
+      },
+    };
+
+    const res = await post('/api/tools/lead-crm/submit', {
+      lead_id: crmLeadId,
+      lead,
+    });
+    if (!res.success) return alert('Error saving lead record');
+
+    const pre = document.getElementById('crm-result-pre');
+    pre.innerHTML = `
+      <div style="margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.06)"><strong>Name:</strong> ${lead.lead_information.name || '—'}</div>
+      <div style="margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.06)"><strong>Phone:</strong> ${lead.lead_information.phone || '—'}</div>
+      <div style="margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.06)"><strong>Email:</strong> ${lead.lead_information.email || '—'}</div>
+      <div style="margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.06)"><strong>Event Date:</strong> ${lead.lead_information.event_date || '—'}</div>
+      <div style="margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.06)"><strong>Venue:</strong> ${lead.lead_information.venue || '—'}</div>
+      <div style="margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.06)"><strong>Event Type:</strong> ${lead.lead_information.event_type || '—'}</div>
+      <div style="margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.06)"><strong>Budget:</strong> ${lead.lead_information.budget || '—'}</div>
+      <div style="margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.06)"><strong>Referral Source:</strong> ${lead.lead_information.referral_source || '—'}</div>
+      <div style="margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.06)"><strong>Lead Status:</strong> ${lead.lead_status || '—'}</div>
+      <div style="margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.06)"><strong>Special requests:</strong> ${lead.notes_section.special_requests || '—'}</div>
+      <div style="margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.06)"><strong>Concerns:</strong> ${lead.notes_section.concerns || '—'}</div>
+      <div><strong>Follow-up history:</strong> ${lead.notes_section.follow_up_history || '—'}</div>
+    `;
+
+    document.getElementById('crm-result').classList.add('show');
+    document.getElementById('crm-result').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    showToast('Lead record saved');
   }
 
   // ── SETLIST ──

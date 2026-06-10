@@ -28,6 +28,8 @@ from src.dj_tools.engine import (
     generate_content_pack,
     get_dj_profile_template,
     save_dj_profile,
+    get_lead_crm_template,
+    save_lead_crm_record,
 )
 from config.settings import Settings
 
@@ -99,8 +101,8 @@ async def dashboard_page(request: Request):
 @router.post("/api/tools/timeline")
 async def create_timeline(request: Request):
     """Build an event run-of-show timeline"""
+    _require_dashboard_auth(request)
     try:
-        _require_dashboard_auth(request)
         body = await request.json()
         result = build_event_timeline(
             event_type=body.get("event_type", "general_party"),
@@ -118,8 +120,8 @@ async def create_timeline(request: Request):
 @router.get("/api/tools/questionnaire/{event_type}")
 async def get_questionnaire(event_type: str, request: Request):
     """Return the client questionnaire for a given event type"""
+    _require_dashboard_auth(request)
     try:
-        _require_dashboard_auth(request)
         result = get_questionnaire_template(event_type)
         return ApiResponse(success=True, message="Questionnaire ready", data=result)
     except Exception as e:
@@ -130,8 +132,8 @@ async def get_questionnaire(event_type: str, request: Request):
 @router.post("/api/tools/questionnaire/submit")
 async def submit_questionnaire(request: Request):
     """Save a completed client questionnaire"""
+    _require_dashboard_auth(request)
     try:
-        _require_dashboard_auth(request)
         body = await request.json()
         result = save_questionnaire_answers(
             portal_id=body.get("portal_id", str(uuid.uuid4())),
@@ -147,8 +149,8 @@ async def submit_questionnaire(request: Request):
 @router.post("/api/tools/setlist")
 async def create_setlist(request: Request):
     """Build an organized setlist by moment"""
+    _require_dashboard_auth(request)
     try:
-        _require_dashboard_auth(request)
         body = await request.json()
         result = build_setlist(
             moments=body.get("moments"),
@@ -163,8 +165,8 @@ async def create_setlist(request: Request):
 @router.post("/api/tools/pricing")
 async def get_booking_price(request: Request):
     """Calculate a full DJ booking quote"""
+    _require_dashboard_auth(request)
     try:
-        _require_dashboard_auth(request)
         body = await request.json()
         result = calculate_booking_price(
             event_type=body.get("event_type", "general_party"),
@@ -182,8 +184,8 @@ async def get_booking_price(request: Request):
 @router.post("/api/tools/content-pack")
 async def create_content_pack(request: Request):
     """Generate a 30-day Instagram content pack"""
+    _require_dashboard_auth(request)
     try:
-        _require_dashboard_auth(request)
         body = await request.json()
         result = generate_content_pack(
             years_experience=int(body.get("years_experience", 5)),
@@ -199,8 +201,8 @@ async def create_content_pack(request: Request):
 @router.get("/api/tools/dj-profile/template")
 async def get_dj_profile_setup(request: Request):
     """Return the DJ profile setup template"""
+    _require_dashboard_auth(request)
     try:
-        _require_dashboard_auth(request)
         result = get_dj_profile_template()
         return ApiResponse(success=True, message="DJ profile template ready", data=result)
     except Exception as e:
@@ -211,8 +213,8 @@ async def get_dj_profile_setup(request: Request):
 @router.post("/api/tools/dj-profile/submit")
 async def submit_dj_profile(request: Request):
     """Save a completed DJ profile setup"""
+    _require_dashboard_auth(request)
     try:
-        _require_dashboard_auth(request)
         body = await request.json()
         result = save_dj_profile(
             profile_id=body.get("profile_id", str(uuid.uuid4())),
@@ -221,6 +223,34 @@ async def submit_dj_profile(request: Request):
         return ApiResponse(success=True, message="DJ profile saved", data=result)
     except Exception as e:
         logger.error(f"DJ profile submit error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/api/tools/lead-crm/template")
+async def get_lead_crm_setup(request: Request):
+    """Return the lead CRM template"""
+    _require_dashboard_auth(request)
+    try:
+        result = get_lead_crm_template()
+        return ApiResponse(success=True, message="Lead CRM template ready", data=result)
+    except Exception as e:
+        logger.error(f"Lead CRM template error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/api/tools/lead-crm/submit")
+async def submit_lead_crm(request: Request):
+    """Save a lead CRM record"""
+    _require_dashboard_auth(request)
+    try:
+        body = await request.json()
+        result = save_lead_crm_record(
+            lead_id=body.get("lead_id", str(uuid.uuid4())),
+            lead=body.get("lead", {}),
+        )
+        return ApiResponse(success=True, message="Lead CRM record saved", data=result)
+    except Exception as e:
+        logger.error(f"Lead CRM submit error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 

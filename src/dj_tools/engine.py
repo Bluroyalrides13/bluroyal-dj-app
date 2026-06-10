@@ -7,6 +7,7 @@ All five tools delivered to DJs who purchase the Blu Bloods platform:
   4. Booking & Pricing Calculator
   5. Instagram Content Pack Generator
     6. DJ Profile Setup
+    7. Lead Management (CRM)
 """
 
 from __future__ import annotations
@@ -1283,7 +1284,7 @@ That is what the Blu Bloods platform is built to give you.
 
 {cta}
 
-#DJLife #DJ {specialty.replace(' ', '')} #EventDJ #DJBusiness #BluBloods""",
+#DJLife #DJ{specialty_tag} #EventDJ #DJBusiness #BluBloods""",
 
     """{hook}
 
@@ -1295,7 +1296,7 @@ I built a platform that handles all of it — specifically for {specialty} DJs.
 
 {cta}
 
-#DJBusiness #DJ {specialty.replace(' ', '')} #DJTips #BluBloods""",
+#DJBusiness #DJ{specialty_tag} #DJTips #BluBloods""",
 
     """{hook}
 
@@ -1303,7 +1304,7 @@ Drop a 🎵 below if you want the full breakdown.
 
 {cta}
 
-#DJLife #EventPlanning #DJ {specialty.replace(' ', '')} #BluBloods #DJTips""",
+#DJLife #EventPlanning #DJ{specialty_tag} #BluBloods #DJTips""",
 ]
 
 DM_SCRIPTS = {
@@ -1353,7 +1354,9 @@ def generate_content_pack(
         hooks = hooks_dict[category]
         hook = hooks[(day - 1) % len(hooks)]
         template = CAPTION_TEMPLATES[(day - 1) % len(CAPTION_TEMPLATES)]
-        caption = template.format(hook=hook, years=years_experience, cta=cta, specialty=specialty.replace("_", " ").title())
+        specialty_label = specialty.replace("_", " ").title()
+        specialty_tag = specialty_label.replace(" ", "")
+        caption = template.format(hook=hook, years=years_experience, cta=cta, specialty=specialty_label, specialty_tag=specialty_tag)
 
         posts.append({
             "day": day,
@@ -1447,5 +1450,58 @@ def save_dj_profile(profile_id: str, profile: Dict) -> Dict:
         "profile_id": profile_id,
         "profile": profile,
         "saved_id": str(uuid.uuid4()),
+        "saved_at": datetime.utcnow().isoformat(),
+    }
+
+
+# ─────────────────────────────────────────────
+# 7. LEAD MANAGEMENT (CRM)
+# ─────────────────────────────────────────────
+
+LEAD_STATUS_OPTIONS = [
+    "New Lead",
+    "Contacted",
+    "Consultation Scheduled",
+    "Proposal Sent",
+    "Follow Up Needed",
+    "Booked",
+    "Lost",
+]
+
+LEAD_CRM_TEMPLATE = {
+    "lead_information": [
+        {"id": "name", "label": "Name", "type": "text"},
+        {"id": "phone", "label": "Phone", "type": "text"},
+        {"id": "email", "label": "Email", "type": "text"},
+        {"id": "event_date", "label": "Event Date", "type": "date"},
+        {"id": "venue", "label": "Venue", "type": "text"},
+        {"id": "event_type", "label": "Event Type", "type": "text"},
+        {"id": "budget", "label": "Budget", "type": "text"},
+        {"id": "referral_source", "label": "Referral Source", "type": "text"},
+    ],
+    "lead_status": LEAD_STATUS_OPTIONS,
+    "notes_section": [
+        {"id": "special_requests", "label": "Special requests", "type": "textarea"},
+        {"id": "concerns", "label": "Concerns", "type": "textarea"},
+        {"id": "follow_up_history", "label": "Follow-up history", "type": "textarea"},
+    ],
+}
+
+
+def get_lead_crm_template() -> Dict:
+    """Return the lead management CRM template."""
+    return {
+        "lead_id": str(uuid.uuid4()),
+        "template": LEAD_CRM_TEMPLATE,
+        "created_at": datetime.utcnow().isoformat(),
+    }
+
+
+def save_lead_crm_record(lead_id: str, lead: Dict) -> Dict:
+    """Package lead details into a structured CRM record."""
+    return {
+        "lead_id": lead_id,
+        "lead": lead,
+        "record_id": str(uuid.uuid4()),
         "saved_at": datetime.utcnow().isoformat(),
     }
