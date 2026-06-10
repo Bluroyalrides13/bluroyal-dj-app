@@ -62,6 +62,15 @@ def _require_dashboard_auth(request: Request):
         raise HTTPException(status_code=401, detail="Unauthorized")
 
 
+def _is_academy_authenticated(request: Request) -> bool:
+    return request.cookies.get("academy_app_auth") == "1"
+
+
+def _require_academy_auth(request: Request):
+    if not _is_academy_authenticated(request):
+        raise HTTPException(status_code=401, detail="Unauthorized")
+
+
 # ===================== DJ Dashboard UI =====================
 
 @router.get("/dashboard/login", include_in_schema=False)
@@ -108,6 +117,46 @@ async def sales_dashboard_page(request: Request):
     if not _is_dashboard_authenticated(request):
         return RedirectResponse(url="/dashboard/login", status_code=303)
     return FileResponse(STATIC_DIR / "sales-dashboard.html")
+
+
+# ===================== Academy App UI =====================
+
+@router.get("/academy/login", include_in_schema=False)
+async def academy_login_page():
+    """Serve academy app login page"""
+    return FileResponse(STATIC_DIR / "academy-login.html")
+
+
+@router.post("/academy/login", include_in_schema=False)
+async def academy_login(username: str = Form(...), password: str = Form(...)):
+    """Authenticate academy app access"""
+    if username != settings.ACADEMY_APP_USERNAME or password != settings.ACADEMY_APP_PASSWORD:
+        return RedirectResponse(url="/academy/login?error=1", status_code=303)
+
+    response = RedirectResponse(url="/academy", status_code=303)
+    response.set_cookie(
+        key="academy_app_auth",
+        value="1",
+        httponly=True,
+        samesite="lax",
+    )
+    return response
+
+
+@router.post("/academy/logout", include_in_schema=False)
+async def academy_logout():
+    """Log out academy app session"""
+    response = RedirectResponse(url="/academy/login", status_code=303)
+    response.delete_cookie("academy_app_auth")
+    return response
+
+
+@router.get("/academy", include_in_schema=False)
+async def academy_page(request: Request):
+    """Serve the standalone academy app dashboard"""
+    if not _is_academy_authenticated(request):
+        return RedirectResponse(url="/academy/login", status_code=303)
+    return FileResponse(STATIC_DIR / "academy-dashboard.html")
 
 
 # ===================== DJ Tool Endpoints =====================
@@ -230,6 +279,27 @@ async def create_lesson_plan(request: Request):
         return ApiResponse(success=True, message="Lesson plan ready", data=result)
     except Exception as e:
         logger.error(f"Lesson plan error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/api/academy/lesson-plan")
+async def create_academy_lesson_plan(request: Request):
+    """Generate lesson plans for the standalone academy app"""
+    _require_academy_auth(request)
+    try:
+        body = await request.json()
+        result = generate_lesson_plan(
+            theme=body.get("theme", "Seasonal Learning"),
+            audience_type=body.get("audience_type", "preschool"),
+            duration_weeks=int(body.get("duration_weeks", 4)),
+            focus_area=body.get("focus_area", "mixed"),
+            session_length_minutes=int(body.get("session_length_minutes", 45)),
+            language_mode=body.get("language_mode", "english"),
+            include_printables=bool(body.get("include_printables", True)),
+        )
+        return ApiResponse(success=True, message="Academy lesson plan ready", data=result)
+    except Exception as e:
+        logger.error(f"Academy lesson plan error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 

@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Blu Royal Academy App</title>
+  <style>
+    :root {
+      --bg: #f3f7ff;
+      --card: #ffffff;
+      --line: rgba(18, 34, 74, 0.12);
+      --text: #12224a;
+      --muted: #516087;
+      --accent: #f03b83;
+      --accent2: #0baf8a;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Plus Jakarta Sans", "Segoe UI", Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(240,59,131,0.14), transparent 28%),
+        radial-gradient(circle at top right, rgba(11,175,138,0.12), transparent 30%),
+        var(--bg);
+      min-height: 100vh;
+    }
+    .shell { width: min(1100px, calc(100% - 32px)); margin: 0 auto; }
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 0;
+    }
+    .brand {
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      font-size: 1.18rem;
+    }
+    .muted { color: var(--muted); }
+    .btn {
+      border: none;
+      border-radius: 999px;
+      padding: 11px 16px;
+      font: inherit;
+      font-weight: 800;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), #ff7a59);
+      color: #fff;
+    }
+    .btn-secondary {
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--text);
+    }
+    .hero {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: 0 18px 44px rgba(18, 34, 74, 0.1);
+      margin-bottom: 18px;
+    }
+    h1 {
+      margin: 0 0 10px;
+      font-size: clamp(2rem, 4vw, 2.8rem);
+      letter-spacing: -0.05em;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+    .field { display: grid; gap: 8px; }
+    label {
+      font-size: 0.82rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+    }
+    input, select {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px;
+      font: inherit;
+      color: var(--text);
+      background: #fff;
+    }
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: 20px;
+      box-shadow: 0 14px 32px rgba(18, 34, 74, 0.08);
+      margin-bottom: 16px;
+    }
+    .tabs { display: flex; gap: 8px; margin-bottom: 12px; }
+    .tab {
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 0.82rem;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .tab.active {
+      background: rgba(240,59,131,0.12);
+      border-color: rgba(240,59,131,0.4);
+      color: var(--accent);
+    }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 12px;
+      margin-bottom: 10px;
+      background: #fff;
+    }
+    .small { font-size: 0.84rem; color: var(--muted); line-height: 1.6; }
+    @media (max-width: 900px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <div>
+        <div class="brand">Blu Royal Academy App</div>
+        <div class="muted">Standalone curriculum workspace (separate from DJ app)</div>
+      </div>
+      <form method="post" action="/academy/logout">
+        <button class="btn btn-secondary" type="submit">Log out</button>
+      </form>
+    </header>
+
+    <section class="hero">
+      <h1>Generate bilingual lesson plans and worksheet packs</h1>
+      <p class="small">Build age-appropriate preschool and homeschool plans with English, Spanish, or bilingual output.</p>
+
+      <div class="grid" style="margin-top:14px;">
+        <div class="field">
+          <label>Theme</label>
+          <input id="lp-theme" value="All About Me" placeholder="Ocean Life, Community Helpers, Seasons" />
+        </div>
+        <div class="field">
+          <label>Audience</label>
+          <select id="lp-audience">
+            <option value="preschool" selected>Preschool</option>
+            <option value="homeschool">Homeschool</option>
+            <option value="mixed">Mixed</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Focus area</label>
+          <select id="lp-focus">
+            <option value="mixed" selected>Mixed</option>
+            <option value="literacy">Literacy</option>
+            <option value="math">Math</option>
+            <option value="social_emotional">Social Emotional</option>
+            <option value="science">Science</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Duration (weeks)</label>
+          <input type="number" id="lp-weeks" min="1" max="12" value="4" />
+        </div>
+        <div class="field">
+          <label>Session length (minutes)</label>
+          <input type="number" id="lp-minutes" min="20" max="120" value="45" />
+        </div>
+        <div class="field">
+          <label>Language mode</label>
+          <select id="lp-language">
+            <option value="english" selected>English</option>
+            <option value="spanish">Spanish</option>
+            <option value="bilingual">Bilingual (English + Spanish)</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;">
+        <button class="btn btn-primary" type="button" onclick="buildLessonPlan()">Generate Lesson Plan</button>
+        <a class="btn btn-secondary" href="/">Back to sales page</a>
+      </div>
+    </section>
+
+    <section id="lp-result" class="panel" style="display:none;">
+      <div class="tabs">
+        <button class="tab active" onclick="showTab('weeks', this)">Weekly Plans</button>
+        <button class="tab" onclick="showTab('printables', this)">Printables</button>
+        <button class="tab" onclick="showTab('hooks', this)">Instagram Hooks</button>
+      </div>
+      <div class="tab-panel active" id="tab-weeks"></div>
+      <div class="tab-panel" id="tab-printables"></div>
+      <div class="tab-panel" id="tab-hooks"></div>
+    </section>
+  </div>
+
+  <script>
+    async function post(url, body) {
+      const r = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+      return r.json();
+    }
+
+    function showTab(name, btn) {
+      const scope = document.getElementById('lp-result');
+      scope.querySelectorAll('.tab').forEach((t) => t.classList.remove('active'));
+      scope.querySelectorAll('.tab-panel').forEach((p) => p.classList.remove('active'));
+      btn.classList.add('active');
+      scope.querySelector('#tab-' + name).classList.add('active');
+    }
+
+    async function buildLessonPlan() {
+      const res = await post('/api/academy/lesson-plan', {
+        theme: document.getElementById('lp-theme').value,
+        audience_type: document.getElementById('lp-audience').value,
+        duration_weeks: document.getElementById('lp-weeks').value,
+        focus_area: document.getElementById('lp-focus').value,
+        session_length_minutes: document.getElementById('lp-minutes').value,
+        language_mode: document.getElementById('lp-language').value,
+        include_printables: true,
+      });
+
+      if (!res.success) {
+        alert('Unable to generate lesson plan. Please check login session and try again.');
+        return;
+      }
+
+      const d = res.data;
+      const weeks = document.getElementById('tab-weeks');
+      const printables = document.getElementById('tab-printables');
+      const hooks = document.getElementById('tab-hooks');
+
+      weeks.innerHTML = d.weekly_plans.map((week) => `
+        <div class="card">
+          <strong>${week.title}</strong>
+          <div class="small" style="margin-top:6px;">${week.objectives.join(' • ')}</div>
+          ${week.daily_plan.map((day) => `
+            <div class="card" style="margin-top:10px;background:#f8faff;">
+              <strong>${day.day}</strong><br />
+              <span class="small">${day.objective}</span><br />
+              <div class="small" style="margin-top:6px;">${day.schedule.map((b) => `${b.block} (${b.minutes}m): ${b.activity}`).join('<br />')}</div>
+            </div>
+          `).join('')}
+        </div>
+      `).join('');
+
+      printables.innerHTML = (d.printable_resources || []).map((p) => `
+        <div class="card small">${p}</div>
+      `).join('') || '<div class="card small">No printables selected.</div>';
+
+      hooks.innerHTML = (d.instagram_promo_hooks || []).map((h) => `
+        <div class="card small">${h}</div>
+      `).join('');
+
+      document.getElementById('lp-result').style.display = 'block';
+    }
+  </script>
+</body>
+</html>

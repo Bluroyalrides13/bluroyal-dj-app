@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Blu Royal Academy Login</title>
+  <style>
+    :root {
+      --bg: #0d1024;
+      --card: #151b3a;
+      --line: rgba(255,255,255,0.12);
+      --text: #f5f7ff;
+      --muted: #a3abd1;
+      --accent: #f03b83;
+      --accent2: #0baf8a;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      background:
+        radial-gradient(circle at top left, rgba(240,59,131,0.18), transparent 35%),
+        radial-gradient(circle at top right, rgba(11,175,138,0.16), transparent 35%),
+        var(--bg);
+      font-family: "Plus Jakarta Sans", "Segoe UI", Arial, sans-serif;
+      color: var(--text);
+      padding: 20px;
+    }
+    .card {
+      width: min(480px, 100%);
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.35);
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-size: 1.6rem;
+      letter-spacing: -0.03em;
+    }
+    p {
+      margin: 0 0 20px;
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 0.95rem;
+    }
+    .field { margin-bottom: 14px; }
+    label {
+      display: block;
+      margin-bottom: 7px;
+      color: var(--muted);
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    input {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: #1d254c;
+      color: var(--text);
+      font: inherit;
+    }
+    input:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+    .btn {
+      width: 100%;
+      border: none;
+      border-radius: 999px;
+      padding: 12px 16px;
+      font: inherit;
+      font-weight: 800;
+      cursor: pointer;
+      background: linear-gradient(135deg, var(--accent), #ff7a59);
+      color: #fff;
+      margin-top: 8px;
+    }
+    .error {
+      background: rgba(255, 74, 109, 0.12);
+      border: 1px solid rgba(255, 74, 109, 0.35);
+      color: #ff9ab2;
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-size: 0.88rem;
+      margin-bottom: 14px;
+      display: none;
+    }
+    .error.show { display: block; }
+    .links {
+      margin-top: 14px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .link {
+      color: #8fdec8;
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <h1>Blu Royal Academy App Login</h1>
+    <p>Sign in to the standalone Academy app for bilingual lesson plans and preschool worksheet generation.</p>
+
+    <div id="error" class="error">Incorrect academy app username or password.</div>
+
+    <form method="post" action="/academy/login">
+      <div class="field">
+        <label for="username">Username</label>
+        <input id="username" name="username" autocomplete="username" required />
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" autocomplete="current-password" required />
+      </div>
+      <button class="btn" type="submit">Log In</button>
+    </form>
+
+    <div class="links">
+      <a class="link" href="/">Back to sales page</a>
+      <a class="link" href="https://bluroyaladventures.com" target="_blank" rel="noopener">Main website</a>
+    </div>
+  </main>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('error') === '1') {
+      document.getElementById('error').classList.add('show');
+    }
+  </script>
+</body>
+</html>

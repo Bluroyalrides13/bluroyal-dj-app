@@ -20,6 +20,8 @@ class Settings(BaseSettings):
     # Dashboard Access Control
     DASHBOARD_USERNAME: str = os.getenv("DASHBOARD_USERNAME", "djadmin")
     DASHBOARD_PASSWORD: str = os.getenv("DASHBOARD_PASSWORD", "change-this-now")
+    ACADEMY_APP_USERNAME: str = os.getenv("ACADEMY_APP_USERNAME", "academyadmin")
+    ACADEMY_APP_PASSWORD: str = os.getenv("ACADEMY_APP_PASSWORD", "change-this-now")
 
     # Payment Link Configuration
     STARTER_PAYMENT_LINK: str = os.getenv("STARTER_PAYMENT_LINK", "")
@@ -27,7 +29,7 @@ class Settings(BaseSettings):
     VIP_PAYMENT_LINK: str = os.getenv("VIP_PAYMENT_LINK", "")
     POST_PURCHASE_LOGIN_URL: str = os.getenv(
         "POST_PURCHASE_LOGIN_URL",
-        "https://app.bluroyaladventures.com/dashboard/login",
+        "https://app.bluroyaladventures.com/academy/login",
     )
     SUPPORT_EMAIL: str = os.getenv("SUPPORT_EMAIL", "")
     
@@ -57,6 +59,9 @@ class Settings(BaseSettings):
         "http://localhost",
         "http://localhost:3000",
         "http://localhost:8000",
+        "https://bluroyaladventures.com",
+        "https://www.bluroyaladventures.com",
+        "https://app.bluroyaladventures.com",
         "https://*.wix.com",
         "https://*.wixpress.com",
     ]
