@@ -30,6 +30,7 @@ DATA_DIR = Path(__file__).resolve().parent.parent.parent / "data"
 LEADS_FILE = DATA_DIR / "crm_leads.json"
 BRIEFS_FILE = DATA_DIR / "questionnaire_briefs.json"
 QUOTES_FILE = DATA_DIR / "pricing_quotes.json"
+AGREEMENTS_FILE = DATA_DIR / "service_agreements.json"
 
 _json_lock = threading.Lock()
 
@@ -1547,6 +1548,194 @@ def save_lead_crm_record(lead_id: str, lead: Dict) -> Dict:
         "saved_at": datetime.utcnow().isoformat(),
     }
     _append_record(LEADS_FILE, result)
+    return result
+
+
+# ─────────────────────────────────────────────
+# 8. DJ SERVICE AGREEMENTS
+# ─────────────────────────────────────────────
+
+SERVICE_AGREEMENT_TEMPLATE = {
+    "main_contract": {
+        "client_information": [
+            {"id": "client_name", "label": "Client Name", "type": "text"},
+            {"id": "phone", "label": "Phone", "type": "text"},
+            {"id": "email", "label": "Email", "type": "text"},
+            {"id": "address", "label": "Address", "type": "text"},
+        ],
+        "event_information": [
+            {"id": "event_type", "label": "Event Type", "type": "text"},
+            {"id": "event_date", "label": "Event Date", "type": "date"},
+            {"id": "venue_name", "label": "Venue Name", "type": "text"},
+            {"id": "venue_address", "label": "Venue Address", "type": "text"},
+            {"id": "start_time", "label": "Start Time", "type": "time"},
+            {"id": "end_time", "label": "End Time", "type": "time"},
+        ],
+        "services_included": [
+            "DJ Service",
+            "MC Service",
+            "Ceremony Audio",
+            "Cocktail Hour",
+            "Reception",
+            "Uplighting",
+            "Photo Booth",
+            "Cold Sparks",
+            "Dancing on Clouds",
+            "Monogram",
+            "Karaoke",
+            "Other",
+        ],
+        "financial_information": [
+            {"id": "total_package_price", "label": "Total Package Price", "type": "number"},
+            {"id": "retainer_amount", "label": "Retainer Amount", "type": "number"},
+            {"id": "retainer_due_date", "label": "Retainer Due Date", "type": "date"},
+            {"id": "balance_due_date", "label": "Balance Due Date", "type": "date"},
+            {"id": "overtime_rate", "label": "Overtime Rate", "type": "number"},
+        ],
+        "terms_conditions": [
+            "Retainer is non-refundable",
+            "Client responsible for venue permissions",
+            "DJ not responsible for power failures",
+            "Force majeure clause",
+            "Cancellation policy",
+            "Overtime policy",
+            "Equipment damage clause",
+        ],
+        "electronic_signatures": [
+            {"id": "client_signature", "label": "Client Signature", "type": "text"},
+            {"id": "dj_signature", "label": "DJ Signature", "type": "text"},
+            {"id": "signature_date", "label": "Date", "type": "date"},
+        ],
+    },
+    "payment_authorization_form": {
+        "client_information": [
+            {"id": "name", "label": "Name", "type": "text"},
+            {"id": "email", "label": "Email", "type": "text"},
+            {"id": "phone", "label": "Phone", "type": "text"},
+        ],
+        "payment_details": [
+            {"id": "retainer_amount", "label": "Retainer Amount", "type": "number"},
+            {"id": "remaining_balance", "label": "Remaining Balance", "type": "number"},
+            {"id": "payment_schedule", "label": "Payment Schedule", "type": "textarea"},
+        ],
+        "payment_methods": ["Credit Card", "ACH", "Cash", "Check", "Venmo", "Zelle", "PayPal"],
+        "agreement_text": "I authorize payment according to the contract terms.",
+        "signature": [
+            {"id": "signature", "label": "Signature", "type": "text"},
+            {"id": "date", "label": "Date", "type": "date"},
+        ],
+    },
+    "event_change_request_form": {
+        "client_information": [
+            {"id": "client_name", "label": "Client Name", "type": "text"},
+            {"id": "event_date", "label": "Event Date", "type": "date"},
+        ],
+        "requested_changes": [
+            "Time Change",
+            "Venue Change",
+            "Additional Hours",
+            "Added Services",
+            "Removed Services",
+        ],
+        "details": [
+            {"id": "reason_for_change", "label": "Reason for Change", "type": "textarea"},
+            {"id": "additional_charges", "label": "Additional Charges", "type": "text"},
+            {"id": "approval_signature", "label": "Approval Signature", "type": "text"},
+        ],
+    },
+    "cancellation_request_form": {
+        "client_information": [
+            {"id": "client_name", "label": "Client Name", "type": "text"},
+            {"id": "event_information", "label": "Event Information", "type": "textarea"},
+        ],
+        "reason_for_cancellation": ["Illness", "Venue Issue", "Budget", "Personal", "Other"],
+        "details": [
+            {"id": "cancellation_date", "label": "Cancellation Date", "type": "date"},
+            {
+                "id": "acknowledgement_of_contract_terms",
+                "label": "Acknowledgement of Contract Terms",
+                "type": "textarea",
+            },
+            {"id": "signature", "label": "Signature", "type": "text"},
+        ],
+    },
+    "final_payment_confirmation_form": {
+        "fields": [
+            {"id": "client_name", "label": "Client Name", "type": "text"},
+            {"id": "event_date", "label": "Event Date", "type": "date"},
+            {"id": "contract_total", "label": "Contract Total", "type": "number"},
+            {"id": "payments_received", "label": "Payments Received", "type": "number"},
+            {"id": "remaining_balance", "label": "Remaining Balance", "type": "number"},
+            {"id": "date_paid", "label": "Date Paid", "type": "date"},
+            {"id": "payment_method", "label": "Payment Method", "type": "text"},
+        ],
+        "balance_paid_in_full": ["Yes", "No"],
+    },
+    "event_liability_waiver": {
+        "fields": [
+            {"id": "venue_information", "label": "Venue Information", "type": "textarea"},
+            {"id": "equipment_placement", "label": "Equipment Placement", "type": "textarea"},
+        ],
+        "client_acknowledges": [
+            "DJ equipment requires dedicated power",
+            "Guests should not handle equipment",
+            "Client responsible for damage caused by guests",
+        ],
+        "signature": [
+            {"id": "signature", "label": "Signature", "type": "text"},
+            {"id": "date", "label": "Date", "type": "date"},
+        ],
+    },
+    "venue_information_form": {
+        "fields": [
+            {"id": "venue_name", "label": "Venue Name", "type": "text"},
+            {"id": "venue_address", "label": "Venue Address", "type": "text"},
+            {"id": "venue_contact", "label": "Venue Contact", "type": "text"},
+            {"id": "venue_phone", "label": "Venue Phone", "type": "text"},
+            {"id": "load_in_time", "label": "Load-In Time", "type": "time"},
+            {"id": "load_out_time", "label": "Load-Out Time", "type": "time"},
+            {"id": "parking_instructions", "label": "Parking Instructions", "type": "textarea"},
+            {"id": "vendor_rules", "label": "Vendor Rules", "type": "textarea"},
+            {"id": "insurance_requirements", "label": "Insurance Requirements", "type": "textarea"},
+            {"id": "sound_restrictions", "label": "Sound Restrictions", "type": "textarea"},
+            {"id": "curfew", "label": "Curfew", "type": "text"},
+        ]
+    },
+    "music_licensing_content_agreement": {
+        "fields": [
+            {"id": "client_name", "label": "Client Name", "type": "text"},
+        ],
+        "client_understands": [
+            "Clean music may be required",
+            "Requested songs may not be available",
+            "DJ reserves right to decline offensive requests",
+        ],
+        "signature": [
+            {"id": "signature", "label": "Signature", "type": "text"},
+            {"id": "date", "label": "Date", "type": "date"},
+        ],
+    },
+}
+
+
+def get_service_agreement_template() -> Dict:
+    """Return the full DJ service agreement forms template."""
+    return {
+        "agreement_id": str(uuid.uuid4()),
+        "template": SERVICE_AGREEMENT_TEMPLATE,
+        "created_at": datetime.utcnow().isoformat(),
+    }
+
+
+def save_service_agreement_pack(agreement_id: str, agreement_pack: Dict) -> Dict:
+    """Save completed agreement forms as a single contract pack record."""
+    result = {
+        "agreement_id": agreement_id,
+        "agreement_pack": agreement_pack,
+        "record_id": str(uuid.uuid4()),
+        "saved_at": datetime.utcnow().isoformat(),
+    }
+    _append_record(AGREEMENTS_FILE, result)
     return result
 
 

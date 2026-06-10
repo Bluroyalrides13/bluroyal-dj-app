@@ -491,6 +491,9 @@
     <button class="nav-item" onclick="showPage('crm', this); loadLeadCrmTemplate();">
       <span class="nav-icon">VII</span> Lead Management
     </button>
+    <button class="nav-item" onclick="showPage('agreements', this); loadServiceAgreementTemplate();">
+      <span class="nav-icon">IX</span> Service Agreements
+    </button>
     <button class="nav-item" onclick="showPage('resources', this);">
       <span class="nav-icon">VIII</span> DJ Resources
     </button>
@@ -1088,6 +1091,186 @@
         </div>
         <p style="font-weight:700;margin-bottom:10px;">Lead record saved ✓</p>
         <div id="crm-result-pre" style="font-size:0.9rem;line-height:1.8;"></div>
+      </div>
+    </div>
+
+    <!-- ──────────── DJ SERVICE AGREEMENTS ──────────── -->
+    <div class="page" id="page-agreements">
+      <div class="page-header">
+        <h1>DJ Service Agreements</h1>
+        <p>Main contract and supporting legal/payment forms for every booking.</p>
+      </div>
+
+      <div class="panel">
+        <h2>1. DJ Service Agreement (Main Contract)</h2>
+        <h3 style="margin:10px 0 8px;font-size:0.95rem;color:#7a6a52;">Client Information</h3>
+        <div class="form-row form-2col">
+          <div class="field"><label>Client Name</label><input type="text" id="ag-client_name" /></div>
+          <div class="field"><label>Phone</label><input type="text" id="ag-phone" /></div>
+        </div>
+        <div class="form-row form-2col">
+          <div class="field"><label>Email</label><input type="text" id="ag-email" /></div>
+          <div class="field"><label>Address</label><input type="text" id="ag-address" /></div>
+        </div>
+
+        <h3 style="margin:10px 0 8px;font-size:0.95rem;color:#7a6a52;">Event Information</h3>
+        <div class="form-row form-3col">
+          <div class="field"><label>Event Type</label><input type="text" id="ag-event_type" /></div>
+          <div class="field"><label>Event Date</label><input type="date" id="ag-event_date" /></div>
+          <div class="field"><label>Venue Name</label><input type="text" id="ag-venue_name" /></div>
+        </div>
+        <div class="form-row form-3col">
+          <div class="field"><label>Venue Address</label><input type="text" id="ag-venue_address" /></div>
+          <div class="field"><label>Start Time</label><input type="time" id="ag-start_time" /></div>
+          <div class="field"><label>End Time</label><input type="time" id="ag-end_time" /></div>
+        </div>
+
+        <h3 style="margin:10px 0 8px;font-size:0.95rem;color:#7a6a52;">Services Included</h3>
+        <div id="ag-services-included" style="display:flex;flex-wrap:wrap;gap:10px;"></div>
+
+        <h3 style="margin:12px 0 8px;font-size:0.95rem;color:#7a6a52;">Financial Information</h3>
+        <div class="form-row form-3col">
+          <div class="field"><label>Total Package Price</label><input type="number" id="ag-total_package_price" /></div>
+          <div class="field"><label>Retainer Amount</label><input type="number" id="ag-retainer_amount" /></div>
+          <div class="field"><label>Retainer Due Date</label><input type="date" id="ag-retainer_due_date" /></div>
+        </div>
+        <div class="form-row form-2col">
+          <div class="field"><label>Balance Due Date</label><input type="date" id="ag-balance_due_date" /></div>
+          <div class="field"><label>Overtime Rate</label><input type="number" id="ag-overtime_rate" /></div>
+        </div>
+
+        <h3 style="margin:12px 0 8px;font-size:0.95rem;color:#7a6a52;">Terms & Conditions</h3>
+        <div id="ag-terms-conditions" style="display:flex;flex-wrap:wrap;gap:10px;"></div>
+
+        <h3 style="margin:12px 0 8px;font-size:0.95rem;color:#7a6a52;">Electronic Signatures</h3>
+        <div class="form-row form-3col">
+          <div class="field"><label>Client Signature</label><input type="text" id="ag-client_signature" /></div>
+          <div class="field"><label>DJ Signature</label><input type="text" id="ag-dj_signature" /></div>
+          <div class="field"><label>Date</label><input type="date" id="ag-signature_date" /></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>2. Payment Authorization Form</h2>
+        <div class="form-row form-3col">
+          <div class="field"><label>Name</label><input type="text" id="ag-pay-name" /></div>
+          <div class="field"><label>Email</label><input type="text" id="ag-pay-email" /></div>
+          <div class="field"><label>Phone</label><input type="text" id="ag-pay-phone" /></div>
+        </div>
+        <div class="form-row form-3col">
+          <div class="field"><label>Retainer Amount</label><input type="number" id="ag-pay-retainer_amount" /></div>
+          <div class="field"><label>Remaining Balance</label><input type="number" id="ag-pay-remaining_balance" /></div>
+          <div class="field"><label>Payment Schedule</label><textarea id="ag-pay-payment_schedule"></textarea></div>
+        </div>
+        <div style="margin:8px 0;"><strong>Payment Methods</strong></div>
+        <div id="ag-payment-methods" style="display:flex;flex-wrap:wrap;gap:10px;"></div>
+        <div class="form-row"><div class="field"><label>Agreement</label><textarea id="ag-pay-agreement" readonly>I authorize payment according to the contract terms.</textarea></div></div>
+        <div class="form-row form-2col">
+          <div class="field"><label>Signature</label><input type="text" id="ag-pay-signature" /></div>
+          <div class="field"><label>Date</label><input type="date" id="ag-pay-date" /></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>3. Event Change Request Form</h2>
+        <div class="form-row form-2col">
+          <div class="field"><label>Client Name</label><input type="text" id="ag-change-client_name" /></div>
+          <div class="field"><label>Event Date</label><input type="date" id="ag-change-event_date" /></div>
+        </div>
+        <div style="margin:8px 0;"><strong>Requested Changes</strong></div>
+        <div id="ag-requested-changes" style="display:flex;flex-wrap:wrap;gap:10px;"></div>
+        <div class="form-row"><div class="field"><label>Reason for Change</label><textarea id="ag-change-reason_for_change"></textarea></div></div>
+        <div class="form-row form-2col">
+          <div class="field"><label>Additional Charges</label><input type="text" id="ag-change-additional_charges" /></div>
+          <div class="field"><label>Approval Signature</label><input type="text" id="ag-change-approval_signature" /></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>4. Cancellation Request Form</h2>
+        <div class="form-row form-2col">
+          <div class="field"><label>Client Name</label><input type="text" id="ag-cancel-client_name" /></div>
+          <div class="field"><label>Cancellation Date</label><input type="date" id="ag-cancel-cancellation_date" /></div>
+        </div>
+        <div class="form-row"><div class="field"><label>Event Information</label><textarea id="ag-cancel-event_information"></textarea></div></div>
+        <div style="margin:8px 0;"><strong>Reason for Cancellation</strong></div>
+        <div id="ag-cancel-reasons" style="display:flex;flex-wrap:wrap;gap:10px;"></div>
+        <div class="form-row"><div class="field"><label>Acknowledgement of Contract Terms</label><textarea id="ag-cancel-ack"></textarea></div></div>
+        <div class="form-row"><div class="field"><label>Signature</label><input type="text" id="ag-cancel-signature" /></div></div>
+      </div>
+
+      <div class="panel">
+        <h2>5. Final Payment Confirmation Form</h2>
+        <div class="form-row form-3col">
+          <div class="field"><label>Client Name</label><input type="text" id="ag-final-client_name" /></div>
+          <div class="field"><label>Event Date</label><input type="date" id="ag-final-event_date" /></div>
+          <div class="field"><label>Contract Total</label><input type="number" id="ag-final-contract_total" /></div>
+        </div>
+        <div class="form-row form-3col">
+          <div class="field"><label>Payments Received</label><input type="number" id="ag-final-payments_received" /></div>
+          <div class="field"><label>Remaining Balance</label><input type="number" id="ag-final-remaining_balance" /></div>
+          <div class="field"><label>Date Paid</label><input type="date" id="ag-final-date_paid" /></div>
+        </div>
+        <div class="form-row form-2col">
+          <div class="field"><label>Balance Paid In Full</label><select id="ag-final-balance_paid_in_full"><option>Yes</option><option>No</option></select></div>
+          <div class="field"><label>Payment Method</label><input type="text" id="ag-final-payment_method" /></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>6. Event Liability Waiver</h2>
+        <div class="form-row form-2col">
+          <div class="field"><label>Venue Information</label><textarea id="ag-waiver-venue_information"></textarea></div>
+          <div class="field"><label>Equipment Placement</label><textarea id="ag-waiver-equipment_placement"></textarea></div>
+        </div>
+        <div style="margin:8px 0;"><strong>Client acknowledges</strong></div>
+        <div id="ag-waiver-ack" style="display:flex;flex-wrap:wrap;gap:10px;"></div>
+        <div class="form-row form-2col">
+          <div class="field"><label>Signature</label><input type="text" id="ag-waiver-signature" /></div>
+          <div class="field"><label>Date</label><input type="date" id="ag-waiver-date" /></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>7. Venue Information Form</h2>
+        <div class="form-row form-3col">
+          <div class="field"><label>Venue Name</label><input type="text" id="ag-venue-info-name" /></div>
+          <div class="field"><label>Venue Address</label><input type="text" id="ag-venue-info-address" /></div>
+          <div class="field"><label>Venue Contact</label><input type="text" id="ag-venue-info-contact" /></div>
+        </div>
+        <div class="form-row form-3col">
+          <div class="field"><label>Venue Phone</label><input type="text" id="ag-venue-info-phone" /></div>
+          <div class="field"><label>Load-In Time</label><input type="time" id="ag-venue-info-load_in_time" /></div>
+          <div class="field"><label>Load-Out Time</label><input type="time" id="ag-venue-info-load_out_time" /></div>
+        </div>
+        <div class="form-row"><div class="field"><label>Parking Instructions</label><textarea id="ag-venue-info-parking_instructions"></textarea></div></div>
+        <div class="form-row"><div class="field"><label>Vendor Rules</label><textarea id="ag-venue-info-vendor_rules"></textarea></div></div>
+        <div class="form-row"><div class="field"><label>Insurance Requirements</label><textarea id="ag-venue-info-insurance_requirements"></textarea></div></div>
+        <div class="form-row form-2col">
+          <div class="field"><label>Sound Restrictions</label><textarea id="ag-venue-info-sound_restrictions"></textarea></div>
+          <div class="field"><label>Curfew</label><input type="text" id="ag-venue-info-curfew" /></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>8. Music Licensing & Content Agreement</h2>
+        <div class="form-row"><div class="field"><label>Client Name</label><input type="text" id="ag-ml-client_name" /></div></div>
+        <div style="margin:8px 0;"><strong>Client understands</strong></div>
+        <div id="ag-ml-understands" style="display:flex;flex-wrap:wrap;gap:10px;"></div>
+        <div class="form-row form-2col">
+          <div class="field"><label>Signature</label><input type="text" id="ag-ml-signature" /></div>
+          <div class="field"><label>Date</label><input type="date" id="ag-ml-date" /></div>
+        </div>
+
+        <button class="btn btn-primary" onclick="submitServiceAgreementPack()">Save Agreement Pack</button>
+      </div>
+
+      <div class="result-box" id="ag-result">
+        <div class="print-bar">
+          <button class="btn btn-print" onclick="printSection('ag-result', 'DJ Service Agreement Pack')">Print / Save PDF</button>
+        </div>
+        <p style="font-weight:700;margin-bottom:10px;">Service agreement pack saved ✓</p>
+        <div id="ag-result-pre" style="font-size:0.9rem;line-height:1.8;"></div>
       </div>
     </div>
 
@@ -1843,6 +2026,10 @@ POST-EVENT
   let crmLeadId = '';
   let crmTemplate = null;
 
+  // ── SERVICE AGREEMENTS ──
+  let agreementPackId = '';
+  let agreementTemplate = null;
+
   const REQUIRED_FIELDS_BY_EVENT = {
     wedding: [
       'couple_names', 'wedding_date', 'venue_name', 'guest_count', 'must_play'
@@ -2287,6 +2474,156 @@ POST-EVENT
     document.getElementById('crm-result').classList.add('show');
     document.getElementById('crm-result').scrollIntoView({ behavior: 'smooth', block: 'start' });
     showToast('Lead record saved');
+  }
+
+  async function loadServiceAgreementTemplate() {
+    if (agreementTemplate) return;
+
+    const r = await fetch('/api/tools/service-agreement/template');
+    const res = await r.json();
+    if (!res.success) return alert('Error loading service agreement template');
+
+    agreementPackId = res.data.agreement_id;
+    agreementTemplate = res.data.template;
+
+    renderChecklist('ag-services-included', agreementTemplate.main_contract?.services_included || [], 'ag-services');
+    renderChecklist('ag-terms-conditions', agreementTemplate.main_contract?.terms_conditions || [], 'ag-terms');
+    renderChecklist('ag-payment-methods', agreementTemplate.payment_authorization_form?.payment_methods || [], 'ag-pay-methods');
+    renderChecklist('ag-requested-changes', agreementTemplate.event_change_request_form?.requested_changes || [], 'ag-requested');
+    renderChecklist('ag-cancel-reasons', agreementTemplate.cancellation_request_form?.reason_for_cancellation || [], 'ag-cancel-reason');
+    renderChecklist('ag-waiver-ack', agreementTemplate.event_liability_waiver?.client_acknowledges || [], 'ag-waiver-ack');
+    renderChecklist('ag-ml-understands', agreementTemplate.music_licensing_content_agreement?.client_understands || [], 'ag-ml-understands');
+  }
+
+  async function submitServiceAgreementPack() {
+    if (!agreementTemplate) await loadServiceAgreementTemplate();
+
+    const agreement_pack = {
+      main_contract: {
+        client_information: {
+          client_name: document.getElementById('ag-client_name').value.trim(),
+          phone: document.getElementById('ag-phone').value.trim(),
+          email: document.getElementById('ag-email').value.trim(),
+          address: document.getElementById('ag-address').value.trim(),
+        },
+        event_information: {
+          event_type: document.getElementById('ag-event_type').value.trim(),
+          event_date: document.getElementById('ag-event_date').value,
+          venue_name: document.getElementById('ag-venue_name').value.trim(),
+          venue_address: document.getElementById('ag-venue_address').value.trim(),
+          start_time: document.getElementById('ag-start_time').value,
+          end_time: document.getElementById('ag-end_time').value,
+        },
+        services_included: selectedChecklistValues('ag-services'),
+        financial_information: {
+          total_package_price: document.getElementById('ag-total_package_price').value,
+          retainer_amount: document.getElementById('ag-retainer_amount').value,
+          retainer_due_date: document.getElementById('ag-retainer_due_date').value,
+          balance_due_date: document.getElementById('ag-balance_due_date').value,
+          overtime_rate: document.getElementById('ag-overtime_rate').value,
+        },
+        terms_conditions: selectedChecklistValues('ag-terms'),
+        electronic_signatures: {
+          client_signature: document.getElementById('ag-client_signature').value.trim(),
+          dj_signature: document.getElementById('ag-dj_signature').value.trim(),
+          date: document.getElementById('ag-signature_date').value,
+        },
+      },
+      payment_authorization_form: {
+        client_information: {
+          name: document.getElementById('ag-pay-name').value.trim(),
+          email: document.getElementById('ag-pay-email').value.trim(),
+          phone: document.getElementById('ag-pay-phone').value.trim(),
+        },
+        payment_details: {
+          retainer_amount: document.getElementById('ag-pay-retainer_amount').value,
+          remaining_balance: document.getElementById('ag-pay-remaining_balance').value,
+          payment_schedule: document.getElementById('ag-pay-payment_schedule').value.trim(),
+        },
+        payment_methods: selectedChecklistValues('ag-pay-methods'),
+        agreement: document.getElementById('ag-pay-agreement').value.trim(),
+        signature: {
+          signature: document.getElementById('ag-pay-signature').value.trim(),
+          date: document.getElementById('ag-pay-date').value,
+        },
+      },
+      event_change_request_form: {
+        client_information: {
+          client_name: document.getElementById('ag-change-client_name').value.trim(),
+          event_date: document.getElementById('ag-change-event_date').value,
+        },
+        requested_changes: selectedChecklistValues('ag-requested'),
+        reason_for_change: document.getElementById('ag-change-reason_for_change').value.trim(),
+        additional_charges: document.getElementById('ag-change-additional_charges').value.trim(),
+        approval_signature: document.getElementById('ag-change-approval_signature').value.trim(),
+      },
+      cancellation_request_form: {
+        client_information: {
+          client_name: document.getElementById('ag-cancel-client_name').value.trim(),
+          event_information: document.getElementById('ag-cancel-event_information').value.trim(),
+        },
+        reason_for_cancellation: selectedChecklistValues('ag-cancel-reason'),
+        cancellation_date: document.getElementById('ag-cancel-cancellation_date').value,
+        acknowledgement_of_contract_terms: document.getElementById('ag-cancel-ack').value.trim(),
+        signature: document.getElementById('ag-cancel-signature').value.trim(),
+      },
+      final_payment_confirmation_form: {
+        client_name: document.getElementById('ag-final-client_name').value.trim(),
+        event_date: document.getElementById('ag-final-event_date').value,
+        contract_total: document.getElementById('ag-final-contract_total').value,
+        payments_received: document.getElementById('ag-final-payments_received').value,
+        remaining_balance: document.getElementById('ag-final-remaining_balance').value,
+        balance_paid_in_full: document.getElementById('ag-final-balance_paid_in_full').value,
+        date_paid: document.getElementById('ag-final-date_paid').value,
+        payment_method: document.getElementById('ag-final-payment_method').value.trim(),
+      },
+      event_liability_waiver: {
+        venue_information: document.getElementById('ag-waiver-venue_information').value.trim(),
+        equipment_placement: document.getElementById('ag-waiver-equipment_placement').value.trim(),
+        client_acknowledges: selectedChecklistValues('ag-waiver-ack'),
+        signature: document.getElementById('ag-waiver-signature').value.trim(),
+        date: document.getElementById('ag-waiver-date').value,
+      },
+      venue_information_form: {
+        venue_name: document.getElementById('ag-venue-info-name').value.trim(),
+        venue_address: document.getElementById('ag-venue-info-address').value.trim(),
+        venue_contact: document.getElementById('ag-venue-info-contact').value.trim(),
+        venue_phone: document.getElementById('ag-venue-info-phone').value.trim(),
+        load_in_time: document.getElementById('ag-venue-info-load_in_time').value,
+        load_out_time: document.getElementById('ag-venue-info-load_out_time').value,
+        parking_instructions: document.getElementById('ag-venue-info-parking_instructions').value.trim(),
+        vendor_rules: document.getElementById('ag-venue-info-vendor_rules').value.trim(),
+        insurance_requirements: document.getElementById('ag-venue-info-insurance_requirements').value.trim(),
+        sound_restrictions: document.getElementById('ag-venue-info-sound_restrictions').value.trim(),
+        curfew: document.getElementById('ag-venue-info-curfew').value.trim(),
+      },
+      music_licensing_content_agreement: {
+        client_name: document.getElementById('ag-ml-client_name').value.trim(),
+        client_understands: selectedChecklistValues('ag-ml-understands'),
+        signature: document.getElementById('ag-ml-signature').value.trim(),
+        date: document.getElementById('ag-ml-date').value,
+      },
+    };
+
+    const res = await post('/api/tools/service-agreement/submit', {
+      agreement_id: agreementPackId,
+      agreement_pack,
+    });
+    if (!res.success) return alert('Error saving service agreement pack');
+
+    const pre = document.getElementById('ag-result-pre');
+    pre.innerHTML = `
+      <div style="margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.06)"><strong>Client:</strong> ${agreement_pack.main_contract.client_information.client_name || '—'}</div>
+      <div style="margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.06)"><strong>Event:</strong> ${agreement_pack.main_contract.event_information.event_type || '—'} on ${agreement_pack.main_contract.event_information.event_date || '—'}</div>
+      <div style="margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.06)"><strong>Total Package:</strong> ${agreement_pack.main_contract.financial_information.total_package_price || '—'}</div>
+      <div style="margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.06)"><strong>Retainer:</strong> ${agreement_pack.main_contract.financial_information.retainer_amount || '—'}</div>
+      <div style="margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.06)"><strong>Selected Services:</strong> ${(agreement_pack.main_contract.services_included || []).join(', ') || '—'}</div>
+      <div><strong>Forms Included:</strong> Main Contract, Payment Authorization, Event Change Request, Cancellation Request, Final Payment Confirmation, Liability Waiver, Venue Information, Music Licensing Agreement</div>
+    `;
+
+    document.getElementById('ag-result').classList.add('show');
+    document.getElementById('ag-result').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    showToast('Service agreement pack saved');
   }
 
   // ── SETLIST ──

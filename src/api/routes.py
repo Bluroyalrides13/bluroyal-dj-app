@@ -30,7 +30,9 @@ from src.dj_tools.engine import (
     save_dj_profile,
     get_lead_crm_template,
     save_lead_crm_record,
-        get_admin_stats,
+    get_service_agreement_template,
+    save_service_agreement_pack,
+    get_admin_stats,
 )
 from config.settings import Settings
 
@@ -252,6 +254,34 @@ async def submit_lead_crm(request: Request):
         return ApiResponse(success=True, message="Lead CRM record saved", data=result)
     except Exception as e:
         logger.error(f"Lead CRM submit error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/api/tools/service-agreement/template")
+async def get_service_agreement_setup(request: Request):
+    """Return the service agreement forms template"""
+    _require_dashboard_auth(request)
+    try:
+        result = get_service_agreement_template()
+        return ApiResponse(success=True, message="Service agreement template ready", data=result)
+    except Exception as e:
+        logger.error(f"Service agreement template error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/api/tools/service-agreement/submit")
+async def submit_service_agreement(request: Request):
+    """Save a full service agreement forms pack"""
+    _require_dashboard_auth(request)
+    try:
+        body = await request.json()
+        result = save_service_agreement_pack(
+            agreement_id=body.get("agreement_id", str(uuid.uuid4())),
+            agreement_pack=body.get("agreement_pack", {}),
+        )
+        return ApiResponse(success=True, message="Service agreement pack saved", data=result)
+    except Exception as e:
+        logger.error(f"Service agreement submit error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 
@@ -561,7 +591,6 @@ async def create_payment(
 
 # ===================== Health/Status Endpoints =====================
 
-@router.get("/status")
 @router.get("/api/admin/stats")
 async def admin_dashboard_stats(request: Request):
     """Aggregated stats for the admin dashboard."""
