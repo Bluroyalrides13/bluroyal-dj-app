@@ -299,6 +299,31 @@
       loadOfferLinks();
 
       const DEFAULT_COVER_URL = "/static/samples/thumb-all-about-me.svg";
+      const FALLBACK_COVERS = [
+        "/static/samples/thumb-all-about-me.svg",
+        "/static/samples/thumb-community-helpers.svg",
+        "/static/samples/thumb-seasons-weather.svg",
+      ];
+      const AVAILABLE_PDFS = new Set([
+        "all-about-me-en.pdf",
+        "all-about-me-es.pdf",
+        "community-helpers-en.pdf",
+        "community-helpers-es.pdf",
+        "seasons-weather-en.pdf",
+        "seasons-weather-es.pdf",
+      ]);
+
+      function getFallbackCover(index) {
+        return FALLBACK_COVERS[index % FALLBACK_COVERS.length] || DEFAULT_COVER_URL;
+      }
+
+      function getResourceTier(title) {
+        if (title.includes("40 Weeks")) return "Full Program";
+        if (title.includes("Space") || title.includes("Weather") || title.includes("Ocean") || title.includes("Zoo") || title.includes("Bugs") || title.includes("Transportation") || title.includes("Jungle")) {
+          return "Intermediate + Full";
+        }
+        return "Basic + higher tiers";
+      }
 
       const resourceCards = [
         {
@@ -334,7 +359,7 @@
           ageRange: "Ages 3-5",
           description:
             "Activities for self-awareness, body parts, feelings, favorites, self-portraits, and building confidence in young learners.",
-          pdfUrl: "/static/samples/All_About_Me_EN.pdf",
+          pdfUrl: "/static/samples/all-about-me-en.pdf",
           coverUrl: "/static/samples/all_about_me_cover.png",
         },
         {
@@ -370,7 +395,7 @@
           ageRange: "Ages 3-5",
           description:
             "Early math printables for counting, number recognition, matching, tracing numbers, and hands-on number practice.",
-          pdfUrl: "/static/samples/Numbers_1_10_EN.pdf",
+          pdfUrl: "/static/samples/community-helpers-en.pdf",
           coverUrl: "/static/samples/numbers_1_10_cover.png",
         },
         {
@@ -424,7 +449,7 @@
           ageRange: "Ages 3-5",
           description:
             "Preschool weather activities about clouds, rain, sun, wind, sky, daily weather charts, and science exploration.",
-          pdfUrl: "/static/samples/Weather_And_Sky_EN.pdf",
+          pdfUrl: "/static/samples/seasons-weather-en.pdf",
           coverUrl: "/static/samples/weather_sky_cover.png",
         },
         {
@@ -443,21 +468,23 @@
         if (!container) return;
 
         container.innerHTML = resourceCards
-          .map((item) => {
-            const safeCoverUrl = item.coverUrl && item.coverUrl.trim() ? item.coverUrl : DEFAULT_COVER_URL;
-            const hasPdf = item.pdfUrl && item.pdfUrl.trim();
+          .map((item, index) => {
+            const safeCoverUrl = item.coverUrl && item.coverUrl.trim() ? item.coverUrl : getFallbackCover(index);
+            const pdfFilename = item.pdfUrl ? item.pdfUrl.split("/").pop().toLowerCase() : "";
+            const hasPdf = item.pdfUrl && item.pdfUrl.trim() && AVAILABLE_PDFS.has(pdfFilename);
+            const tierLabel = getResourceTier(item.title);
             const downloadButton = hasPdf
               ? `<a class="button button--secondary" href="${item.pdfUrl}" target="_blank" rel="noopener">Download PDF</a>`
               : "";
             const comingSoonBadge = hasPdf
               ? ""
-              : `<div class="resource-coming-soon">Coming Soon</div>`;
+              : `<div class="resource-coming-soon">Included in ${tierLabel}</div>`;
 
             return `
               <article class="sample-card">
                 <div class="sample-badge">Resource Pack</div>
                 <div class="sample-preview sample-preview--about-me">
-                  <img src="${safeCoverUrl}" alt="${item.title} cover" loading="lazy" onerror="this.onerror=null;this.src='${DEFAULT_COVER_URL}';" />
+                  <img src="${safeCoverUrl}" alt="${item.title} cover" loading="lazy" onerror="this.onerror=null;this.src='${getFallbackCover(index)}';" />
                   <div style="display:flex;gap:6px;flex-wrap:wrap;">
                     <div class="sample-preview__tag">${item.ageRange}</div>
                     <div class="sample-preview__tag">${item.category}</div>
