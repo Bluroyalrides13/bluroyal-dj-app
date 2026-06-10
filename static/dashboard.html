@@ -2982,14 +2982,9 @@ POST-EVENT
     window.lastLessonPrintableDocs = docs;
 
     const hookItems = d.instagram_promo_hooks || [];
-    const hooksEl = document.getElementById('lp-hooks-output');
-    hooksEl.innerHTML = `
-      <div style="display:flex;justify-content:flex-end;margin-bottom:10px;">
-        <button class="btn btn-secondary" type="button" onclick="copyLessonHooksDashboard()">Copy Hooks</button>
-      </div>
-      ${hookItems.map((hook) => `<div class="dm-card"><div class="dm-text">${hook}</div></div>`).join('')}
-    `;
     window.lastLessonHooks = hookItems;
+    window.lastLessonHooksFilter = 'all';
+    renderLessonHooksDashboard();
 
     const panel = document.getElementById('lp-result');
     panel.classList.add('show');
@@ -3037,13 +3032,52 @@ POST-EVENT
     win.onload = () => win.print();
   }
 
-  async function copyLessonHooksDashboard() {
+  function getFilteredLessonHooksDashboard() {
     const hooks = window.lastLessonHooks || [];
+    const filter = window.lastLessonHooksFilter || 'all';
+    if (filter === 'all') return hooks;
+    return hooks.filter((h) => h.startsWith(filter.toUpperCase()));
+  }
+
+  function renderLessonHooksDashboard() {
+    const hooksEl = document.getElementById('lp-hooks-output');
+    if (!hooksEl) return;
+    const filter = window.lastLessonHooksFilter || 'all';
+    const filtered = getFilteredLessonHooksDashboard();
+    const channelBtn = (name, label) => {
+      const active = filter === name;
+      const style = active
+        ? 'background:#2f6feb;color:#fff;border-color:#2f6feb;'
+        : '';
+      return `<button class="btn btn-secondary" type="button" style="${style}" onclick="setLessonHooksFilterDashboard('${name}')">${label}</button>`;
+    };
+
+    hooksEl.innerHTML = `
+      <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:10px;">
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          ${channelBtn('all', 'All')}
+          ${channelBtn('reel', 'Reels')}
+          ${channelBtn('story', 'Stories')}
+          ${channelBtn('dm', 'DMs')}
+        </div>
+        <button class="btn btn-secondary" type="button" onclick="copyLessonHooksDashboard()">Copy Hooks</button>
+      </div>
+      ${filtered.map((hook) => `<div class="dm-card"><div class="dm-text">${hook}</div></div>`).join('') || '<div class="dm-card"><div class="dm-text">No hooks for this channel.</div></div>'}
+    `;
+  }
+
+  function setLessonHooksFilterDashboard(filter) {
+    window.lastLessonHooksFilter = filter;
+    renderLessonHooksDashboard();
+  }
+
+  async function copyLessonHooksDashboard() {
+    const hooks = getFilteredLessonHooksDashboard();
     if (!hooks.length) return;
     const text = hooks.join('\n\n');
     try {
       await navigator.clipboard.writeText(text);
-      showToast('Instagram hooks copied');
+      showToast('Filtered Instagram hooks copied');
     } catch (err) {
       const ta = document.createElement('textarea');
       ta.value = text;
@@ -3051,7 +3085,7 @@ POST-EVENT
       ta.select();
       document.execCommand('copy');
       ta.remove();
-      showToast('Instagram hooks copied');
+      showToast('Filtered Instagram hooks copied');
     }
   }
 
