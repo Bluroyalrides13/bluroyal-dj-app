@@ -1,0 +1,14 @@
+[
+  {
+    "agreement_id": "smoke-test-id",
+    "agreement_pack": {
+      "main_contract": {
+        "client_information": {
+          "client_name": "Smoke Test"
+        }
+      }
+    },
+    "record_id": "33cfa7e9-8130-4b3f-9949-31de2e2aa1d6",
+    "saved_at": "2026-06-10T09:54:35.187730"
+  }
+]

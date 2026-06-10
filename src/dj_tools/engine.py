@@ -1766,18 +1766,23 @@ def _format_comprehensive_theme(theme_data: Dict, language_mode: str, weeks: int
 
 
 def _build_theme_printables(theme_data: Dict, language_mode: str, printable_count: int = 4) -> List[Dict[str, str]]:
-    """Generate printable worksheets based on theme learning objectives."""
+    """Generate colorful, kid-friendly printable worksheets based on theme learning objectives."""
     documents: List[Dict[str, str]] = []
     theme_title = theme_data.get("title", "Theme")
     learning_objectives = theme_data.get("learning_objectives", {})
+    theme_emoji = theme_data.get("emoji", "📚")
     
     subjects = list(learning_objectives.keys())
+    subject_emojis = {'Literacy': '📚', 'Math': '🔢', 'Science': '🔬', 'Social-Emotional': '💖'}
+    subject_colors = {'Literacy': '#ff7675', 'Math': '#a29bfe', 'Science': '#00b894', 'Social-Emotional': '#fdcb6e'}
     
     for idx in range(printable_count):
         subject = subjects[idx % len(subjects)] if subjects else "Learning"
         objective = learning_objectives.get(subject, [""])[0] if learning_objectives.get(subject) else ""
         
-        title = f"Worksheet {idx + 1}: {theme_title} - {subject}"
+        worksheet_title = f"Worksheet {idx + 1}: {theme_title} - {subject}"
+        subject_emoji = subject_emojis.get(subject, "✨")
+        color = subject_colors.get(subject, "#4da6ff")
         
         instructions = _bilingual(
             "Instructions: Complete the activity with your learner. Review answers together and celebrate progress!",
@@ -1791,40 +1796,95 @@ def _build_theme_printables(theme_data: Dict, language_mode: str, printable_coun
             language_mode,
         )
         
-        content = "\n".join(
-            [
-                title,
-                "=" * len(title),
-                "",
-                focus,
-                instructions,
-                "",
-                _bilingual("Name: ____________________", "Nombre: ____________________", language_mode),
-                _bilingual("Date: ____________________", "Fecha: ____________________", language_mode),
-                "",
-                _bilingual("Activity:", "Actividad:", language_mode),
-                "_" * 50,
-                "_" * 50,
-                "_" * 50,
-                "",
-                _bilingual("Draw or write your answer:", "Dibuja o escribe tu respuesta:", language_mode),
-                "_" * 50,
-                "_" * 50,
-                "",
-                _bilingual("Circle the best answer:", "Encierra la mejor respuesta:", language_mode),
-                "☐ A          ☐ B          ☐ C",
-                "",
-                _bilingual("Teacher/Parent Notes:", "Notas del maestro/padre:", language_mode),
-                "_" * 50,
-            ]
-        )
+        # Generate beautiful HTML content
+        html_content = f"""
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {{ font-family: 'Arial', sans-serif; margin: 20px; background: white; }}
+        .worksheet {{ max-width: 800px; margin: 0 auto; }}
+        .header {{ background: linear-gradient(135deg, {color} 0%, rgba({color}, 0.1) 100%); padding: 20px; border-radius: 10px; border: 3px solid {color}; margin-bottom: 20px; }}
+        .title {{ font-size: 28px; font-weight: bold; color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); display: flex; gap: 10px; align-items: center; }}
+        .title-text {{ background: linear-gradient(135deg, white, #f0f0f0); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }}
+        .emoji-large {{ font-size: 40px; }}
+        .info-box {{ background: #f8f9fa; padding: 15px; border-left: 5px solid {color}; margin: 15px 0; border-radius: 5px; }}
+        .label {{ font-weight: bold; color: {color}; font-size: 12px; }}
+        .content {{ color: #333; line-height: 1.6; }}
+        .section {{ margin: 20px 0; }}
+        .section-title {{ font-size: 16px; font-weight: bold; color: {color}; display: flex; gap: 8px; align-items: center; border-bottom: 2px solid {color}; padding-bottom: 8px; margin-bottom: 12px; }}
+        .fill-line {{ border-bottom: 1px solid #ccc; height: 20px; margin: 8px 0; }}
+        .checkbox {{ margin: 5px; display: inline-block; }}
+        .footer {{ margin-top: 30px; text-align: center; font-size: 12px; color: #999; }}
+        .emoji {{ font-size: 20px; margin-right: 5px; }}
+    </style>
+</head>
+<body>
+    <div class="worksheet">
+        <div class="header">
+            <div class="title">
+                <span class="emoji-large">{theme_emoji}</span>
+                <span class="title-text">{worksheet_title}</span>
+            </div>
+        </div>
+
+        <div class="info-box">
+            <div class="label">📚 {focus}</div>
+        </div>
+
+        <div class="info-box">
+            <div class="label">ℹ️ {instructions}</div>
+        </div>
+
+        <div class="info-box">
+            <div class="label">👤 {_bilingual("Student Name:", "Nombre del estudiante:", language_mode)}</div>
+            <div class="fill-line"></div>
+            <div class="label">📅 {_bilingual("Date:", "Fecha:", language_mode)}</div>
+            <div class="fill-line"></div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">
+                <span>✏️</span>
+                <span>{_bilingual("Activity 1: Draw or Write Your Answer", "Actividad 1: Dibuja o escribe tu respuesta", language_mode)}</span>
+            </div>
+            <div style="border: 2px dashed {color}; padding: 20px; min-height: 100px; border-radius: 8px; background: rgba({color}, 0.05);"></div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">
+                <span>⭐</span>
+                <span>{_bilingual("Activity 2: Circle the Best Answer", "Actividad 2: Encierra la mejor respuesta", language_mode)}</span>
+            </div>
+            <div style="font-size: 18px; margin: 15px 0;">
+                <div class="checkbox">☑ {_bilingual("A", "A", language_mode)}</div>
+                <div class="checkbox">☐ {_bilingual("B", "B", language_mode)}</div>
+                <div class="checkbox">☐ {_bilingual("C", "C", language_mode)}</div>
+            </div>
+        </div>
+
+        <div class="info-box">
+            <div class="label">📝 {_bilingual("Teacher/Parent Notes:", "Notas del maestro/padre:", language_mode)}</div>
+            <div class="fill-line"></div>
+            <div class="fill-line"></div>
+        </div>
+
+        <div class="footer">
+            <p>🌟 {_bilingual("Great work!", "¡Buen trabajo!", language_mode)} 🌟</p>
+            <p>{theme_title} • {_bilingual("Preschool Learning", "Aprendizaje Preescolar", language_mode)}</p>
+        </div>
+    </div>
+</body>
+</html>
+"""
         
         documents.append(
             {
                 "id": f"printable_{idx + 1}",
-                "title": title,
-                "content": content,
-                "format": "txt",
+                "title": worksheet_title,
+                "content": html_content,
+                "format": "html",
             }
         )
     
@@ -1865,8 +1925,18 @@ def _build_printable_documents(
     language_mode: str,
     printable_resources: List[str],
 ) -> List[Dict[str, str]]:
-    """Create worksheet-ready printable document payloads for UI download/printing."""
+    """Create colorful, kid-friendly printable worksheet documents for UI download/printing."""
     documents: List[Dict[str, str]] = []
+    
+    # Color scheme
+    focus_colors = {
+        'literacy': '#ff7675',
+        'math': '#a29bfe',
+        'science': '#00b894',
+        'social_emotional': '#fdcb6e',
+        'mixed': '#4da6ff'
+    }
+    color = focus_colors.get(focus_area.lower(), '#4da6ff')
 
     for idx, title in enumerate(printable_resources, start=1):
         if language_mode == "bilingual" and " / " in title:
@@ -1877,6 +1947,7 @@ def _build_printable_documents(
                 f"Hoja de trabajo {idx}: {title}",
                 language_mode,
             )
+        
         instructions = _bilingual(
             "Instructions: Complete the activity with your learner and review answers together.",
             "Instrucciones: Completa la actividad con tu estudiante y revisen las respuestas juntos.",
@@ -1898,37 +1969,100 @@ def _build_printable_documents(
             language_mode,
         )
 
-        content = "\n".join(
-            [
-                worksheet_title,
-                "=" * len(worksheet_title),
-                audience_line,
-                skill_focus,
-                instructions,
-                prompt_line,
-                "",
-                _bilingual("Student Name: ____________________", "Nombre del estudiante: ____________________", language_mode),
-                _bilingual("Date: ____________________", "Fecha: ____________________", language_mode),
-                "",
-                _bilingual("1. Draw or write your response below:", "1. Dibuja o escribe tu respuesta abajo:", language_mode),
-                "__________________________________________",
-                "__________________________________________",
-                "",
-                _bilingual("2. Circle or mark the best answer.", "2. Encierra o marca la mejor respuesta.", language_mode),
-                "A) ____    B) ____    C) ____",
-                "",
-                _bilingual("Teacher/Parent Notes:", "Notas del maestro/padre:", language_mode),
-                "__________________________________________",
-                "__________________________________________",
-            ]
-        )
+        # Generate beautiful HTML content
+        html_content = f"""
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {{ font-family: 'Arial', sans-serif; margin: 20px; background: white; }}
+        .worksheet {{ max-width: 800px; margin: 0 auto; }}
+        .header {{ background: linear-gradient(135deg, {color} 0%, rgba({color}, 0.1) 100%); padding: 20px; border-radius: 10px; border: 3px solid {color}; margin-bottom: 20px; }}
+        .title {{ font-size: 28px; font-weight: bold; color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); }}
+        .theme-label {{ font-size: 14px; margin-top: 8px; opacity: 0.9; }}
+        .info-box {{ background: #f8f9fa; padding: 15px; border-left: 5px solid {color}; margin: 15px 0; border-radius: 5px; }}
+        .label {{ font-weight: bold; color: {color}; font-size: 12px; }}
+        .content {{ color: #333; line-height: 1.6; }}
+        .section {{ margin: 20px 0; }}
+        .section-title {{ font-size: 16px; font-weight: bold; color: {color}; display: flex; gap: 8px; align-items: center; border-bottom: 2px solid {color}; padding-bottom: 8px; margin-bottom: 12px; }}
+        .fill-line {{ border-bottom: 1px solid #ccc; height: 20px; margin: 8px 0; }}
+        .checkbox {{ margin: 8px 15px 8px 0; display: inline-block; }}
+        .activity-box {{ border: 2px dashed {color}; padding: 20px; min-height: 100px; border-radius: 8px; background: rgba({color}, 0.05); }}
+        .footer {{ margin-top: 30px; text-align: center; font-size: 12px; color: #999; }}
+        .emoji {{ font-size: 20px; margin-right: 5px; }}
+    </style>
+</head>
+<body>
+    <div class="worksheet">
+        <div class="header">
+            <div class="title">✨ {worksheet_title} ✨</div>
+            <div class="theme-label">📚 {theme} • {audience_type.title()}</div>
+        </div>
+
+        <div class="info-box">
+            <div class="label">🎯 {skill_focus}</div>
+            <div class="label" style="margin-top: 8px;">📋 {audience_line}</div>
+        </div>
+
+        <div class="info-box">
+            <div class="label">ℹ️ {_bilingual("Instructions", "Instrucciones", language_mode)}</div>
+            <div style="margin-top: 8px; font-size: 13px;">{instructions}</div>
+        </div>
+
+        <div class="info-box">
+            <div class="label">💭 {_bilingual("Prompt", "Actividad", language_mode)}</div>
+            <div style="margin-top: 8px; font-size: 13px;">{prompt_line}</div>
+        </div>
+
+        <div class="info-box">
+            <div class="label">👤 {_bilingual("Student Name:", "Nombre del estudiante:", language_mode)}</div>
+            <div class="fill-line"></div>
+            <div class="label">📅 {_bilingual("Date:", "Fecha:", language_mode)}</div>
+            <div class="fill-line"></div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">
+                <span>1️⃣</span>
+                <span>{_bilingual("Draw or Write Your Response", "Dibuja o escribe tu respuesta", language_mode)}</span>
+            </div>
+            <div class="activity-box"></div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">
+                <span>2️⃣</span>
+                <span>{_bilingual("Circle the Best Answer", "Encierra la mejor respuesta", language_mode)}</span>
+            </div>
+            <div style="font-size: 16px; margin: 15px 0;">
+                <div class="checkbox">☐ A)</div>
+                <div class="checkbox">☐ B)</div>
+                <div class="checkbox">☐ C)</div>
+            </div>
+        </div>
+
+        <div class="info-box">
+            <div class="label">📝 {_bilingual("Teacher/Parent Notes:", "Notas del maestro/padre:", language_mode)}</div>
+            <div class="fill-line"></div>
+            <div class="fill-line"></div>
+        </div>
+
+        <div class="footer">
+            <p>🌟 {_bilingual("Excellent Work!", "¡Excelente trabajo!", language_mode)} 🌟</p>
+            <p>{theme} Theme • {_bilingual("Preschool Learning", "Aprendizaje Preescolar", language_mode)}</p>
+        </div>
+    </div>
+</body>
+</html>
+"""
 
         documents.append(
             {
                 "id": f"printable_{idx}",
                 "title": worksheet_title,
-                "content": content,
-                "format": "txt",
+                "content": html_content,
+                "format": "html",
             }
         )
 
