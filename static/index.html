@@ -171,69 +171,9 @@
             teacher-approved packs in English and Spanish for age-appropriate preschool learning.
           </p>
 
-          <div class="sample-grid">
-            <article class="sample-card">
-              <div class="sample-badge">Teacher Approved</div>
-              <div class="sample-preview sample-preview--about-me">
-                <img src="/static/samples/all-about-me-cover.jpg" alt="All About Me Unit sample thumbnail" loading="lazy" onerror="this.onerror=null;this.src='/static/samples/thumb-all-about-me.svg';" />
-                <div class="sample-preview__tag">Age 3-5</div>
-                <strong>All About Me Unit</strong>
-                <span>Circle time + literacy + home connection</span>
-              </div>
-              <h3>All About Me Unit</h3>
-              <p>Age 3-5, circle time prompts, literacy mini-lessons, and home connection activities.</p>
-              <div class="checklist">
-                <div class="check">English + Spanish parent instructions included.</div>
-                <div class="check">Weekly sequence with printable center tasks.</div>
-              </div>
-              <div class="sample-actions">
-                <a class="button button--secondary" href="/static/samples/all-about-me-en.pdf" target="_blank" rel="noopener">View Sample PDF (EN)</a>
-                <a class="button button--secondary" href="/static/samples/all-about-me-es.pdf" target="_blank" rel="noopener">Ver PDF de muestra (ES)</a>
-              </div>
-            </article>
+          <div class="sample-grid" id="resource-cards"></div>
 
-            <article class="sample-card">
-              <div class="sample-badge">Bilingual Printables</div>
-              <div class="sample-preview sample-preview--helpers">
-                <img src="/static/samples/community-helpers-cover.jpg" alt="Community Helpers Pack sample thumbnail" loading="lazy" onerror="this.onerror=null;this.src='/static/samples/thumb-community-helpers.svg';" />
-                <div class="sample-preview__tag">Age 4-6</div>
-                <strong>Community Helpers Pack</strong>
-                <span>Vocabulary cards + role-play + worksheets</span>
-              </div>
-              <h3>Community Helpers Pack</h3>
-              <p>Age 4-6, vocabulary cards, role-play activities, and differentiated worksheets.</p>
-              <div class="checklist">
-                <div class="check">Bilingual worksheet set: English and Spanish.</div>
-                <div class="check">Ready for preschool classroom or homeschool routines.</div>
-              </div>
-              <div class="sample-actions">
-                <a class="button button--secondary" href="/static/samples/community-helpers-en.pdf" target="_blank" rel="noopener">View Sample PDF (EN)</a>
-                <a class="button button--secondary" href="/static/samples/community-helpers-es.pdf" target="_blank" rel="noopener">Ver PDF de muestra (ES)</a>
-              </div>
-            </article>
-
-            <article class="sample-card">
-              <div class="sample-badge">Low-Prep Favorite</div>
-              <div class="sample-preview sample-preview--weather">
-                <img src="/static/samples/seasons-weather-cover.jpg" alt="Seasons and Weather sample thumbnail" loading="lazy" onerror="this.onerror=null;this.src='/static/samples/thumb-seasons-weather.svg';" />
-                <div class="sample-preview__tag">Age 3-6</div>
-                <strong>Seasons and Weather</strong>
-                <span>Sorting pages + journals + visual schedule</span>
-              </div>
-              <h3>Seasons and Weather</h3>
-              <p>Age 3-6, sorting pages, weather journals, and visual schedule resources.</p>
-              <div class="checklist">
-                <div class="check">Dual-language labels for classroom and at-home use.</div>
-                <div class="check">Print-and-teach format for low prep implementation.</div>
-              </div>
-              <div class="sample-actions">
-                <a class="button button--secondary" href="/static/samples/seasons-weather-en.pdf" target="_blank" rel="noopener">View Sample PDF (EN)</a>
-                <a class="button button--secondary" href="/static/samples/seasons-weather-es.pdf" target="_blank" rel="noopener">Ver PDF de muestra (ES)</a>
-              </div>
-            </article>
-          </div>
-
-          <p style="margin-top:16px;">Have your own samples already built? Place them here and use this section in your Instagram link-in-bio to prove quality before checkout.</p>
+          <p style="margin-top:16px;">Each resource includes bilingual download buttons so teachers and homeschool parents can access English and Spanish versions quickly.</p>
         </div>
       </section>
 
@@ -357,6 +297,173 @@
       }
 
       loadOfferLinks();
+
+      const resourceCards = [
+        {
+          title: "Pre-K Lesson Plan Book - 40 Weeks",
+          ageRange: "Ages 3-5",
+          description:
+            "Complete preschool lesson plan book with 40 ready-to-teach weekly themes, learning objectives, materials, songs, read-alouds, daily activities, family notes, and teacher tips.",
+          enFile: "PreK_Lesson_Plan_Book_EN.pdf",
+          esFile: "PreK_Lesson_Plan_Book_ES.pdf",
+          coverFile: "prek_lesson_plan_cover.png",
+        },
+        {
+          title: "Jungle Adventure Activity Book",
+          ageRange: "Ages 3-6",
+          description:
+            "Jungle-themed printable activity book with fun pages for coloring, tracing, matching, counting, puzzles, and early learning skills.",
+          enFile: "Jungle_Adventure_Activity_Book_EN.pdf",
+          esFile: "Jungle_Adventure_Activity_Book_ES.pdf",
+          coverFile: "jungle_adventure_cover.png",
+        },
+        {
+          title: "Welcome to School Theme Pack",
+          ageRange: "Ages 3-5",
+          description:
+            "First-week-of-school activities focused on routines, classroom rules, names, greetings, friends, and building classroom community.",
+          enFile: "Welcome_To_School_EN.pdf",
+          esFile: "Welcome_To_School_ES.pdf",
+          coverFile: "welcome_to_school_cover.png",
+        },
+        {
+          title: "All About Me Theme Pack",
+          ageRange: "Ages 3-5",
+          description:
+            "Activities for self-awareness, body parts, feelings, favorites, self-portraits, and building confidence in young learners.",
+          enFile: "All_About_Me_EN.pdf",
+          esFile: "All_About_Me_ES.pdf",
+          coverFile: "all_about_me_cover.png",
+        },
+        {
+          title: "My Family Theme Pack",
+          ageRange: "Ages 3-5",
+          description:
+            "Family-themed preschool activities about family members, family traditions, love, counting family members, and family crafts.",
+          enFile: "My_Family_EN.pdf",
+          esFile: "My_Family_ES.pdf",
+          coverFile: "my_family_cover.png",
+        },
+        {
+          title: "Friends & Feelings Theme Pack",
+          ageRange: "Ages 3-5",
+          description:
+            "Social-emotional learning activities that help children identify emotions, practice kindness, and learn friendship skills.",
+          enFile: "Friends_And_Feelings_EN.pdf",
+          esFile: "Friends_And_Feelings_ES.pdf",
+          coverFile: "friends_feelings_cover.png",
+        },
+        {
+          title: "Colors All Around Theme Pack",
+          ageRange: "Ages 3-5",
+          description:
+            "Color recognition activities, sorting, matching, art projects, songs, and hands-on preschool learning centers.",
+          enFile: "Colors_All_Around_EN.pdf",
+          esFile: "Colors_All_Around_ES.pdf",
+          coverFile: "colors_all_around_cover.png",
+        },
+        {
+          title: "Numbers 1-10 Activity Pack",
+          ageRange: "Ages 3-5",
+          description:
+            "Early math printables for counting, number recognition, matching, tracing numbers, and hands-on number practice.",
+          enFile: "Numbers_1_10_EN.pdf",
+          esFile: "Numbers_1_10_ES.pdf",
+          coverFile: "numbers_1_10_cover.png",
+        },
+        {
+          title: "Alphabet Review Activity Pack",
+          ageRange: "Ages 3-5",
+          description:
+            "ABC review activities with letter recognition, tracing, beginning sounds, matching, and preschool literacy practice.",
+          enFile: "Alphabet_Review_EN.pdf",
+          esFile: "Alphabet_Review_ES.pdf",
+          coverFile: "alphabet_review_cover.png",
+        },
+        {
+          title: "Bugs & Butterflies Activity Pack",
+          ageRange: "Ages 3-6",
+          description:
+            "Science and nature activities featuring bugs, butterflies, counting, coloring, matching, and hands-on exploration.",
+          enFile: "Bugs_And_Butterflies_EN.pdf",
+          esFile: "Bugs_And_Butterflies_ES.pdf",
+          coverFile: "bugs_butterflies_cover.png",
+        },
+        {
+          title: "Ocean Animals Activity Pack",
+          ageRange: "Ages 3-6",
+          description:
+            "Ocean-themed printable activities with sea animals, coloring pages, tracing, counting, matching, and preschool learning fun.",
+          enFile: "Ocean_Animals_EN.pdf",
+          esFile: "Ocean_Animals_ES.pdf",
+          coverFile: "ocean_animals_cover.png",
+        },
+        {
+          title: "Zoo Animals Activity Pack",
+          ageRange: "Ages 3-6",
+          description:
+            "Zoo animal activities for preschoolers including animal names, matching, coloring, counting, and early vocabulary practice.",
+          enFile: "Zoo_Animals_EN.pdf",
+          esFile: "Zoo_Animals_ES.pdf",
+          coverFile: "zoo_animals_cover.png",
+        },
+        {
+          title: "Transportation Activity Pack",
+          ageRange: "Ages 3-5",
+          description:
+            "Printable activities about cars, buses, planes, trains, and community travel with matching, sorting, coloring, and counting.",
+          enFile: "Transportation_EN.pdf",
+          esFile: "Transportation_ES.pdf",
+          coverFile: "transportation_cover.png",
+        },
+        {
+          title: "Weather & Sky Activity Pack",
+          ageRange: "Ages 3-5",
+          description:
+            "Preschool weather activities about clouds, rain, sun, wind, sky, daily weather charts, and science exploration.",
+          enFile: "Weather_And_Sky_EN.pdf",
+          esFile: "Weather_And_Sky_ES.pdf",
+          coverFile: "weather_sky_cover.png",
+        },
+        {
+          title: "Space, Stars & Moon Activity Pack",
+          ageRange: "Ages 3-6",
+          description:
+            "Space-themed preschool activities with stars, planets, moon, rockets, coloring, counting, and early science learning.",
+          enFile: "Space_Stars_Moon_EN.pdf",
+          esFile: "Space_Stars_Moon_ES.pdf",
+          coverFile: "space_stars_moon_cover.png",
+        },
+      ];
+
+      function renderResourceCards() {
+        const container = document.getElementById("resource-cards");
+        if (!container) return;
+
+        container.innerHTML = resourceCards
+          .map(
+            (item) => `
+              <article class="sample-card">
+                <div class="sample-badge">Resource Pack</div>
+                <div class="sample-preview sample-preview--about-me">
+                  <img src="/static/samples/${item.coverFile}" alt="${item.title} cover" loading="lazy" onerror="this.onerror=null;this.src='/static/samples/thumb-all-about-me.svg';" />
+                  <div class="sample-preview__tag">${item.ageRange}</div>
+                  <strong>${item.title}</strong>
+                  <span>${item.description}</span>
+                </div>
+                <h3>${item.title}</h3>
+                <p>${item.description}</p>
+                <div class="sample-actions">
+                  <a class="button button--secondary" href="/static/samples/${item.enFile}" target="_blank" rel="noopener">View Sample PDF (EN)</a>
+                  <a class="button button--secondary" href="/static/samples/${item.esFile}" target="_blank" rel="noopener">Ver PDF de muestra (ES)</a>
+                </div>
+              </article>
+            `
+          )
+          .join("");
+      }
+
+      renderResourceCards();
 
       const form = document.getElementById("application-form");
       const result = document.getElementById("result");
