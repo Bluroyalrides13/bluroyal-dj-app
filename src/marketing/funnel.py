@@ -1,4 +1,4 @@
-"""Offer strategy and qualification logic for the DJ Blu Bloods sales funnel."""
+"""Offer strategy and qualification logic for the Blu Royal Academy sales funnel."""
 
 from __future__ import annotations
 
@@ -26,27 +26,27 @@ class OfferTier:
 OFFER_TIERS: List[OfferTier] = [
     OfferTier(
         slug="vault",
-        name="Blu Bloods Resource Vault",
+        name="Basic Curriculum Kit",
         price=497,
         access_level="starter",
-        promise="A self-paced library of the exact content, offer, and posting assets you can use right now.",
-        outcome="Turn Instagram into a clearer, more consistent lead source.",
+        promise="A foundational planning system with school-year themes, weekly templates, and ready-to-print learning activities.",
+        outcome="Launch a reliable curriculum offer that helps teachers prep faster.",
     ),
     OfferTier(
         slug="accelerator",
-        name="Content-to-Client Accelerator",
+        name="Intermediate Growth Kit",
         price=1500,
         access_level="guided",
-        promise="A high-touch implementation sprint that turns your content into a structured sales system.",
-        outcome="Launch a premium funnel that converts DMs into booked calls.",
+        promise="An expanded curriculum and implementation package with deeper themed units and parent-facing resources.",
+        outcome="Scale from scattered materials to a complete education product suite.",
     ),
     OfferTier(
         slug="vip",
-        name="VIP Blueprint Intensive",
+        name="Full Program Implementation",
         price=3500,
         access_level="vip",
-        promise="A done-with-you premium buildout for your Instagram offer, messaging, and booking flow.",
-        outcome="Install a high-ticket client acquisition system tailored to your brand.",
+        promise="A premium done-with-you launch package combining full-year curriculum assets with high-ticket positioning support.",
+        outcome="Sell a complete premium program through Instagram with confidence.",
     ),
 ]
 
@@ -54,28 +54,28 @@ OFFER_TIERS: List[OfferTier] = [
 TIER_FILE_BUNDLES: Dict[str, List[str]] = {
     # $497: foundational starter files only
     "vault": [
-        "Event Timeline Builder",
-        "Core Client Questionnaire Templates",
-        "Setlist Organizer",
-        "Pricing Calculator",
-        "Basic Instagram Content Pack",
+        "School-Year Theme Map Starter Pack",
+        "Weekly Lesson Plan Templates",
+        "Core Classroom Activity PDF Printables",
+        "Parent Take-Home Practice Sheets",
+        "Instagram Starter Promotion Copy",
     ],
     # $1500: starter + growth systems
     "accelerator": [
-        "Everything in $497 Vault",
-        "DJ Profile Setup System",
-        "Lead Management CRM",
-        "Advanced Sales Scripts",
-        "Enhanced Follow-Up Workflows",
-        "Service Agreement Core Forms",
+        "Everything in $497 Basic Kit",
+        "Seasonal and Monthly Unit Plan Expansion",
+        "Assessment Checklists and Tracking Sheets",
+        "Advanced Parent Communication Templates",
+        "Upsell and Bundle Offer Scripts",
+        "Instagram DM Conversion Prompts",
     ],
     # $3500: complete package
     "vip": [
-        "Everything in $1500 Accelerator",
-        "Full Service Agreement Pack (all forms)",
-        "Complete DJ Resources Vault",
-        "Premium Sales Automation Assets",
-        "VIP Blueprint Intensive Deliverables",
+        "Everything in $1500 Intermediate Kit",
+        "Full-Year Curriculum Blueprint",
+        "Premium Printable Bundle Library",
+        "High-Ticket Offer Positioning Framework",
+        "Instagram Launch and Sales Sequence",
         "Done-with-you implementation playbook",
     ],
 }

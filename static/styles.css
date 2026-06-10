@@ -1,14 +1,18 @@
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Sora:wght@600;700;800&display=swap");
+
 :root {
-  --bg: #f5f1eb;
+  --bg: #eef3f9;
   --panel: rgba(255, 255, 255, 0.82);
   --panel-strong: #ffffff;
   --text: #12224a;
-  --muted: #5e6785;
+  --muted: #4f5c81;
   --line: rgba(18, 34, 74, 0.1);
-  --accent: #ff3d8d;
-  --accent-2: #0fbb8f;
-  --accent-3: #ffb84d;
+  --accent: #f03b83;
+  --accent-2: #0baf8a;
+  --accent-3: #ffbf54;
   --shadow: 0 24px 80px rgba(18, 34, 74, 0.12);
+  --heading-font: "Sora", "Avenir Next", "Segoe UI", sans-serif;
+  --body-font: "Plus Jakarta Sans", "Avenir Next", "Segoe UI", sans-serif;
 }
 
 * {
@@ -21,12 +25,13 @@ html {
 
 body {
   margin: 0;
-  font-family: Inter, "Segoe UI", Arial, sans-serif;
+  font-family: var(--body-font);
   color: var(--text);
   background:
-    radial-gradient(circle at top left, rgba(255, 61, 141, 0.16), transparent 26%),
-    radial-gradient(circle at top right, rgba(15, 187, 143, 0.16), transparent 28%),
-    linear-gradient(180deg, #fffdf9 0%, var(--bg) 100%);
+    radial-gradient(circle at 15% 6%, rgba(240, 59, 131, 0.16), transparent 30%),
+    radial-gradient(circle at 85% 12%, rgba(11, 175, 138, 0.16), transparent 32%),
+    linear-gradient(180deg, #f8fbff 0%, var(--bg) 100%);
+  background-attachment: fixed;
 }
 
 a {
@@ -62,6 +67,7 @@ a {
   font-weight: 800;
   letter-spacing: -0.03em;
   font-size: 1.1rem;
+  font-family: var(--heading-font);
 }
 
 .brand__mark {
@@ -116,6 +122,8 @@ h1 {
   font-size: clamp(3rem, 7vw, 5.7rem);
   line-height: 0.94;
   letter-spacing: -0.07em;
+  font-family: var(--heading-font);
+  animation: revealUp 520ms ease-out both;
 }
 
 .lede {
@@ -123,6 +131,7 @@ h1 {
   font-size: 1.18rem;
   line-height: 1.75;
   color: var(--muted);
+  animation: revealUp 680ms ease-out both;
 }
 
 .hero__actions {
@@ -130,6 +139,7 @@ h1 {
   flex-wrap: wrap;
   gap: 14px;
   margin-top: 28px;
+  animation: revealUp 820ms ease-out both;
 }
 
 .button {
@@ -168,6 +178,7 @@ h1 {
   background: var(--panel);
   border: 1px solid rgba(18, 34, 74, 0.08);
   box-shadow: var(--shadow);
+  animation: revealUp 760ms ease-out both;
 }
 
 .stat-grid {
@@ -207,6 +218,7 @@ h1 {
   font-size: clamp(2rem, 4vw, 3.4rem);
   line-height: 1;
   letter-spacing: -0.06em;
+  font-family: var(--heading-font);
 }
 
 .section p {
@@ -228,6 +240,12 @@ h1 {
   border-radius: 28px;
   padding: 24px;
   box-shadow: 0 20px 45px rgba(18, 34, 74, 0.05);
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 24px 48px rgba(18, 34, 74, 0.1);
 }
 
 .card__price {
@@ -246,6 +264,7 @@ h1 {
   margin: 0 0 10px;
   font-size: 1.35rem;
   letter-spacing: -0.04em;
+  font-family: var(--heading-font);
 }
 
 .checklist {
@@ -362,6 +381,7 @@ textarea:focus {
 .faq summary {
   cursor: pointer;
   font-weight: 800;
+  font-family: var(--heading-font);
 }
 
 .footer {
@@ -384,5 +404,16 @@ textarea:focus {
 
   h1 {
     font-size: clamp(2.45rem, 12vw, 4.4rem);
+  }
+}
+
+@keyframes revealUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
