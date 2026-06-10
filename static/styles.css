@@ -301,45 +301,105 @@ h1 {
 .sample-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-  margin-top: 18px;
+  gap: 18px;
+  margin-top: 20px;
 }
 
 .sample-card {
-  border: 1px solid var(--line);
-  background: rgba(255, 255, 255, 0.86);
-  border-radius: 22px;
+  border: 1px solid rgba(18, 34, 74, 0.12);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(255, 255, 255, 0.88));
+  border-radius: 24px;
   padding: 18px;
+  box-shadow: 0 14px 34px rgba(18, 34, 74, 0.09);
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.sample-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 42px rgba(18, 34, 74, 0.14);
 }
 
 .sample-card h3 {
-  margin: 10px 0;
+  margin: 14px 0 8px;
   font-family: var(--heading-font);
   letter-spacing: -0.03em;
+  font-size: 1.28rem;
 }
 
 .sample-actions {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: 1fr;
   gap: 8px;
-  margin-top: 14px;
+  margin-top: 16px;
 }
 
 .sample-actions .button {
-  padding: 10px 14px;
-  font-size: 0.8rem;
+  padding: 10px 12px;
+  font-size: 0.78rem;
+  text-align: center;
 }
 
 .sample-badge {
   display: inline-flex;
   border-radius: 999px;
-  padding: 6px 10px;
+  padding: 6px 11px;
   font-size: 0.74rem;
   font-weight: 800;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: var(--accent);
-  background: rgba(240, 59, 131, 0.12);
+  color: #9f2660;
+  background: linear-gradient(135deg, rgba(240, 59, 131, 0.18), rgba(255, 191, 84, 0.22));
+}
+
+.sample-preview {
+  margin-top: 12px;
+  border-radius: 18px;
+  padding: 14px;
+  border: 1px dashed rgba(18, 34, 74, 0.2);
+  display: grid;
+  gap: 4px;
+}
+
+.sample-preview strong {
+  font-family: var(--heading-font);
+  letter-spacing: -0.02em;
+  font-size: 1.05rem;
+}
+
+.sample-preview span {
+  font-size: 0.88rem;
+  color: rgba(18, 34, 74, 0.72);
+  line-height: 1.35;
+}
+
+.sample-preview__tag {
+  width: fit-content;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 800;
+  border-radius: 999px;
+  padding: 4px 8px;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(18, 34, 74, 0.16);
+}
+
+.sample-preview--about-me {
+  background:
+    linear-gradient(145deg, rgba(255, 239, 247, 0.95), rgba(227, 244, 255, 0.92)),
+    radial-gradient(circle at 80% 20%, rgba(240, 59, 131, 0.22), transparent 42%);
+}
+
+.sample-preview--helpers {
+  background:
+    linear-gradient(145deg, rgba(233, 255, 245, 0.95), rgba(237, 245, 255, 0.92)),
+    radial-gradient(circle at 18% 18%, rgba(11, 175, 138, 0.2), transparent 40%);
+}
+
+.sample-preview--weather {
+  background:
+    linear-gradient(145deg, rgba(255, 250, 233, 0.96), rgba(235, 245, 255, 0.94)),
+    radial-gradient(circle at 86% 14%, rgba(255, 191, 84, 0.22), transparent 44%);
 }
 
 .form-grid {
