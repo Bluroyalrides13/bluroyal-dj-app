@@ -97,33 +97,6 @@
     .page { display: none; }
     .page.active { display: block; }
 
-    .lux-strip {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(140px, 1fr));
-      gap: 12px;
-      margin-bottom: 14px;
-    }
-    .lux-chip {
-      border: 1px solid var(--border);
-      background: linear-gradient(180deg, rgba(19,35,49,0.86), rgba(11,21,31,0.9));
-      border-radius: 14px;
-      padding: 10px 12px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.25);
-    }
-    .lux-chip__kicker {
-      color: var(--muted);
-      font-size: 0.66rem;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      margin-bottom: 3px;
-      font-weight: 700;
-    }
-    .lux-chip__value {
-      color: var(--accent3);
-      font-size: 0.9rem;
-      font-weight: 800;
-      letter-spacing: 0.03em;
-    }
 
     /* ── Page header ── */
     .page-header { margin-bottom: 28px; }
@@ -252,6 +225,37 @@
       color: #ff9aaa;
     }
 
+    .brief-actions {
+      margin-top: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .toast {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 9999;
+      border-radius: 12px;
+      padding: 10px 14px;
+      border: 1px solid rgba(201,168,109,0.3);
+      background: linear-gradient(180deg, rgba(19,35,49,0.95), rgba(11,21,31,0.95));
+      color: var(--text);
+      font-size: 0.84rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 180ms ease, transform 180ms ease;
+      pointer-events: none;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
     /* ── Buttons ── */
     .btn {
       display: inline-flex; align-items: center; gap: 8px;
@@ -358,7 +362,6 @@
       .sidebar__brand { display: none; }
       .form-2col, .form-3col { grid-template-columns: 1fr; }
       .main { padding: 18px; }
-      .lux-strip { grid-template-columns: 1fr 1fr; }
     }
 
     .page.active .panel,
@@ -403,24 +406,6 @@
 
   <!-- ── Main content ── -->
   <main class="main">
-    <div class="lux-strip">
-      <div class="lux-chip">
-        <div class="lux-chip__kicker">Brand Standard</div>
-        <div class="lux-chip__value">Blu Bloods Luxury</div>
-      </div>
-      <div class="lux-chip">
-        <div class="lux-chip__kicker">Planning Suite</div>
-        <div class="lux-chip__value">Event-Specific Forms</div>
-      </div>
-      <div class="lux-chip">
-        <div class="lux-chip__kicker">Delivery Mode</div>
-        <div class="lux-chip__value">Client-Ready Briefs</div>
-      </div>
-      <div class="lux-chip">
-        <div class="lux-chip__kicker">Positioning</div>
-        <div class="lux-chip__value">Premium Operator</div>
-      </div>
-    </div>
     <div style="display:flex;justify-content:flex-end;margin-bottom:12px;">
       <form method="post" action="/dashboard/logout">
         <button class="btn btn-secondary" type="submit">Log out</button>
@@ -533,6 +518,10 @@
         </div>
         <p style="font-weight:700;margin-bottom:10px;">Brief saved ✓</p>
         <div id="q-result-pre" style="font-size:0.9rem;line-height:1.8;"></div>
+        <div class="brief-actions">
+          <button class="btn btn-secondary" type="button" onclick="copyBriefText()">Copy Brief Text</button>
+          <button class="btn btn-secondary" type="button" onclick="downloadBriefJSON()">Download Brief JSON</button>
+        </div>
       </div>
     </div>
 
@@ -706,6 +695,8 @@
   </main>
 </div>
 
+<div id="app-toast" class="toast"></div>
+
 <script>
   // ── Print any result section ──
   function printSection(sectionId, title) {
@@ -799,6 +790,7 @@
   // ── QUESTIONNAIRE ──
   let qPortalId = '';
   let qQuestions = [];
+  let lastBriefPayload = null;
 
   const REQUIRED_FIELDS_BY_EVENT = {
     wedding: [
@@ -948,6 +940,12 @@
     });
     const res = await post('/api/tools/questionnaire/submit', { portal_id: qPortalId, event_type: type, answers });
     if (!res.success) return alert('Error saving brief');
+    lastBriefPayload = {
+      event_type: type,
+      portal_id: qPortalId,
+      submitted_at: new Date().toISOString(),
+      answers,
+    };
     // Render as readable list instead of raw JSON
     const pre = document.getElementById('q-result-pre');
     pre.innerHTML = '';
@@ -960,6 +958,75 @@
     });
     document.getElementById('q-result').classList.add('show');
     document.getElementById('q-result').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    showToast('Brief saved and ready to export');
+  }
+
+  function showToast(message) {
+    const toast = document.getElementById('app-toast');
+    if (!toast) return;
+
+    toast.textContent = message;
+    toast.classList.add('show');
+    window.clearTimeout(showToast._timer);
+    showToast._timer = window.setTimeout(() => {
+      toast.classList.remove('show');
+    }, 1800);
+  }
+
+  function buildBriefText() {
+    if (!lastBriefPayload) return '';
+
+    const lines = [];
+    lines.push(`DJ Blu Bloods Client Brief`);
+    lines.push(`Event Type: ${lastBriefPayload.event_type}`);
+    lines.push(`Portal ID: ${lastBriefPayload.portal_id}`);
+    lines.push(`Submitted: ${new Date(lastBriefPayload.submitted_at).toLocaleString()}`);
+    lines.push('');
+
+    qQuestions.forEach((q) => {
+      const val = (lastBriefPayload.answers?.[q.id] || '').toString().trim() || '—';
+      lines.push(`${q.label}: ${val}`);
+    });
+
+    return lines.join('\n');
+  }
+
+  async function copyBriefText() {
+    if (!lastBriefPayload) {
+      showToast('Save a brief first');
+      return;
+    }
+
+    const text = buildBriefText();
+    try {
+      await navigator.clipboard.writeText(text);
+      showToast('Brief copied to clipboard');
+    } catch (err) {
+      showToast('Clipboard blocked by browser');
+    }
+  }
+
+  function downloadBriefJSON() {
+    if (!lastBriefPayload) {
+      showToast('Save a brief first');
+      return;
+    }
+
+    const exportData = {
+      ...lastBriefPayload,
+      questions: qQuestions,
+    };
+
+    const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `dj-brief-${lastBriefPayload.event_type}-${Date.now()}.json`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+    showToast('Brief JSON downloaded');
   }
 
   // ── SETLIST ──
