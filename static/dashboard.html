@@ -2883,13 +2883,16 @@ POST-EVENT
 
     const printablesEl = document.getElementById('lp-printables-output');
     printablesEl.innerHTML = '';
-    if ((d.printable_resources || []).length === 0) {
+    const docs = d.printable_documents || [];
+    if (!docs.length) {
       printablesEl.innerHTML = '<div class="dm-card"><div class="dm-text">No printables selected for this plan.</div></div>';
     } else {
-      d.printable_resources.forEach((item) => {
-        printablesEl.innerHTML += `<div class="dm-card"><div class="dm-text">${item}</div></div>`;
+      docs.forEach((doc) => {
+        printablesEl.innerHTML += `<div class="dm-card"><div class="dm-label">${doc.title}</div><div class="dm-text" style="white-space:pre-wrap;">${doc.content}</div><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;"><button class="btn btn-secondary" type="button" onclick="downloadLessonPrintable('${doc.id}')">Download</button><button class="btn btn-secondary" type="button" onclick="printLessonPrintable('${doc.id}')">Print</button></div></div>`;
       });
     }
+
+    window.lastLessonPrintableDocs = docs;
 
     const hooksEl = document.getElementById('lp-hooks-output');
     hooksEl.innerHTML = '';
@@ -2903,6 +2906,36 @@ POST-EVENT
     panel.querySelectorAll('.tab-panel').forEach((tab) => tab.classList.remove('active'));
     panel.querySelector('.tab').classList.add('active');
     panel.querySelector('#tab-lesson-weeks').classList.add('active');
+  }
+
+  function getLessonPrintableDoc(docId) {
+    const docs = window.lastLessonPrintableDocs || [];
+    return docs.find((d) => d.id === docId);
+  }
+
+  function downloadLessonPrintable(docId) {
+    const doc = getLessonPrintableDoc(docId);
+    if (!doc) return;
+
+    const blob = new Blob([doc.content], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${doc.title.replace(/[^a-z0-9]+/gi, '_').toLowerCase()}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+    showToast('Printable downloaded');
+  }
+
+  function printLessonPrintable(docId) {
+    const doc = getLessonPrintableDoc(docId);
+    if (!doc) return;
+
+    const win = window.open('', '_blank');
+    win.document.write(`<!doctype html><html><head><title>${doc.title}</title><style>body{font-family:Arial,sans-serif;padding:24px;white-space:pre-wrap;line-height:1.5;}h1{font-size:20px;}</style></head><body><h1>${doc.title}</h1><pre>${doc.content.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</pre><script>window.onload=()=>window.print();<\/script></body></html>`);
+    win.document.close();
   }
 
   async function buildContentPack() {

@@ -260,15 +260,57 @@
         </div>
       `).join('');
 
-      printables.innerHTML = (d.printable_resources || []).map((p) => `
-        <div class="card small">${p}</div>
-      `).join('') || '<div class="card small">No printables selected.</div>';
+      const docs = d.printable_documents || [];
+      if (!docs.length) {
+        printables.innerHTML = '<div class="card small">No printables selected.</div>';
+      } else {
+        printables.innerHTML = docs.map((doc) => `
+          <div class="card">
+            <strong>${doc.title}</strong>
+            <div class="small" style="white-space:pre-wrap;margin-top:6px;">${doc.content}</div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;">
+              <button class="btn btn-secondary" type="button" onclick="downloadPrintable('${doc.id}')">Download</button>
+              <button class="btn btn-secondary" type="button" onclick="printPrintable('${doc.id}')">Print</button>
+            </div>
+          </div>
+        `).join('');
+      }
 
       hooks.innerHTML = (d.instagram_promo_hooks || []).map((h) => `
         <div class="card small">${h}</div>
       `).join('');
 
+      window.lastPrintableDocs = docs;
       document.getElementById('lp-result').style.display = 'block';
+    }
+
+    function getPrintableDoc(docId) {
+      const docs = window.lastPrintableDocs || [];
+      return docs.find((d) => d.id === docId);
+    }
+
+    function downloadPrintable(docId) {
+      const doc = getPrintableDoc(docId);
+      if (!doc) return;
+
+      const blob = new Blob([doc.content], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${doc.title.replace(/[^a-z0-9]+/gi, '_').toLowerCase()}.txt`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    function printPrintable(docId) {
+      const doc = getPrintableDoc(docId);
+      if (!doc) return;
+
+      const printWin = window.open('', '_blank');
+      printWin.document.write(`<!doctype html><html><head><title>${doc.title}</title><style>body{font-family:Arial,sans-serif;padding:24px;white-space:pre-wrap;line-height:1.5;}h1{font-size:20px;}</style></head><body><h1>${doc.title}</h1><pre>${doc.content.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</pre><script>window.onload=()=>window.print();<\/script></body></html>`);
+      printWin.document.close();
     }
   </script>
 </body>

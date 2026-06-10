@@ -1577,6 +1577,83 @@ def _bilingual(english_text: str, spanish_text: str, language_mode: str) -> str:
     return english_text
 
 
+def _build_printable_documents(
+    theme: str,
+    audience_type: str,
+    focus_area: str,
+    language_mode: str,
+    printable_resources: List[str],
+) -> List[Dict[str, str]]:
+    """Create worksheet-ready printable document payloads for UI download/printing."""
+    documents: List[Dict[str, str]] = []
+
+    for idx, title in enumerate(printable_resources, start=1):
+        if language_mode == "bilingual" and " / " in title:
+            worksheet_title = f"Worksheet {idx}: {title}"
+        else:
+            worksheet_title = _bilingual(
+                f"Worksheet {idx}: {title}",
+                f"Hoja de trabajo {idx}: {title}",
+                language_mode,
+            )
+        instructions = _bilingual(
+            "Instructions: Complete the activity with your learner and review answers together.",
+            "Instrucciones: Completa la actividad con tu estudiante y revisen las respuestas juntos.",
+            language_mode,
+        )
+        skill_focus = _bilingual(
+            f"Skill focus: {focus_area.replace('_', ' ')}",
+            f"Enfoque: {focus_area.replace('_', ' ')}",
+            language_mode,
+        )
+        audience_line = _bilingual(
+            f"Audience: {audience_type}",
+            f"Audiencia: {audience_type}",
+            language_mode,
+        )
+        prompt_line = _bilingual(
+            f"Prompt: Use the {theme.lower()} theme to guide this worksheet task.",
+            f"Actividad: Usa el tema de {theme.lower()} para guiar esta hoja.",
+            language_mode,
+        )
+
+        content = "\n".join(
+            [
+                worksheet_title,
+                "=" * len(worksheet_title),
+                audience_line,
+                skill_focus,
+                instructions,
+                prompt_line,
+                "",
+                _bilingual("Student Name: ____________________", "Nombre del estudiante: ____________________", language_mode),
+                _bilingual("Date: ____________________", "Fecha: ____________________", language_mode),
+                "",
+                _bilingual("1. Draw or write your response below:", "1. Dibuja o escribe tu respuesta abajo:", language_mode),
+                "__________________________________________",
+                "__________________________________________",
+                "",
+                _bilingual("2. Circle or mark the best answer.", "2. Encierra o marca la mejor respuesta.", language_mode),
+                "A) ____    B) ____    C) ____",
+                "",
+                _bilingual("Teacher/Parent Notes:", "Notas del maestro/padre:", language_mode),
+                "__________________________________________",
+                "__________________________________________",
+            ]
+        )
+
+        documents.append(
+            {
+                "id": f"printable_{idx}",
+                "title": worksheet_title,
+                "content": content,
+                "format": "txt",
+            }
+        )
+
+    return documents
+
+
 def generate_lesson_plan(
     theme: str,
     audience_type: str = "preschool",
@@ -1711,6 +1788,15 @@ def generate_lesson_plan(
             f"{eng} / {spa}" for eng, spa in zip(printable_pool, spanish_printable_pool)
         ]
 
+    active_printables = printable_resources if include_printables else []
+    printable_documents = _build_printable_documents(
+        theme=normalized_theme,
+        audience_type=normalized_audience,
+        focus_area=normalized_focus,
+        language_mode=normalized_language,
+        printable_resources=active_printables,
+    )
+
     return {
         "plan_id": str(uuid.uuid4()),
         "theme": normalized_theme,
@@ -1720,7 +1806,8 @@ def generate_lesson_plan(
         "duration_weeks": weeks,
         "session_length_minutes": minutes,
         "weekly_plans": weekly_plans,
-        "printable_resources": printable_resources if include_printables else [],
+        "printable_resources": active_printables,
+        "printable_documents": printable_documents,
         "instagram_promo_hooks": [
             _bilingual(
                 f"Parents asked for done-for-you {normalized_theme.lower()} lesson plans, so we built them.",
