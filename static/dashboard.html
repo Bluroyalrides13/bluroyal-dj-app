@@ -5,31 +5,43 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>DJ Blu Bloods — Business Engine</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@500;600;700;800&display=swap');
+
     :root {
-      --bg: #0d0f1a;
-      --surface: #151827;
-      --surface2: #1e2235;
-      --border: rgba(255,255,255,0.07);
-      --text: #f0f2ff;
-      --muted: #7a82a8;
-      --accent: #ff3d8d;
-      --accent2: #0fbb8f;
-      --accent3: #ffb84d;
+      --bg: #0a1118;
+      --surface: #0f1b26;
+      --surface2: #132331;
+      --border: rgba(201, 168, 109, 0.18);
+      --text: #f7f2e8;
+      --muted: #bcae93;
+      --accent: #c9a86d;
+      --accent2: #84b6a4;
+      --accent3: #e1c892;
       --radius: 18px;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: Inter, "Segoe UI", sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+    body {
+      font-family: "Manrope", "Segoe UI", sans-serif;
+      background:
+        radial-gradient(1200px 500px at 85% -120px, rgba(201,168,109,0.15), transparent 55%),
+        radial-gradient(1000px 400px at -10% -60px, rgba(132,182,164,0.12), transparent 50%),
+        var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      letter-spacing: 0.01em;
+    }
 
     /* ── Layout ── */
     .app { display: grid; grid-template-columns: 240px 1fr; min-height: 100vh; }
 
     /* ── Sidebar ── */
     .sidebar {
-      background: var(--surface);
+      background: linear-gradient(180deg, #10202d, #0c1823 60%, #0a151f);
       border-right: 1px solid var(--border);
       padding: 28px 18px;
       display: flex; flex-direction: column; gap: 6px;
       position: sticky; top: 0; height: 100vh; overflow-y: auto;
+      box-shadow: inset -1px 0 0 rgba(201,168,109,0.08);
     }
     .sidebar__brand {
       display: flex; align-items: center; gap: 12px;
@@ -38,11 +50,19 @@
     }
     .brand-mark {
       width: 38px; height: 38px; border-radius: 12px;
-      background: linear-gradient(135deg, var(--accent), #ff7a59);
+      background: linear-gradient(135deg, #d8b980, #b8904b);
       display: grid; place-items: center;
       font-weight: 900; font-size: 0.85rem;
+      color: #1d1205;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.35);
     }
-    .brand-name { font-weight: 800; font-size: 0.95rem; line-height: 1.2; }
+    .brand-name {
+      font-family: "Cormorant Garamond", serif;
+      font-weight: 700;
+      font-size: 1.2rem;
+      line-height: 1.1;
+      letter-spacing: 0.04em;
+    }
     .brand-sub  { color: var(--muted); font-size: 0.75rem; }
 
     .nav-item {
@@ -53,7 +73,11 @@
       border: none; background: none; width: 100%; text-align: left;
     }
     .nav-item:hover  { background: var(--surface2); color: var(--text); }
-    .nav-item.active { background: rgba(255,61,141,0.12); color: var(--accent); }
+    .nav-item.active {
+      background: linear-gradient(90deg, rgba(201,168,109,0.24), rgba(201,168,109,0.1));
+      color: var(--accent3);
+      border: 1px solid rgba(201,168,109,0.3);
+    }
     .nav-icon { font-size: 1.1rem; width: 22px; text-align: center; }
 
     /* ── Main ── */
@@ -63,18 +87,30 @@
 
     /* ── Page header ── */
     .page-header { margin-bottom: 28px; }
-    .page-header h1 { font-size: 1.8rem; letter-spacing: -0.04em; }
+    .page-header h1 {
+      font-family: "Cormorant Garamond", serif;
+      font-size: 2.15rem;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+    }
     .page-header p  { color: var(--muted); margin-top: 6px; font-size: 0.95rem; }
 
     /* ── Cards / Panels ── */
     .panel {
-      background: var(--surface);
+      background: linear-gradient(180deg, rgba(19,35,49,0.92), rgba(15,27,38,0.92));
       border: 1px solid var(--border);
       border-radius: var(--radius);
       padding: 24px;
+      box-shadow: 0 18px 40px rgba(0,0,0,0.35);
+      backdrop-filter: blur(8px);
     }
     .panel + .panel { margin-top: 18px; }
-    .panel h2 { font-size: 1.1rem; margin-bottom: 16px; letter-spacing: -0.02em; }
+    .panel h2 {
+      font-family: "Cormorant Garamond", serif;
+      font-size: 1.35rem;
+      margin-bottom: 16px;
+      letter-spacing: 0.03em;
+    }
 
     /* ── Form controls ── */
     .form-row   { display: grid; gap: 14px; margin-bottom: 14px; }
@@ -85,8 +121,8 @@
     .field select,
     .field textarea {
       width: 100%;
-      background: var(--surface2);
-      border: 1px solid var(--border);
+      background: rgba(12, 23, 33, 0.85);
+      border: 1px solid rgba(201,168,109,0.24);
       border-radius: 12px;
       color: var(--text);
       font: inherit;
@@ -95,7 +131,11 @@
     .field textarea { min-height: 100px; resize: vertical; }
     .field input:focus,
     .field select:focus,
-    .field textarea:focus { outline: none; border-color: var(--accent); }
+    .field textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(201,168,109,0.2);
+    }
 
     /* ── Questionnaire label badges / progress ── */
     .q-label-row {
@@ -180,14 +220,25 @@
       cursor: pointer; border: none; transition: transform 150ms, opacity 150ms;
     }
     .btn:hover { opacity: 0.88; transform: translateY(-1px); }
-    .btn-primary   { background: linear-gradient(135deg, var(--accent), #ff7a59); color: #fff; }
-    .btn-secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
-    .btn-green     { background: linear-gradient(135deg, var(--accent2), #0d9e7a); color: #fff; }
+    .btn-primary {
+      background: linear-gradient(135deg, #d3b174, #b88b44);
+      color: #211406;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.3);
+    }
+    .btn-secondary {
+      background: rgba(19,35,49,0.75);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-green {
+      background: linear-gradient(135deg, #7cad9b, #4d8e77);
+      color: #f8f4ea;
+    }
 
     /* ── Result boxes ── */
     .result-box {
       margin-top: 20px;
-      background: var(--surface2);
+      background: linear-gradient(180deg, rgba(16,31,43,0.95), rgba(12,24,34,0.95));
       border: 1px solid var(--border);
       border-radius: var(--radius);
       padding: 20px;
@@ -267,6 +318,16 @@
       .sidebar__brand { display: none; }
       .form-2col, .form-3col { grid-template-columns: 1fr; }
       .main { padding: 18px; }
+    }
+
+    .page.active .panel,
+    .page.active .result-box {
+      animation: riseIn 320ms ease both;
+    }
+
+    @keyframes riseIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
