@@ -928,6 +928,21 @@
           </div>
         </div>
 
+        <div class="form-row form-2col">
+          <div class="field">
+            <label>Language mode</label>
+            <select id="lp-language">
+              <option value="english" selected>English</option>
+              <option value="spanish">Spanish</option>
+              <option value="bilingual">Bilingual (English + Spanish)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Sample type label</label>
+            <input type="text" id="lp-sample-label" value="Teacher Approved" placeholder="Premade Lesson Plans or Teacher Approved" />
+          </div>
+        </div>
+
         <button class="btn btn-primary" onclick="buildLessonPlan()">Generate Lesson Plan</button>
       </div>
 
@@ -2836,6 +2851,7 @@ POST-EVENT
       duration_weeks: document.getElementById('lp-weeks').value,
       focus_area: document.getElementById('lp-focus').value,
       session_length_minutes: document.getElementById('lp-minutes').value,
+      language_mode: document.getElementById('lp-language').value,
       include_printables: includePrintables,
     });
 
@@ -2844,6 +2860,8 @@ POST-EVENT
 
     const weeksEl = document.getElementById('lp-weeks-output');
     weeksEl.innerHTML = '';
+    const sampleLabel = document.getElementById('lp-sample-label').value || 'Teacher Approved';
+    weeksEl.innerHTML += `<div class="dm-card" style="margin-bottom:12px;"><div class="dm-label">${sampleLabel}</div><div class="dm-text">Language mode: ${d.language_mode || 'english'} | Audience: ${d.audience_type} | Focus: ${d.focus_area}</div></div>`;
     d.weekly_plans.forEach((week) => {
       weeksEl.innerHTML += `<div class="lesson-week">
         <div style="display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:8px;">

@@ -298,6 +298,38 @@ h1 {
   padding: 24px;
 }
 
+.sample-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 18px;
+}
+
+.sample-card {
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.86);
+  border-radius: 22px;
+  padding: 18px;
+}
+
+.sample-card h3 {
+  margin: 10px 0;
+  font-family: var(--heading-font);
+  letter-spacing: -0.03em;
+}
+
+.sample-badge {
+  display: inline-flex;
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: rgba(240, 59, 131, 0.12);
+}
+
 .form-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -393,6 +425,7 @@ textarea:focus {
 @media (max-width: 920px) {
   .hero__grid,
   .cards,
+  .sample-grid,
   .stat-grid,
   .form-grid {
     grid-template-columns: 1fr;

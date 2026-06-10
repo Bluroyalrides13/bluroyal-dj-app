@@ -224,6 +224,7 @@ async def create_lesson_plan(request: Request):
             duration_weeks=int(body.get("duration_weeks", 4)),
             focus_area=body.get("focus_area", "mixed"),
             session_length_minutes=int(body.get("session_length_minutes", 45)),
+            language_mode=body.get("language_mode", "english"),
             include_printables=bool(body.get("include_printables", True)),
         )
         return ApiResponse(success=True, message="Lesson plan ready", data=result)

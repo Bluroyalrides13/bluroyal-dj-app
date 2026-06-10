@@ -1508,6 +1508,47 @@ LESSON_PRINTABLE_LIBRARY = {
     ],
 }
 
+SPANISH_BLOCKS = {
+    "Morning meeting": "Reunion de la manana",
+    "Mini-lesson": "Mini leccion",
+    "Hands-on center": "Centro practico",
+    "Movement or sensory": "Movimiento o sensorial",
+    "Wrap-up reflection": "Reflexion final",
+}
+
+SPANISH_PRINTABLE_LIBRARY = {
+    "literacy": [
+        "Hojas para trazar letras",
+        "Tarjetas para relacionar sonidos iniciales",
+        "Tarjetas de palabras frecuentes",
+        "Actividad de secuencia de historia recortar y pegar",
+    ],
+    "math": [
+        "Hojas para trazar numeros",
+        "Tarjetas de conteo con pinzas",
+        "Plantilla imprimible de patrones",
+        "Lista de busqueda de figuras",
+    ],
+    "social_emotional": [
+        "Rueda de emociones imprimible",
+        "Cartel de expectativas del aula",
+        "Tarjetas de resolucion de conflictos",
+        "Hoja de reflexion para rincon de calma",
+    ],
+    "science": [
+        "Paginas de diario de observacion",
+        "Tarjetas de secuencia de ciclo de vida",
+        "Grafica de seguimiento del clima",
+        "Hoja de registro de experimento simple",
+    ],
+    "mixed": [
+        "Tarjetas de vocabulario por tema",
+        "Tablero de rotacion de centros",
+        "Actividad para casa",
+        "Pagina de reflexion semanal",
+    ],
+}
+
 
 def _normalize_focus(value: str) -> str:
     focus = (value or "mixed").strip().lower()
@@ -1521,12 +1562,28 @@ def _normalize_audience(value: str) -> str:
     return "preschool"
 
 
+def _normalize_language_mode(value: str) -> str:
+    language_mode = (value or "english").strip().lower()
+    if language_mode in {"english", "spanish", "bilingual"}:
+        return language_mode
+    return "english"
+
+
+def _bilingual(english_text: str, spanish_text: str, language_mode: str) -> str:
+    if language_mode == "spanish":
+        return spanish_text
+    if language_mode == "bilingual":
+        return f"{english_text} / {spanish_text}"
+    return english_text
+
+
 def generate_lesson_plan(
     theme: str,
     audience_type: str = "preschool",
     duration_weeks: int = 4,
     focus_area: str = "mixed",
     session_length_minutes: int = 45,
+    language_mode: str = "english",
     include_printables: bool = True,
 ) -> Dict:
     """Generate a multi-week lesson plan framework with daily activities and printable suggestions."""
@@ -1534,11 +1591,13 @@ def generate_lesson_plan(
     normalized_theme = (theme or "Seasonal Learning").strip() or "Seasonal Learning"
     normalized_audience = _normalize_audience(audience_type)
     normalized_focus = _normalize_focus(focus_area)
+    normalized_language = _normalize_language_mode(language_mode)
     weeks = max(1, min(duration_weeks, 12))
     minutes = max(20, min(session_length_minutes, 120))
 
     focus_targets = LESSON_PLAN_FOCUS_LIBRARY[normalized_focus]
     printable_pool = LESSON_PRINTABLE_LIBRARY[normalized_focus]
+    spanish_printable_pool = SPANISH_PRINTABLE_LIBRARY[normalized_focus]
     daily_blocks = [
         "Morning meeting",
         "Mini-lesson",
@@ -1551,9 +1610,21 @@ def generate_lesson_plan(
     for week in range(1, weeks + 1):
         week_title = f"Week {week}: {normalized_theme}"
         week_objectives = [
-            focus_targets[(week - 1) % len(focus_targets)],
-            focus_targets[week % len(focus_targets)],
-            f"Apply {normalized_theme.lower()} vocabulary through guided play and discussion",
+            _bilingual(
+                focus_targets[(week - 1) % len(focus_targets)],
+                focus_targets[(week - 1) % len(focus_targets)],
+                normalized_language,
+            ),
+            _bilingual(
+                focus_targets[week % len(focus_targets)],
+                focus_targets[week % len(focus_targets)],
+                normalized_language,
+            ),
+            _bilingual(
+                f"Apply {normalized_theme.lower()} vocabulary through guided play and discussion",
+                f"Aplicar vocabulario de {normalized_theme.lower()} mediante juego guiado y conversacion",
+                normalized_language,
+            ),
         ]
 
         daily_plan = []
@@ -1565,32 +1636,56 @@ def generate_lesson_plan(
                     "objective": week_objectives[idx % len(week_objectives)],
                     "schedule": [
                         {
-                            "block": daily_blocks[0],
+                            "block": _bilingual(daily_blocks[0], SPANISH_BLOCKS[daily_blocks[0]], normalized_language),
                             "minutes": max(8, round(minutes * 0.2)),
-                            "activity": f"Introduce {normalized_theme.lower()} question of the day and preview goals.",
+                            "activity": _bilingual(
+                                f"Introduce {normalized_theme.lower()} question of the day and preview goals.",
+                                f"Presenta la pregunta del dia sobre {normalized_theme.lower()} y los objetivos.",
+                                normalized_language,
+                            ),
                         },
                         {
-                            "block": daily_blocks[1],
+                            "block": _bilingual(daily_blocks[1], SPANISH_BLOCKS[daily_blocks[1]], normalized_language),
                             "minutes": max(10, round(minutes * 0.25)),
-                            "activity": f"Teach mini concept on {normalized_focus.replace('_', ' ')} using visuals and modeling.",
+                            "activity": _bilingual(
+                                f"Teach mini concept on {normalized_focus.replace('_', ' ')} using visuals and modeling.",
+                                f"Ensena un mini concepto de {normalized_focus.replace('_', ' ')} con apoyos visuales.",
+                                normalized_language,
+                            ),
                         },
                         {
-                            "block": daily_blocks[2],
+                            "block": _bilingual(daily_blocks[2], SPANISH_BLOCKS[daily_blocks[2]], normalized_language),
                             "minutes": max(10, round(minutes * 0.25)),
-                            "activity": f"Center task: {printable_pool[(idx + week) % len(printable_pool)]}.",
+                            "activity": _bilingual(
+                                f"Center task: {printable_pool[(idx + week) % len(printable_pool)]}.",
+                                f"Actividad de centro: {spanish_printable_pool[(idx + week) % len(spanish_printable_pool)]}.",
+                                normalized_language,
+                            ),
                         },
                         {
-                            "block": daily_blocks[3],
+                            "block": _bilingual(daily_blocks[3], SPANISH_BLOCKS[daily_blocks[3]], normalized_language),
                             "minutes": max(8, round(minutes * 0.2)),
-                            "activity": f"Movement game tied to {normalized_theme.lower()} and collaborative play.",
+                            "activity": _bilingual(
+                                f"Movement game tied to {normalized_theme.lower()} and collaborative play.",
+                                f"Juego de movimiento relacionado con {normalized_theme.lower()} y trabajo colaborativo.",
+                                normalized_language,
+                            ),
                         },
                         {
-                            "block": daily_blocks[4],
+                            "block": _bilingual(daily_blocks[4], SPANISH_BLOCKS[daily_blocks[4]], normalized_language),
                             "minutes": max(6, round(minutes * 0.1)),
-                            "activity": "Quick check for understanding and send-home prompt.",
+                            "activity": _bilingual(
+                                "Quick check for understanding and send-home prompt.",
+                                "Verificacion rapida de comprension y actividad para casa.",
+                                normalized_language,
+                            ),
                         },
                     ],
-                    "home_extension": f"Family prompt: practice one {normalized_theme.lower()} activity at home for 10 minutes.",
+                    "home_extension": _bilingual(
+                        f"Family prompt: practice one {normalized_theme.lower()} activity at home for 10 minutes.",
+                        f"Actividad en familia: practiquen una actividad de {normalized_theme.lower()} por 10 minutos en casa.",
+                        normalized_language,
+                    ),
                 }
             )
 
@@ -1600,23 +1695,48 @@ def generate_lesson_plan(
                 "title": week_title,
                 "objectives": week_objectives,
                 "daily_plan": daily_plan,
-                "assessment": "Use observation checklist and student work samples to track progress.",
+                "assessment": _bilingual(
+                    "Use observation checklist and student work samples to track progress.",
+                    "Use una lista de observacion y muestras de trabajo para medir el progreso.",
+                    normalized_language,
+                ),
             }
         )
+
+    printable_resources = printable_pool
+    if normalized_language == "spanish":
+        printable_resources = spanish_printable_pool
+    elif normalized_language == "bilingual":
+        printable_resources = [
+            f"{eng} / {spa}" for eng, spa in zip(printable_pool, spanish_printable_pool)
+        ]
 
     return {
         "plan_id": str(uuid.uuid4()),
         "theme": normalized_theme,
         "audience_type": normalized_audience,
         "focus_area": normalized_focus,
+        "language_mode": normalized_language,
         "duration_weeks": weeks,
         "session_length_minutes": minutes,
         "weekly_plans": weekly_plans,
-        "printable_resources": printable_pool if include_printables else [],
+        "printable_resources": printable_resources if include_printables else [],
         "instagram_promo_hooks": [
-            f"Parents asked for done-for-you {normalized_theme.lower()} lesson plans, so we built them.",
-            f"Stop planning from scratch: this {weeks}-week {normalized_theme.lower()} kit is classroom-ready.",
-            "Comment LESSONS and we will send the tier that fits your school-year goals.",
+            _bilingual(
+                f"Parents asked for done-for-you {normalized_theme.lower()} lesson plans, so we built them.",
+                f"Las familias pidieron planes de {normalized_theme.lower()} listos para usar, y por eso los creamos.",
+                normalized_language,
+            ),
+            _bilingual(
+                f"Stop planning from scratch: this {weeks}-week {normalized_theme.lower()} kit is classroom-ready.",
+                f"Deja de planear desde cero: este kit de {weeks} semanas sobre {normalized_theme.lower()} esta listo para clase.",
+                normalized_language,
+            ),
+            _bilingual(
+                "Comment LESSONS and we will send the tier that fits your school-year goals.",
+                "Comenta LECCIONES y te enviamos el nivel que mejor se adapta a tus metas escolares.",
+                normalized_language,
+            ),
         ],
         "created_at": datetime.utcnow().isoformat(),
     }
