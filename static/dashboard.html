@@ -1261,6 +1261,23 @@
           <div class="field"><label>Signature</label><input type="text" id="ag-ml-signature" /></div>
           <div class="field"><label>Date</label><input type="date" id="ag-ml-date" /></div>
         </div>
+      </div>
+
+      <div class="panel">
+        <h2>9. Testimonial & Media Release Form</h2>
+        <div class="form-row"><div class="field"><label>Client Name</label><input type="text" id="ag-tmr-client_name" /></div></div>
+        <div style="margin:8px 0;"><strong>May DJ Blu Bloods Entertainment use for marketing purposes?</strong></div>
+        <div id="ag-tmr-use-types" style="display:flex;flex-wrap:wrap;gap:10px;"></div>
+        <div class="form-row">
+          <div class="field">
+            <label>Permission</label>
+            <select id="ag-tmr-permission"><option>Yes</option><option>No</option></select>
+          </div>
+        </div>
+        <div class="form-row form-2col">
+          <div class="field"><label>Signature</label><input type="text" id="ag-tmr-signature" /></div>
+          <div class="field"><label>Date</label><input type="date" id="ag-tmr-date" /></div>
+        </div>
 
         <button class="btn btn-primary" onclick="submitServiceAgreementPack()">Save Agreement Pack</button>
       </div>
@@ -2493,6 +2510,7 @@ POST-EVENT
     renderChecklist('ag-cancel-reasons', agreementTemplate.cancellation_request_form?.reason_for_cancellation || [], 'ag-cancel-reason');
     renderChecklist('ag-waiver-ack', agreementTemplate.event_liability_waiver?.client_acknowledges || [], 'ag-waiver-ack');
     renderChecklist('ag-ml-understands', agreementTemplate.music_licensing_content_agreement?.client_understands || [], 'ag-ml-understands');
+    renderChecklist('ag-tmr-use-types', agreementTemplate.testimonial_media_release_form?.may_use_for_marketing || [], 'ag-tmr-use-types');
   }
 
   async function submitServiceAgreementPack() {
@@ -2603,6 +2621,13 @@ POST-EVENT
         signature: document.getElementById('ag-ml-signature').value.trim(),
         date: document.getElementById('ag-ml-date').value,
       },
+      testimonial_media_release_form: {
+        client_name: document.getElementById('ag-tmr-client_name').value.trim(),
+        may_use_for_marketing: selectedChecklistValues('ag-tmr-use-types'),
+        permission: document.getElementById('ag-tmr-permission').value,
+        signature: document.getElementById('ag-tmr-signature').value.trim(),
+        date: document.getElementById('ag-tmr-date').value,
+      },
     };
 
     const res = await post('/api/tools/service-agreement/submit', {
@@ -2618,7 +2643,7 @@ POST-EVENT
       <div style="margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.06)"><strong>Total Package:</strong> ${agreement_pack.main_contract.financial_information.total_package_price || '—'}</div>
       <div style="margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.06)"><strong>Retainer:</strong> ${agreement_pack.main_contract.financial_information.retainer_amount || '—'}</div>
       <div style="margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.06)"><strong>Selected Services:</strong> ${(agreement_pack.main_contract.services_included || []).join(', ') || '—'}</div>
-      <div><strong>Forms Included:</strong> Main Contract, Payment Authorization, Event Change Request, Cancellation Request, Final Payment Confirmation, Liability Waiver, Venue Information, Music Licensing Agreement</div>
+      <div><strong>Forms Included:</strong> Main Contract, Payment Authorization, Event Change Request, Cancellation Request, Final Payment Confirmation, Liability Waiver, Venue Information, Music Licensing Agreement, Testimonial & Media Release</div>
     `;
 
     document.getElementById('ag-result').classList.add('show');

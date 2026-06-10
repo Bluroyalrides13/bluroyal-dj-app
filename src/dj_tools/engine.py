@@ -1715,6 +1715,22 @@ SERVICE_AGREEMENT_TEMPLATE = {
             {"id": "date", "label": "Date", "type": "date"},
         ],
     },
+    "testimonial_media_release_form": {
+        "fields": [
+            {"id": "client_name", "label": "Client Name", "type": "text"},
+        ],
+        "may_use_for_marketing": [
+            "Photos",
+            "Videos",
+            "Testimonials",
+            "Social Media Content",
+        ],
+        "marketing_permission": ["Yes", "No"],
+        "signature": [
+            {"id": "signature", "label": "Signature", "type": "text"},
+            {"id": "date", "label": "Date", "type": "date"},
+        ],
+    },
 }
 
 
