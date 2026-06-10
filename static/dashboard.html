@@ -402,6 +402,9 @@
     <button class="nav-item" onclick="showPage('content', this)">
       <span class="nav-icon">V</span> Instagram Pack
     </button>
+    <button class="nav-item" onclick="showPage('profile', this); loadDjProfileTemplate();">
+      <span class="nav-icon">VI</span> DJ Profile Setup
+    </button>
   </nav>
 
   <!-- ── Main content ── -->
@@ -734,6 +737,120 @@
       </div>
     </div>
 
+    <!-- ──────────── DJ PROFILE SETUP ──────────── -->
+    <div class="page" id="page-profile">
+      <div class="page-header">
+        <h1>DJ Profile Setup</h1>
+        <p>Complete your business profile once and keep your offers, service coverage, and equipment details ready.</p>
+      </div>
+      <div class="panel">
+        <h2>Business Information</h2>
+        <div class="form-row form-2col">
+          <div class="field">
+            <label>Business Name</label>
+            <input type="text" id="pf-business_name" />
+          </div>
+          <div class="field">
+            <label>Owner Name</label>
+            <input type="text" id="pf-owner_name" />
+          </div>
+        </div>
+        <div class="form-row form-2col">
+          <div class="field">
+            <label>Logo</label>
+            <input type="text" id="pf-logo" placeholder="Logo URL or file name" />
+          </div>
+          <div class="field">
+            <label>Website</label>
+            <input type="text" id="pf-website" />
+          </div>
+        </div>
+        <div class="form-row form-2col">
+          <div class="field">
+            <label>Phone</label>
+            <input type="text" id="pf-phone" />
+          </div>
+          <div class="field">
+            <label>Email</label>
+            <input type="text" id="pf-email" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="field">
+            <label>Social Media Links</label>
+            <textarea id="pf-social_media_links" placeholder="Instagram, TikTok, Facebook, YouTube, etc."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>Services Offered</h2>
+        <div id="pf-services" style="display:flex;flex-wrap:wrap;gap:10px;"></div>
+      </div>
+
+      <div class="panel">
+        <h2>Coverage Area</h2>
+        <div class="form-row">
+          <div class="field">
+            <label>Cities Served</label>
+            <textarea id="pf-cities_served" placeholder="Miami, Fort Lauderdale, West Palm Beach..."></textarea>
+          </div>
+        </div>
+        <div class="form-row form-2col">
+          <div class="field">
+            <label>Travel Radius</label>
+            <input type="text" id="pf-travel_radius" placeholder="50 miles" />
+          </div>
+          <div class="field">
+            <label>Destination Events</label>
+            <input type="text" id="pf-destination_events" placeholder="Yes / No" />
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>Equipment</h2>
+        <div id="pf-equipment" style="display:flex;flex-wrap:wrap;gap:10px;"></div>
+      </div>
+
+      <div class="panel">
+        <h2>Pricing</h2>
+        <div class="form-row form-2col">
+          <div class="field">
+            <label>Starting Price</label>
+            <input type="number" id="pf-starting_price" min="0" step="1" />
+          </div>
+          <div class="field">
+            <label>Ceremony Add-On</label>
+            <input type="number" id="pf-ceremony_add_on" min="0" step="1" />
+          </div>
+        </div>
+        <div class="form-row form-3col">
+          <div class="field">
+            <label>Cocktail Hour Add-On</label>
+            <input type="number" id="pf-cocktail_hour_add_on" min="0" step="1" />
+          </div>
+          <div class="field">
+            <label>Travel Fees</label>
+            <input type="number" id="pf-travel_fees" min="0" step="1" />
+          </div>
+          <div class="field">
+            <label>Overtime Rate</label>
+            <input type="number" id="pf-overtime_rate" min="0" step="1" />
+          </div>
+        </div>
+        <button class="btn btn-primary" onclick="submitDjProfile()">Save DJ Profile</button>
+      </div>
+
+      <div class="result-box" id="pf-result">
+        <div class="print-bar">
+          <button class="btn btn-print" onclick="printSection('pf-result', 'DJ Profile Setup')">Print / Save PDF</button>
+        </div>
+        <p style="font-weight:700;margin-bottom:10px;">DJ profile saved ✓</p>
+        <div id="pf-result-pre" style="font-size:0.9rem;line-height:1.8;"></div>
+      </div>
+    </div>
+
   </main>
 </div>
 
@@ -833,6 +950,10 @@
   let qPortalId = '';
   let qQuestions = [];
   let lastBriefPayload = null;
+
+  // ── DJ PROFILE SETUP ──
+  let djProfileId = '';
+  let djProfileTemplate = null;
 
   const REQUIRED_FIELDS_BY_EVENT = {
     wedding: [
@@ -1126,6 +1247,92 @@
     a.remove();
     URL.revokeObjectURL(url);
     showToast('Brief JSON downloaded');
+  }
+
+  function renderChecklist(targetId, items, inputName) {
+    const wrap = document.getElementById(targetId);
+    if (!wrap) return;
+    wrap.innerHTML = '';
+
+    items.forEach((item) => {
+      const value = item.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '');
+      wrap.innerHTML += `
+        <label style="display:flex;align-items:center;gap:8px;font-weight:500;text-transform:none;letter-spacing:0;font-size:0.88rem;cursor:pointer;">
+          <input type="checkbox" name="${inputName}" value="${value}" data-label="${item}" /> ${item}
+        </label>`;
+    });
+  }
+
+  async function loadDjProfileTemplate() {
+    if (djProfileTemplate) return;
+
+    const r = await fetch('/api/tools/dj-profile/template');
+    const res = await r.json();
+    if (!res.success) return alert('Error loading DJ profile template');
+
+    djProfileId = res.data.profile_id;
+    djProfileTemplate = res.data.template;
+
+    renderChecklist('pf-services', djProfileTemplate.services_offered || [], 'pf-services-offered');
+    renderChecklist('pf-equipment', djProfileTemplate.equipment || [], 'pf-equipment-list');
+  }
+
+  function selectedChecklistValues(inputName) {
+    const values = [];
+    document.querySelectorAll(`input[name="${inputName}"]:checked`).forEach((el) => {
+      values.push(el.getAttribute('data-label') || el.value);
+    });
+    return values;
+  }
+
+  async function submitDjProfile() {
+    if (!djProfileTemplate) await loadDjProfileTemplate();
+
+    const profile = {
+      business_information: {
+        business_name: document.getElementById('pf-business_name').value.trim(),
+        owner_name: document.getElementById('pf-owner_name').value.trim(),
+        logo: document.getElementById('pf-logo').value.trim(),
+        website: document.getElementById('pf-website').value.trim(),
+        phone: document.getElementById('pf-phone').value.trim(),
+        email: document.getElementById('pf-email').value.trim(),
+        social_media_links: document.getElementById('pf-social_media_links').value.trim(),
+      },
+      services_offered: selectedChecklistValues('pf-services-offered'),
+      coverage_area: {
+        cities_served: document.getElementById('pf-cities_served').value.trim(),
+        travel_radius: document.getElementById('pf-travel_radius').value.trim(),
+        destination_events: document.getElementById('pf-destination_events').value.trim(),
+      },
+      equipment: selectedChecklistValues('pf-equipment-list'),
+      pricing: {
+        starting_price: document.getElementById('pf-starting_price').value,
+        ceremony_add_on: document.getElementById('pf-ceremony_add_on').value,
+        cocktail_hour_add_on: document.getElementById('pf-cocktail_hour_add_on').value,
+        travel_fees: document.getElementById('pf-travel_fees').value,
+        overtime_rate: document.getElementById('pf-overtime_rate').value,
+      },
+    };
+
+    const res = await post('/api/tools/dj-profile/submit', {
+      profile_id: djProfileId,
+      profile,
+    });
+    if (!res.success) return alert('Error saving DJ profile');
+
+    const pre = document.getElementById('pf-result-pre');
+    pre.innerHTML = `
+      <div style="margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.06)"><strong>Business:</strong> ${profile.business_information.business_name || '—'}</div>
+      <div style="margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.06)"><strong>Owner:</strong> ${profile.business_information.owner_name || '—'}</div>
+      <div style="margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.06)"><strong>Services Offered:</strong> ${(profile.services_offered || []).join(', ') || '—'}</div>
+      <div style="margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.06)"><strong>Cities Served:</strong> ${profile.coverage_area.cities_served || '—'}</div>
+      <div style="margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.06)"><strong>Equipment:</strong> ${(profile.equipment || []).join(', ') || '—'}</div>
+      <div><strong>Starting Price:</strong> ${profile.pricing.starting_price || '—'}</div>
+    `;
+
+    document.getElementById('pf-result').classList.add('show');
+    document.getElementById('pf-result').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    showToast('DJ profile saved');
   }
 
   // ── SETLIST ──

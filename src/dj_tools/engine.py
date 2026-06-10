@@ -6,6 +6,7 @@ All five tools delivered to DJs who purchase the Blu Bloods platform:
   3. Setlist & Moment Organizer
   4. Booking & Pricing Calculator
   5. Instagram Content Pack Generator
+    6. DJ Profile Setup
 """
 
 from __future__ import annotations
@@ -1375,4 +1376,76 @@ def generate_content_pack(
             f"DJ Blu Bloods | Premium {specialty.replace('_', ' ').lower()} experiences | DM for booking | Resources in bio",
         ],
         "created_at": datetime.utcnow().isoformat(),
+    }
+
+
+# ─────────────────────────────────────────────
+# 6. DJ PROFILE SETUP
+# ─────────────────────────────────────────────
+
+DJ_PROFILE_TEMPLATE = {
+    "business_information": [
+        {"id": "business_name", "label": "Business Name", "type": "text"},
+        {"id": "owner_name", "label": "Owner Name", "type": "text"},
+        {"id": "logo", "label": "Logo", "type": "text"},
+        {"id": "website", "label": "Website", "type": "text"},
+        {"id": "phone", "label": "Phone", "type": "text"},
+        {"id": "email", "label": "Email", "type": "text"},
+        {"id": "social_media_links", "label": "Social Media Links", "type": "textarea"},
+    ],
+    "services_offered": [
+        "Weddings",
+        "Quinceaneras",
+        "Sweet 16s",
+        "Corporate Events",
+        "Bar/Bat Mitzvahs",
+        "School Events",
+        "Karaoke",
+        "Trivia",
+        "Singo/Music Bingo",
+        "Holiday Parties",
+        "Birthday Parties",
+    ],
+    "coverage_area": [
+        {"id": "cities_served", "label": "Cities Served", "type": "textarea"},
+        {"id": "travel_radius", "label": "Travel Radius", "type": "text"},
+        {"id": "destination_events", "label": "Destination Events", "type": "text"},
+    ],
+    "equipment": [
+        "Sound Systems",
+        "Wireless Mics",
+        "Ceremony Audio",
+        "Uplighting",
+        "Photo Booth",
+        "Dancing on Clouds",
+        "Cold Sparks",
+        "Monogram",
+        "Projector/Screen",
+    ],
+    "pricing": [
+        {"id": "starting_price", "label": "Starting Price", "type": "number"},
+        {"id": "ceremony_add_on", "label": "Ceremony Add-On", "type": "number"},
+        {"id": "cocktail_hour_add_on", "label": "Cocktail Hour Add-On", "type": "number"},
+        {"id": "travel_fees", "label": "Travel Fees", "type": "number"},
+        {"id": "overtime_rate", "label": "Overtime Rate", "type": "number"},
+    ],
+}
+
+
+def get_dj_profile_template() -> Dict:
+    """Return the DJ profile setup template."""
+    return {
+        "profile_id": str(uuid.uuid4()),
+        "template": DJ_PROFILE_TEMPLATE,
+        "created_at": datetime.utcnow().isoformat(),
+    }
+
+
+def save_dj_profile(profile_id: str, profile: Dict) -> Dict:
+    """Package DJ profile answers into a structured setup record."""
+    return {
+        "profile_id": profile_id,
+        "profile": profile,
+        "saved_id": str(uuid.uuid4()),
+        "saved_at": datetime.utcnow().isoformat(),
     }

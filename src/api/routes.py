@@ -26,6 +26,8 @@ from src.dj_tools.engine import (
     build_setlist,
     calculate_booking_price,
     generate_content_pack,
+    get_dj_profile_template,
+    save_dj_profile,
 )
 from config.settings import Settings
 
@@ -191,6 +193,34 @@ async def create_content_pack(request: Request):
         return ApiResponse(success=True, message="Content pack ready", data=result)
     except Exception as e:
         logger.error(f"Content pack error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/api/tools/dj-profile/template")
+async def get_dj_profile_setup(request: Request):
+    """Return the DJ profile setup template"""
+    try:
+        _require_dashboard_auth(request)
+        result = get_dj_profile_template()
+        return ApiResponse(success=True, message="DJ profile template ready", data=result)
+    except Exception as e:
+        logger.error(f"DJ profile template error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/api/tools/dj-profile/submit")
+async def submit_dj_profile(request: Request):
+    """Save a completed DJ profile setup"""
+    try:
+        _require_dashboard_auth(request)
+        body = await request.json()
+        result = save_dj_profile(
+            profile_id=body.get("profile_id", str(uuid.uuid4())),
+            profile=body.get("profile", {}),
+        )
+        return ApiResponse(success=True, message="DJ profile saved", data=result)
+    except Exception as e:
+        logger.error(f"DJ profile submit error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 
