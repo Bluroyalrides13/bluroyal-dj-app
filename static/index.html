@@ -323,20 +323,6 @@
         "Untitled design-4.pdf",
       ];
       const AVAILABLE_PDFS = new Set(RESOURCE_FILES.map((file) => file.toLowerCase()));
-      const COVER_POOL = [
-        "29_daily_routine.png",
-        "balloons.png",
-        "bear.png",
-        "bunny.png",
-        "cat.png",
-        "elephant.png",
-        "fox.png",
-        "kite.png",
-        "lion.png",
-        "owl.png",
-        "train.png",
-        "ChatGPT Image May 22, 2026 at 06_46_09 PM.png",
-      ];
 
       function createFallbackCoverDataUri(title, category, index) {
         const palette = [
@@ -607,15 +593,6 @@
       }
 
       function getResourceCoverUrl(pdfFile, title, category, index) {
-        const slug = `${pdfFile} ${title} ${category}`.toLowerCase();
-
-        if (slug.includes("all about me")) return "/static/samples/thumb-all-about-me.svg";
-        if (slug.includes("community helpers")) return "/static/samples/thumb-community-helpers.svg";
-        if (slug.includes("seasons") || slug.includes("weather")) return "/static/samples/thumb-seasons-weather.svg";
-
-        const pooledCover = COVER_POOL[index % COVER_POOL.length];
-        if (pooledCover) return encodeURI(`/static/samples/${pooledCover}`);
-
         return createFallbackCoverDataUri(title, category, index);
       }
 
