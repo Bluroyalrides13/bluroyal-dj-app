@@ -459,7 +459,10 @@
             ${channelBtn('story', 'Stories')}
             ${channelBtn('dm', 'DMs')}
           </div>
-          <button class="btn btn-secondary" type="button" onclick="copyLessonHooks()">Copy Hooks</button>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button class="btn btn-secondary" type="button" onclick="copyLessonHooks()">Copy Hooks</button>
+            <button class="btn btn-secondary" type="button" onclick="copyLessonHooksNumbered()">Copy As Numbered Script</button>
+          </div>
         </div>
         ${filtered.map((h) => `<div class="card small">${h}</div>`).join('') || '<div class="card small">No hooks for this channel.</div>'}
       `;
@@ -485,6 +488,24 @@
         document.execCommand('copy');
         ta.remove();
         alert('Filtered Instagram hooks copied to clipboard.');
+      }
+    }
+
+    async function copyLessonHooksNumbered() {
+      const hooks = getFilteredLessonHooks();
+      if (!hooks.length) return;
+      const text = hooks.map((h, i) => `${i + 1}. ${h}`).join('\n\n');
+      try {
+        await navigator.clipboard.writeText(text);
+        alert('Numbered Instagram script copied to clipboard.');
+      } catch (err) {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        ta.remove();
+        alert('Numbered Instagram script copied to clipboard.');
       }
     }
   </script>
