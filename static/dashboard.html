@@ -314,6 +314,34 @@
     .dm-label { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 8px; }
     .dm-text  { font-size: 0.88rem; color: var(--muted); line-height: 1.6; }
 
+    /* ── DJ Resources ── */
+    .resource-group__header {
+      display: flex; justify-content: space-between; align-items: center;
+      cursor: pointer; user-select: none;
+    }
+    .resource-group__header h2 { margin-bottom: 0; }
+    .resource-toggle {
+      width: 30px; height: 30px; border-radius: 50%;
+      background: rgba(201,168,109,0.12); border: 1px solid var(--border);
+      display: grid; place-items: center;
+      font-size: 1.2rem; font-weight: 700; color: var(--accent3);
+      flex-shrink: 0;
+    }
+    .resource-body { margin-top: 18px; }
+    .resource-item { margin-bottom: 20px; }
+    .resource-item__title {
+      font-size: 0.82rem; font-weight: 800; text-transform: uppercase;
+      letter-spacing: 0.06em; color: var(--accent3); margin-bottom: 10px;
+    }
+    .resource-content pre {
+      background: rgba(10,17,24,0.7); border: 1px solid var(--border);
+      border-radius: 12px; padding: 18px;
+      font-family: "Fira Mono", "Courier New", monospace;
+      font-size: 0.8rem; color: var(--muted); white-space: pre-wrap;
+      line-height: 1.7; max-height: 340px; overflow-y: auto;
+    }
+    .resource-actions { display: flex; gap: 10px; margin-top: 10px; }
+
     /* ── Setlist ── */
     .moment-group { margin-bottom: 18px; }
     .moment-title { font-size: 0.78rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.07em; color: var(--accent3); margin-bottom: 8px; }
@@ -407,6 +435,9 @@
     </button>
     <button class="nav-item" onclick="showPage('crm', this); loadLeadCrmTemplate();">
       <span class="nav-icon">VII</span> Lead Management
+    </button>
+    <button class="nav-item" onclick="showPage('resources', this);">
+      <span class="nav-icon">VIII</span> DJ Resources
     </button>
   </nav>
 
@@ -945,6 +976,650 @@
         <p style="font-weight:700;margin-bottom:10px;">Lead record saved ✓</p>
         <div id="crm-result-pre" style="font-size:0.9rem;line-height:1.8;"></div>
       </div>
+    </div>
+
+    <!-- ──────────── DJ RESOURCES ──────────── -->
+    <div class="page" id="page-resources">
+      <div class="page-header">
+        <h1>DJ Resources</h1>
+        <p>Ready-to-use templates, scripts, forms, and checklists — click any section to expand, then copy or print.</p>
+      </div>
+
+      <!-- Wedding Templates -->
+      <div class="panel resource-group">
+        <div class="resource-group__header" onclick="toggleResource('res-wedding')">
+          <h2>Wedding Templates</h2>
+          <span class="resource-toggle" id="res-wedding-icon">+</span>
+        </div>
+        <div class="resource-body" id="res-wedding" style="display:none;">
+
+          <div class="resource-item">
+            <div class="resource-item__title">Reception Worksheet</div>
+            <div class="resource-content" id="rc-reception-worksheet"><pre>DJ RECEPTION WORKSHEET
+═══════════════════════════════════════
+Client Name: ________________________
+Event Date:  ________________________
+Venue:       ________________________
+Contact:     ________________________
+
+TIMELINE
+──────────────────────────────────────
+Cocktail Hour Start: _______________
+Guest Seating:       _______________
+Grand Entrance:      _______________
+First Dance:         _______________
+Father-Daughter:     _______________
+Mother-Son:          _______________
+Blessing / Toast:    _______________
+Dinner Start:        _______________
+Cake Cutting:        _______________
+Open Dancing:        _______________
+Last Dance:          _______________
+Send-Off:            _______________
+
+KEY SONGS
+──────────────────────────────────────
+Grand Entrance:  ________________________
+First Dance:     ________________________
+Father-Daughter: ________________________
+Mother-Son:      ________________________
+Cake Cutting:    ________________________
+Last Dance:      ________________________
+
+MUST-PLAY LIST
+──────────────────────────────────────
+1. ____________________________________
+2. ____________________________________
+3. ____________________________________
+4. ____________________________________
+5. ____________________________________
+
+DO-NOT-PLAY LIST
+──────────────────────────────────────
+1. ____________________________________
+2. ____________________________________
+3. ____________________________________
+
+SPECIAL NOTES
+──────────────────────────────────────
+________________________________________
+________________________________________
+________________________________________
+</pre></div>
+            <div class="resource-actions">
+              <button class="btn btn-secondary" onclick="copyResource('rc-reception-worksheet')">Copy</button>
+              <button class="btn btn-print" onclick="printResourceItem('rc-reception-worksheet','Reception Worksheet')">Print / PDF</button>
+            </div>
+          </div>
+
+          <div class="resource-item">
+            <div class="resource-item__title">Ceremony Cue Sheet</div>
+            <div class="resource-content" id="rc-ceremony-cue"><pre>DJ CEREMONY CUE SHEET
+═══════════════════════════════════════
+Client:         ________________________
+Date:           ________________________
+Venue:          ________________________
+Ceremony Start: ________________________
+
+PROCESSIONAL ORDER & SONGS
+──────────────────────────────────────
+□  Seating Music (pre-ceremony):
+   Song: ______________________________
+   Cue: Doors open / guests enter
+
+□  Wedding Party Entrance:
+   Song: ______________________________
+   Cue: Wedding coordinator signal
+
+□  Bridal Entrance:
+   Song: ______________________________
+   Cue: Coordinator / doors open
+
+CEREMONY MOMENTS
+──────────────────────────────────────
+□  Unity Ceremony Song: _______________
+   Timing: ____________________________
+
+□  Ring Exchange: Music off / soft BG?
+   ______________________________________
+
+□  Recessional Song: __________________
+   Cue: Officiant introduction of couple
+
+COCKTAIL HOUR
+──────────────────────────────────────
+   Start: _____________________________
+   Vibe / Genre: ______________________
+   Volume: Background / Moderate
+
+NOTES FOR COORDINATOR
+──────────────────────────────────────
+________________________________________
+________________________________________
+</pre></div>
+            <div class="resource-actions">
+              <button class="btn btn-secondary" onclick="copyResource('rc-ceremony-cue')">Copy</button>
+              <button class="btn btn-print" onclick="printResourceItem('rc-ceremony-cue','Ceremony Cue Sheet')">Print / PDF</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- MC Scripts -->
+      <div class="panel resource-group">
+        <div class="resource-group__header" onclick="toggleResource('res-mc')">
+          <h2>MC Scripts</h2>
+          <span class="resource-toggle" id="res-mc-icon">+</span>
+        </div>
+        <div class="resource-body" id="res-mc" style="display:none;">
+
+          <div class="resource-item">
+            <div class="resource-item__title">Grand Entrance Script</div>
+            <div class="resource-content" id="rc-grand-entrance"><pre>GRAND ENTRANCE MC SCRIPT
+═══════════════════════════════════════
+
+[MUSIC: Build-up track — start 30 sec before]
+
+"Ladies and gentlemen, if I could direct your
+attention to the entrance — it is time to welcome
+our wedding party!"
+
+[INTRODUCE WEDDING PARTY — one by one or in pairs]
+
+"Please welcome [Names]!"
+"Coming in next — [Names]!"
+"Put your hands together for [Names]!"
+
+[MUSIC: Shift to couple's entrance song]
+
+"And now — the moment you have all been waiting for.
+For the very first time as husband and wife —
+please stand on your feet and welcome
+[COUPLE'S FULL NAMES]!"
+
+[Hold mic up — let crowd react — cue couple]
+
+[After entrance]
+"Please find your seats — dinner will be served
+shortly. But first, [NAME] will say a few words..."
+
+──────────────────────────────────────
+NOTES:
+- Confirm pronunciation before event
+- Have backup name card in pocket
+- Eye contact with coordinator for cues
+</pre></div>
+            <div class="resource-actions">
+              <button class="btn btn-secondary" onclick="copyResource('rc-grand-entrance')">Copy</button>
+              <button class="btn btn-print" onclick="printResourceItem('rc-grand-entrance','Grand Entrance Script')">Print / PDF</button>
+            </div>
+          </div>
+
+          <div class="resource-item">
+            <div class="resource-item__title">First Dance Introduction</div>
+            <div class="resource-content" id="rc-first-dance"><pre>FIRST DANCE MC SCRIPT
+═══════════════════════════════════════
+
+[After toasts / clear floor cue from coordinator]
+
+"Ladies and gentlemen, if everyone could
+please clear the dance floor —
+it is time for our newlyweds' first dance."
+
+[Pause — let floor clear]
+
+"[PARTNER 1] and [PARTNER 2], your song is
+[SONG TITLE] by [ARTIST].
+This one's for you."
+
+[Start song — fade up slowly]
+
+[Optional — invite guests after 1 verse]
+"If you'd like to join them on the dance floor,
+please come on up."
+
+──────────────────────────────────────
+NOTES:
+- Confirm if family joins after first verse
+- Confirm volume preference
+- Watch couple for natural ending cue
+</pre></div>
+            <div class="resource-actions">
+              <button class="btn btn-secondary" onclick="copyResource('rc-first-dance')">Copy</button>
+              <button class="btn btn-print" onclick="printResourceItem('rc-first-dance','First Dance Introduction')">Print / PDF</button>
+            </div>
+          </div>
+
+          <div class="resource-item">
+            <div class="resource-item__title">Cake Cutting Script</div>
+            <div class="resource-content" id="rc-cake-cutting"><pre>CAKE CUTTING MC SCRIPT
+═══════════════════════════════════════
+
+[Cue from coordinator — cake is ready]
+
+"Ladies and gentlemen, we are about to witness
+one of the sweetest moments of the evening —
+please make your way to the cake table
+and grab your phones for photos!"
+
+[Wait for crowd to gather]
+
+"[COUPLE'S NAMES] — the knife is yours."
+
+[Play cake cutting song]
+
+[After cut]
+"Let's give them a round of applause!
+Cake service will begin shortly."
+
+──────────────────────────────────────
+NOTES:
+- Coordinate with catering on timing
+- Keep mic close for crowd reaction
+</pre></div>
+            <div class="resource-actions">
+              <button class="btn btn-secondary" onclick="copyResource('rc-cake-cutting')">Copy</button>
+              <button class="btn btn-print" onclick="printResourceItem('rc-cake-cutting','Cake Cutting Script')">Print / PDF</button>
+            </div>
+          </div>
+
+          <div class="resource-item">
+            <div class="resource-item__title">Last Dance / Send-Off Script</div>
+            <div class="resource-content" id="rc-last-dance"><pre>LAST DANCE & SEND-OFF MC SCRIPT
+═══════════════════════════════════════
+
+[15 min before end — announcement]
+
+"Ladies and gentlemen, we are approaching
+the end of a beautiful evening.
+We have time for just a few more songs —
+so let's make them count!"
+
+[Final song cue]
+
+"This is the last dance of the night.
+[COUPLE'S NAMES] — this one is yours
+and everyone who loves you.
+Please join them on the floor."
+
+[Play final song]
+
+[Send-off lineup cue]
+
+"If you have sparklers / rose petals —
+please line up outside now.
+Let's give [COUPLE'S NAMES]
+the send-off they deserve!"
+
+──────────────────────────────────────
+NOTES:
+- Confirm send-off type in advance
+- Brief coordinator 10 min before
+</pre></div>
+            <div class="resource-actions">
+              <button class="btn btn-secondary" onclick="copyResource('rc-last-dance')">Copy</button>
+              <button class="btn btn-print" onclick="printResourceItem('rc-last-dance','Last Dance Send-Off Script')">Print / PDF</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Sales Scripts -->
+      <div class="panel resource-group">
+        <div class="resource-group__header" onclick="toggleResource('res-sales')">
+          <h2>Sales Scripts</h2>
+          <span class="resource-toggle" id="res-sales-icon">+</span>
+        </div>
+        <div class="resource-body" id="res-sales" style="display:none;">
+
+          <div class="resource-item">
+            <div class="resource-item__title">Initial Inquiry Response</div>
+            <div class="resource-content" id="rc-inquiry"><pre>INITIAL INQUIRY RESPONSE
+═══════════════════════════════════════
+
+Hey [NAME] — thank you for reaching out!
+
+Congratulations on your upcoming [EVENT TYPE].
+I'd love to learn more about what you're
+envisioning for the day.
+
+A few quick questions:
+1. What is your event date?
+2. What venue are you considering?
+3. What vibe are you going for — high energy,
+   elegant, something in between?
+4. Do you have a budget range in mind?
+
+Once I know a little more, I can walk you through
+exactly what I offer and see if we're a great fit.
+
+Looking forward to connecting —
+[YOUR NAME]
+[PHONE / EMAIL]
+
+──────────────────────────────────────
+PRO TIP: Respond within 1 hour.
+Speed = trust. Slow replies lose bookings.
+</pre></div>
+            <div class="resource-actions">
+              <button class="btn btn-secondary" onclick="copyResource('rc-inquiry')">Copy</button>
+              <button class="btn btn-print" onclick="printResourceItem('rc-inquiry','Initial Inquiry Response')">Print / PDF</button>
+            </div>
+          </div>
+
+          <div class="resource-item">
+            <div class="resource-item__title">Closing the Booking Script</div>
+            <div class="resource-content" id="rc-closing"><pre>BOOKING CLOSE SCRIPT
+═══════════════════════════════════════
+
+[After consultation — ready to close]
+
+"Based on everything you've shared,
+I'm confident I can deliver exactly what
+you're looking for.
+
+My investment for your [EVENT TYPE] is [PRICE].
+That includes [KEY INCLUSIONS].
+
+To lock in your date, all I need is
+a [DEPOSIT AMOUNT] deposit and a signed
+agreement — I can send both over today.
+
+Are you ready to move forward?"
+
+──────────────────────────────────────
+[If they hesitate]
+
+"I completely understand — this is an
+important decision. Is there anything
+holding you back that I can help clarify?"
+
+[If price is the concern]
+
+"I do have a [LOWER TIER] option at [PRICE]
+if you'd like to explore that instead.
+Here's what's included..."
+
+──────────────────────────────────────
+PRO TIP: Always ask for the booking.
+Silence after quoting is not rejection —
+it is thinking time. Let them respond first.
+</pre></div>
+            <div class="resource-actions">
+              <button class="btn btn-secondary" onclick="copyResource('rc-closing')">Copy</button>
+              <button class="btn btn-print" onclick="printResourceItem('rc-closing','Booking Close Script')">Print / PDF</button>
+            </div>
+          </div>
+
+          <div class="resource-item">
+            <div class="resource-item__title">Follow-Up Script (No Response)</div>
+            <div class="resource-content" id="rc-followup"><pre>FOLLOW-UP SCRIPT — NO RESPONSE
+═══════════════════════════════════════
+
+[3 days after no reply]
+
+"Hey [NAME] — just checking in.
+I know things get busy and I don't want
+your date to slip away.
+
+I still have [DATE] open and would love
+to be part of your event.
+
+If you have any questions or want to
+schedule a quick call, just say the word.
+
+— [YOUR NAME]"
+
+──────────────────────────────────────
+[7 days — final follow-up]
+
+"Hey [NAME] — last check-in from me.
+I respect your time and don't want to
+be a nuisance.
+
+If the timing is right, I'm here.
+If not, no hard feelings — I hope you
+find exactly what you're looking for.
+
+— [YOUR NAME]"
+
+──────────────────────────────────────
+PRO TIP: 3 touches max before you move on.
+Quality follow-up > quantity.
+</pre></div>
+            <div class="resource-actions">
+              <button class="btn btn-secondary" onclick="copyResource('rc-followup')">Copy</button>
+              <button class="btn btn-print" onclick="printResourceItem('rc-followup','Follow-Up Script')">Print / PDF</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Consultation Forms -->
+      <div class="panel resource-group">
+        <div class="resource-group__header" onclick="toggleResource('res-consult')">
+          <h2>Consultation Forms</h2>
+          <span class="resource-toggle" id="res-consult-icon">+</span>
+        </div>
+        <div class="resource-body" id="res-consult" style="display:none;">
+
+          <div class="resource-item">
+            <div class="resource-item__title">Client Consultation Form</div>
+            <div class="resource-content" id="rc-consult-form"><pre>CLIENT CONSULTATION FORM
+═══════════════════════════════════════
+Date of Call:    ________________________
+DJ Name:         ________________________
+
+CLIENT DETAILS
+──────────────────────────────────────
+Client Name:     ________________________
+Phone:           ________________________
+Email:           ________________________
+Referral Source: ________________________
+
+EVENT DETAILS
+──────────────────────────────────────
+Event Type:      ________________________
+Event Date:      ________________________
+Venue Name:      ________________________
+Venue Address:   ________________________
+Start Time:      ________________________
+End Time:        ________________________
+Guest Count:     ________________________
+
+MUSIC & VIBE
+──────────────────────────────────────
+Favorite Genres: ________________________
+Vibe / Energy:   ________________________
+Must-Play Songs: ________________________
+Do-Not-Play:     ________________________
+Clean Music?     Yes / No
+
+SERVICES NEEDED
+──────────────────────────────────────
+□ DJ Only           □ MC Services
+□ Ceremony Audio    □ Cocktail Hour
+□ Uplighting        □ Photo Booth
+□ Dancing on Clouds □ Cold Sparks
+□ Monogram          □ Projector/Screen
+
+BUDGET & BOOKING
+──────────────────────────────────────
+Budget Range:          ________________________
+Decision By:           ________________________
+Other DJs Considering: ________________________
+
+QUESTIONS / CONCERNS
+──────────────────────────────────────
+________________________________________
+________________________________________
+
+NEXT STEPS
+──────────────────────────────────────
+□ Send proposal by:    ___________________
+□ Schedule follow-up:  ___________________
+□ Contract sent:       ___________________
+□ Deposit received:    ___________________
+</pre></div>
+            <div class="resource-actions">
+              <button class="btn btn-secondary" onclick="copyResource('rc-consult-form')">Copy</button>
+              <button class="btn btn-print" onclick="printResourceItem('rc-consult-form','Client Consultation Form')">Print / PDF</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Planning Forms -->
+      <div class="panel resource-group">
+        <div class="resource-group__header" onclick="toggleResource('res-planning')">
+          <h2>Planning Forms</h2>
+          <span class="resource-toggle" id="res-planning-icon">+</span>
+        </div>
+        <div class="resource-body" id="res-planning" style="display:none;">
+
+          <div class="resource-item">
+            <div class="resource-item__title">Day-of Event Planning Form</div>
+            <div class="resource-content" id="rc-planning-form"><pre>DAY-OF EVENT PLANNING FORM
+═══════════════════════════════════════
+Event:        ________________________
+Date:         ________________________
+Venue:        ________________________
+Load-in Time: ________________________
+Setup Time:   ________________________
+Soundcheck:   ________________________
+Event Start:  ________________________
+Event End:    ________________________
+Teardown By:  ________________________
+
+KEY CONTACTS
+──────────────────────────────────────
+Client Name:        __________________  Ph: ____________
+Venue Coordinator:  __________________  Ph: ____________
+Catering Manager:   __________________  Ph: ____________
+Photographer:       __________________  Ph: ____________
+Videographer:       __________________  Ph: ____________
+Officiant (if any): __________________  Ph: ____________
+
+EQUIPMENT CHECKLIST — LOAD IN
+──────────────────────────────────────
+□ Main speakers (L + R)
+□ Subwoofer(s)
+□ DJ controller / mixer
+□ Laptop + backup drive
+□ Cables: XLR, RCA, power
+□ Wireless microphones
+□ Stands (speaker + mic)
+□ Extension cords + power strip
+□ Gaff tape + tools
+□ Uplighting (if included)
+□ Effect lighting
+□ Monogram projector (if included)
+□ Cold sparks / effects (if included)
+
+SETUP NOTES
+──────────────────────────────────────
+Booth placement: ______________________
+Power source:    ______________________
+Special setup:   ______________________
+
+END OF NIGHT
+──────────────────────────────────────
+□ All equipment loaded out
+□ Nothing left behind
+□ Client / coordinator thanked
+□ Review requested
+□ Invoice final balance: ______________
+</pre></div>
+            <div class="resource-actions">
+              <button class="btn btn-secondary" onclick="copyResource('rc-planning-form')">Copy</button>
+              <button class="btn btn-print" onclick="printResourceItem('rc-planning-form','Day-of Event Planning Form')">Print / PDF</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Emergency Checklists -->
+      <div class="panel resource-group">
+        <div class="resource-group__header" onclick="toggleResource('res-emergency')">
+          <h2>Emergency Checklists</h2>
+          <span class="resource-toggle" id="res-emergency-icon">+</span>
+        </div>
+        <div class="resource-body" id="res-emergency" style="display:none;">
+
+          <div class="resource-item">
+            <div class="resource-item__title">DJ Emergency Checklist</div>
+            <div class="resource-content" id="rc-emergency"><pre>DJ EMERGENCY CHECKLIST
+═══════════════════════════════════════
+
+EQUIPMENT BACKUP
+──────────────────────────────────────
+□ Backup laptop fully charged + loaded
+□ Backup hard drive with all music
+□ Spare cables: XLR, RCA, 1/4", USB
+□ Backup controller / mixer (or plan B app)
+□ Spare power strip / surge protector
+□ Headphone adapter
+□ Spare batteries (wireless mics)
+□ Gaff tape, zip ties, multi-tool
+
+SOFTWARE & MUSIC
+──────────────────────────────────────
+□ DJ software updated + tested
+□ All music files backed up to cloud
+□ Offline playlist ready (no internet needed)
+□ Client playlist exported and saved
+□ Backup streaming service logged in
+
+VENUE ISSUES
+──────────────────────────────────────
+If power goes out:
+  □ Switch to battery-powered backup speaker
+  □ Notify venue coordinator immediately
+  □ Keep MC announcements going — stay calm
+
+If your main speaker fails:
+  □ Switch to backup or monitor speaker
+  □ Reduce volume, reposition if needed
+  □ Notify client — manage expectations
+
+If laptop crashes:
+  □ Switch to backup laptop immediately
+  □ Use pre-loaded set on backup device
+  □ DO NOT announce the issue to guests
+
+If you're running late:
+  □ Call client and venue 60 min out
+  □ Have trusted DJ on standby for cover
+  □ Venue coordinator to play background
+    music from house system
+
+HEALTH EMERGENCY
+──────────────────────────────────────
+□ Trusted backup DJ's phone number: _______
+□ Know venue's first aid location
+□ Always have water + snacks on-site
+
+POST-EVENT
+──────────────────────────────────────
+□ Document what went wrong immediately
+□ Follow up with client proactively
+□ Repair or replace gear within 48 hrs
+□ Update emergency plan with new scenario
+</pre></div>
+            <div class="resource-actions">
+              <button class="btn btn-secondary" onclick="copyResource('rc-emergency')">Copy</button>
+              <button class="btn btn-print" onclick="printResourceItem('rc-emergency','DJ Emergency Checklist')">Print / PDF</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
     </div>
 
   </main>
@@ -1602,6 +2277,47 @@
     });
 
     document.getElementById('cp-result').classList.add('show');
+  }
+
+  // ── DJ RESOURCES accordion ──
+  function toggleResource(id) {
+    const body = document.getElementById(id);
+    const icon = document.getElementById(id + '-icon');
+    if (!body) return;
+    const open = body.style.display !== 'none';
+    body.style.display = open ? 'none' : 'block';
+    if (icon) icon.textContent = open ? '+' : '−';
+  }
+
+  function copyResource(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const text = el.innerText || el.textContent;
+    navigator.clipboard.writeText(text)
+      .then(() => showToast('Copied to clipboard'))
+      .catch(() => showToast('Clipboard blocked by browser'));
+  }
+
+  function printResourceItem(id, title) {
+    const content = document.getElementById(id);
+    if (!content) return;
+    const win = window.open('', '_blank');
+    win.document.write(`<!doctype html><html><head>
+      <title>${title} — DJ Blu Bloods</title>
+      <style>
+        body { font-family: "Manrope", Arial, sans-serif; padding: 32px; color: #1b1a18; font-size: 14px; background: #fffdf8; }
+        .print-head { margin-bottom: 18px; border: 1px solid #d4ba86; border-radius: 14px; padding: 14px 16px; background: linear-gradient(135deg,#f4e8c9,#d2b47c); }
+        .print-brand { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 800; color: #463114; }
+        h1 { font-family: serif; font-size: 1.8rem; margin: 4px 0 0; color: #2a1d0d; }
+        pre { font-family: "Courier New", monospace; font-size: 13px; white-space: pre-wrap; line-height: 1.7; }
+        @media print { button { display:none; } }
+      </style>
+    </head><body>
+      <div class="print-head"><div class="print-brand">DJ Blu Bloods • Resources</div><h1>${title}</h1></div>
+      ${content.innerHTML}
+      <script>window.onload=()=>{window.print();}<\/script>
+    </body></html>`);
+    win.document.close();
   }
 
   // ── Initialize dashboard on page load ──
