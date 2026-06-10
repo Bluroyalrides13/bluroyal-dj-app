@@ -1550,6 +1550,287 @@ SPANISH_PRINTABLE_LIBRARY = {
 }
 
 
+# ─────────────────────────────────────────────
+# COMPREHENSIVE LESSON THEMES (with daycare classroom context)
+# ─────────────────────────────────────────────
+
+COMPREHENSIVE_LESSON_THEMES = {
+    "welcome_to_school": {
+        "title": "Welcome to School",
+        "emoji": "🏠",
+        "month": "August/September",
+        "overview": "The first week of school is about comfort and community. Children learn classroom routines, where things belong, and the names of their teachers and friends. Keep activities short, predictable, and warm.",
+        "learning_objectives": {
+            "literacy": [
+                "Recognize own first name in print",
+                "Learn classroom signs and symbols",
+            ],
+            "math": [
+                "Sort classroom items by category",
+                "Match same and different",
+            ],
+            "science": [
+                "Explore the five senses through classroom tour",
+                "Notice routines and patterns",
+            ],
+            "social_emotional": [
+                "Learn classmates' names",
+                "Practice greetings and goodbyes",
+                "Follow simple classroom rules",
+            ],
+        },
+        "key_vocabulary": "school, teacher, classroom, friend, hello, goodbye, please, thank you, line up, listen, share, rule",
+        "materials_needed": [
+            "Name tags with photos",
+            "Classroom labels (door, sink, books)",
+            "Class rules poster",
+            "Photos of each child",
+            "Welcome circle props",
+            "Attendance chart",
+            "Name puzzle pieces",
+            "Crayons and large paper",
+            "Friendship song cards",
+        ],
+        "songs_and_fingerplays": [
+            "Hello, Hello, Hello (greeting)",
+            "The More We Get Together",
+            "Where Is Friend? (to Frère Jacques)",
+            "Wheels on the Bus",
+        ],
+        "read_alouds": [
+            "The Kissing Hand — Audrey Penn",
+            "First Day Jitters — Julie Danneberg",
+            "We Don't Eat Our Classmates — Ryan Higgins",
+            "Llama Llama Misses Mama — Anna Dewdney",
+        ],
+        "family_take_home_note": "This week your child practiced classroom routines and learned new friends' names! Ask: Who is your teacher? What is your favorite spot in the classroom?",
+        "teacher_tip": "Keep day-one transitions short and predictable. Children who cling to parents need quiet welcomes, not crowds. A photo of family in their cubby helps tremendously.",
+        "daily_activities": {
+            "monday": {
+                "title": "Welcome & Hello",
+                "circle_time": "Greet each child by name. Sing the Hello song. Show classroom rules with simple pictures (walking feet, listening ears, kind hands).",
+                "center_activity": "Small-group classroom tour — visit each center and explore one toy from each.",
+                "read_aloud": "The Kissing Hand by Audrey Penn",
+            },
+            "tuesday": {
+                "title": "What's Your Name?",
+                "circle_time": "Photo name game — hold up each child's photo and the class says their name together.",
+                "center_activity": "Name puzzle — children trace their first name with a finger, then a marker.",
+                "read_aloud": "First Day Jitters by Julie Danneberg",
+            },
+            "wednesday": {
+                "title": "Our Classroom",
+                "circle_time": "Tour the classroom labels (door, sink, library, blocks). Children point to each one as you say its name.",
+                "center_activity": "Picture-matching of classroom items (cup→cup, book→book).",
+                "read_aloud": "Llama Llama Misses Mama by Anna Dewdney",
+            },
+            "thursday": {
+                "title": "Making Friends",
+                "circle_time": "Friendship song. Each child shares one thing they like to do.",
+                "art_center": "Partner art — pairs draw each other on a shared paper.",
+                "read_aloud": "We Don't Eat Our Classmates by Ryan Higgins",
+            },
+            "friday": {
+                "title": "Our Class is Special",
+                "group_activity": "Class handprint mural on butcher paper titled 'Our Class.' Each child adds a painted handprint and signs (or stamps) their name.",
+                "circle_time": "Review songs from the week. Celebrate a successful first week!",
+            },
+        },
+    },
+    "all_about_me": {
+        "title": "All About Me",
+        "emoji": "👤",
+        "month": "September",
+        "overview": "Children explore their own identity — body, family, likes, and what makes them special. Builds self-awareness, confidence, and the language to describe themselves.",
+        "learning_objectives": {
+            "literacy": [
+                "Recognize the first letter of own name",
+                "Use 'I am' and 'I like' sentence frames",
+            ],
+            "math": [
+                "Measure and compare height",
+                "Count body parts (2 eyes, 10 fingers)",
+            ],
+            "science": [
+                "Identify major body parts and their functions",
+                "Compare physical traits",
+            ],
+            "social_emotional": [
+                "Express personal likes and dislikes",
+                "Celebrate own uniqueness",
+            ],
+        },
+        "key_vocabulary": "me, body, head, hands, feet, eyes, hair, tall, short, favorite, special, unique",
+        "materials_needed": [
+            "Hand mirrors",
+            "Height chart on wall",
+            "Paper plates for self-portraits",
+            "Yarn (hair colors)",
+            "Crayons and skin-tone markers",
+            "Body outline butcher paper",
+            "Family photo request slip",
+        ],
+        "songs_and_fingerplays": [
+            "Head, Shoulders, Knees and Toes",
+            "If You're Happy and You Know It",
+            "The Hokey Pokey",
+            "This Is Me (original chant)",
+        ],
+        "read_alouds": [
+            "I Like Myself! — Karen Beaumont",
+            "The Skin You Live In — Michael Tyler",
+            "All Are Welcome — Alexandra Penfold",
+            "Marisol McDonald Doesn't Match — Monica Brown",
+        ],
+        "family_take_home_note": "Help your child feel proud of who they are! Ask: What is your favorite thing about yourself? Send in a family photo for our class display.",
+        "teacher_tip": "Use skin-tone crayons and markers for self-portraits — and make sure the package shows the full range. Children notice when their actual color is missing from the box.",
+        "daily_activities": {
+            "monday": {
+                "title": "My Body",
+                "circle_time": "Sing Head, Shoulders, Knees and Toes — fast, then slow, then silly.",
+                "center_activity": "Trace child-sized body outlines on butcher paper. Children label parts.",
+                "read_aloud": "The Skin You Live In by Michael Tyler",
+            },
+            "tuesday": {
+                "title": "My Face",
+                "circle_time": "Mirror exploration — children describe their own face (eye color, hair color).",
+                "art_center": "Paper plate self-portraits with yarn for hair.",
+                "read_aloud": "I Like Myself! by Karen Beaumont",
+            },
+            "wednesday": {
+                "title": "How Tall Am I?",
+                "math_activity": "Measure each child against a class height chart. Compare 'taller' and 'shorter.'",
+                "center_activity": "Trace each child's hand and count fingers. Whose hand is biggest?",
+                "read_aloud": "All Are Welcome by Alexandra Penfold",
+            },
+            "thursday": {
+                "title": "My Favorites",
+                "circle_time": "Each child shares a favorite color, food, and toy.",
+                "math_center": "Class graph: favorite ice cream flavor (chocolate, vanilla, strawberry).",
+                "read_aloud": "Marisol McDonald Doesn't Match by Monica Brown",
+            },
+            "friday": {
+                "title": "I Am Special",
+                "group_project": "Make 'All About Me' mini-books — each child completes pages: My name is ___, I am ___ years old, My favorite color is ___.",
+                "circle_time": "Children share their books with the class.",
+            },
+        },
+    },
+}
+
+
+def _format_comprehensive_theme(theme_data: Dict, language_mode: str, weeks: int = 1) -> Dict:
+    """Format comprehensive theme data into a structured lesson plan with professional formatting."""
+    
+    # Build learning objectives by category
+    formatted_objectives = {}
+    for subject, objectives in theme_data.get("learning_objectives", {}).items():
+        formatted_objectives[subject.replace("_", "-").title()] = objectives
+    
+    # Format daily activities with proper structure
+    daily_activities_list = []
+    weekdays = ["monday", "tuesday", "wednesday", "thursday", "friday"]
+    weekday_names = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+    
+    for idx, (day_key, day_name) in enumerate(zip(weekdays, weekday_names)):
+        day_data = theme_data.get("daily_activities", {}).get(day_key, {})
+        if day_data:
+            activity_obj = {
+                "day": day_name,
+                "title": day_data.get("title", ""),
+                "activities": {},
+            }
+            
+            # Map different activity keys to standardized labels
+            for key in day_data:
+                if key != "title":
+                    label = key.replace("_", " ").title()
+                    activity_obj["activities"][label] = day_data[key]
+            
+            daily_activities_list.append(activity_obj)
+    
+    return {
+        "title": theme_data.get("title", "Untitled Theme"),
+        "emoji": theme_data.get("emoji", "📚"),
+        "month": theme_data.get("month", ""),
+        "overview": theme_data.get("overview", ""),
+        "learning_objectives": formatted_objectives,
+        "key_vocabulary": theme_data.get("key_vocabulary", ""),
+        "materials_needed": theme_data.get("materials_needed", []),
+        "songs_and_fingerplays": theme_data.get("songs_and_fingerplays", []),
+        "read_alouds": theme_data.get("read_alouds", []),
+        "family_take_home_note": theme_data.get("family_take_home_note", ""),
+        "teacher_tip": theme_data.get("teacher_tip", ""),
+        "daily_activities": daily_activities_list,
+    }
+
+
+def _build_theme_printables(theme_data: Dict, language_mode: str, printable_count: int = 4) -> List[Dict[str, str]]:
+    """Generate printable worksheets based on theme learning objectives."""
+    documents: List[Dict[str, str]] = []
+    theme_title = theme_data.get("title", "Theme")
+    learning_objectives = theme_data.get("learning_objectives", {})
+    
+    subjects = list(learning_objectives.keys())
+    
+    for idx in range(printable_count):
+        subject = subjects[idx % len(subjects)] if subjects else "Learning"
+        objective = learning_objectives.get(subject, [""])[0] if learning_objectives.get(subject) else ""
+        
+        title = f"Worksheet {idx + 1}: {theme_title} - {subject}"
+        
+        instructions = _bilingual(
+            "Instructions: Complete the activity with your learner. Review answers together and celebrate progress!",
+            "Instrucciones: Completa la actividad con tu estudiante. ¡Revisen las respuestas juntas y celebren el progreso!",
+            language_mode,
+        )
+        
+        focus = _bilingual(
+            f"Learning Focus: {objective}",
+            f"Enfoque de aprendizaje: {objective}",
+            language_mode,
+        )
+        
+        content = "\n".join(
+            [
+                title,
+                "=" * len(title),
+                "",
+                focus,
+                instructions,
+                "",
+                _bilingual("Name: ____________________", "Nombre: ____________________", language_mode),
+                _bilingual("Date: ____________________", "Fecha: ____________________", language_mode),
+                "",
+                _bilingual("Activity:", "Actividad:", language_mode),
+                "_" * 50,
+                "_" * 50,
+                "_" * 50,
+                "",
+                _bilingual("Draw or write your answer:", "Dibuja o escribe tu respuesta:", language_mode),
+                "_" * 50,
+                "_" * 50,
+                "",
+                _bilingual("Circle the best answer:", "Encierra la mejor respuesta:", language_mode),
+                "☐ A          ☐ B          ☐ C",
+                "",
+                _bilingual("Teacher/Parent Notes:", "Notas del maestro/padre:", language_mode),
+                "_" * 50,
+            ]
+        )
+        
+        documents.append(
+            {
+                "id": f"printable_{idx + 1}",
+                "title": title,
+                "content": content,
+                "format": "txt",
+            }
+        )
+    
+    return documents
+
+
 def _normalize_focus(value: str) -> str:
     focus = (value or "mixed").strip().lower()
     return focus if focus in LESSON_PLAN_FOCUS_LIBRARY else "mixed"
@@ -1663,7 +1944,10 @@ def generate_lesson_plan(
     language_mode: str = "english",
     include_printables: bool = True,
 ) -> Dict:
-    """Generate a multi-week lesson plan framework with daily activities and printable suggestions."""
+    """Generate a multi-week lesson plan framework with daily activities and printable suggestions.
+    
+    Supports both predefined comprehensive themes and custom theme generation.
+    """
 
     normalized_theme = (theme or "Seasonal Learning").strip() or "Seasonal Learning"
     normalized_audience = _normalize_audience(audience_type)
@@ -1672,6 +1956,49 @@ def generate_lesson_plan(
     weeks = max(1, min(duration_weeks, 12))
     minutes = max(20, min(session_length_minutes, 120))
 
+    # Check if this is a comprehensive theme
+    theme_key = normalized_theme.lower().replace(" ", "_")
+    is_comprehensive_theme = theme_key in COMPREHENSIVE_LESSON_THEMES
+    
+    if is_comprehensive_theme:
+        theme_data = COMPREHENSIVE_LESSON_THEMES[theme_key]
+        formatted_theme = _format_comprehensive_theme(theme_data, normalized_language, weeks)
+        
+        # Build printables if requested
+        printable_documents = []
+        if include_printables:
+            printable_documents = _build_theme_printables(
+                theme_data,
+                language_mode=normalized_language,
+                printable_count=4
+            )
+        
+        return {
+            "plan_id": str(uuid.uuid4()),
+            "theme": formatted_theme.get("title", normalized_theme),
+            "emoji": formatted_theme.get("emoji", "📚"),
+            "month": formatted_theme.get("month", ""),
+            "audience_type": normalized_audience,
+            "focus_area": normalized_focus,
+            "language_mode": normalized_language,
+            "duration_weeks": weeks,
+            "session_length_minutes": minutes,
+            "overview": formatted_theme.get("overview", ""),
+            "learning_objectives": formatted_theme.get("learning_objectives", {}),
+            "key_vocabulary": formatted_theme.get("key_vocabulary", ""),
+            "materials_needed": formatted_theme.get("materials_needed", []),
+            "songs_and_fingerplays": formatted_theme.get("songs_and_fingerplays", []),
+            "read_alouds": formatted_theme.get("read_alouds", []),
+            "family_take_home_note": formatted_theme.get("family_take_home_note", ""),
+            "teacher_tip": formatted_theme.get("teacher_tip", ""),
+            "daily_activities": formatted_theme.get("daily_activities", []),
+            "printable_resources": [doc["title"] for doc in printable_documents] if printable_documents else [],
+            "printable_documents": printable_documents,
+            "is_comprehensive": True,
+            "created_at": datetime.utcnow().isoformat(),
+        }
+    
+    # Fallback to legacy custom theme generation
     focus_targets = LESSON_PLAN_FOCUS_LIBRARY[normalized_focus]
     printable_pool = LESSON_PRINTABLE_LIBRARY[normalized_focus]
     spanish_printable_pool = SPANISH_PRINTABLE_LIBRARY[normalized_focus]
@@ -1808,6 +2135,7 @@ def generate_lesson_plan(
         "weekly_plans": weekly_plans,
         "printable_resources": active_printables,
         "printable_documents": printable_documents,
+        "is_comprehensive": False,
         "instagram_promo_hooks": [
             _bilingual(
                 f"Parents asked for done-for-you {normalized_theme.lower()} lesson plans, so we built them.",
