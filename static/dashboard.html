@@ -494,6 +494,9 @@
     <button class="nav-item" onclick="showPage('agreements', this); loadServiceAgreementTemplate();">
       <span class="nav-icon">IX</span> Service Agreements
     </button>
+    <button class="nav-item" onclick="showPage('sales', this); loadSalesOffers();">
+      <span class="nav-icon">X</span> Sales Offers
+    </button>
     <button class="nav-item" onclick="showPage('resources', this);">
       <span class="nav-icon">VIII</span> DJ Resources
     </button>
@@ -1288,6 +1291,33 @@
         </div>
         <p style="font-weight:700;margin-bottom:10px;">Service agreement pack saved ✓</p>
         <div id="ag-result-pre" style="font-size:0.9rem;line-height:1.8;"></div>
+      </div>
+    </div>
+
+    <!-- ──────────── SALES OFFERS ──────────── -->
+    <div class="page" id="page-sales">
+      <div class="page-header">
+        <h1>Sales Offers</h1>
+        <p>Sell your three core offers: $497, $1500, and $3500 with direct purchase links.</p>
+      </div>
+
+      <div class="panel">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px;">
+          <h2 style="margin:0;">Offer Stack</h2>
+          <button class="btn btn-secondary" onclick="loadSalesOffers()">Refresh Offers</button>
+        </div>
+        <div id="sales-offers-wrap" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;">
+          <div class="panel" style="padding:16px;opacity:.8;">Loading offers...</div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>Quick Sales Script</h2>
+        <div style="font-size:0.92rem;color:var(--muted);line-height:1.8;">
+          Start with <strong>$497</strong> for self-paced execution.<br/>
+          Move to <strong>$1500</strong> when they want guided implementation.<br/>
+          Close <strong>$3500</strong> for done-with-you premium buildout.
+        </div>
       </div>
     </div>
 
@@ -2793,6 +2823,47 @@ POST-EVENT
       <script>window.onload=()=>{window.print();}<\/script>
     </body></html>`);
     win.document.close();
+  }
+
+  // ── SALES OFFERS ──
+  async function loadSalesOffers() {
+    const wrap = document.getElementById('sales-offers-wrap');
+    if (!wrap) return;
+
+    wrap.innerHTML = '<div class="panel" style="padding:16px;opacity:.8;">Loading offers...</div>';
+    try {
+      const r = await fetch('/api/offers');
+      const res = await r.json();
+      const offers = res?.data?.offers || [];
+
+      if (!offers.length) {
+        wrap.innerHTML = '<div class="panel" style="padding:16px;opacity:.8;">No offers found.</div>';
+        return;
+      }
+
+      offers.sort((a, b) => Number(a.price || 0) - Number(b.price || 0));
+      wrap.innerHTML = offers.map((offer) => {
+        const price = Number(offer.price || 0);
+        const isTargetTier = [497, 1500, 3500].includes(price);
+        const accent = isTargetTier ? 'var(--accent3)' : 'var(--muted)';
+        return `
+          <div class="panel" style="padding:16px; border-color: rgba(201,168,109,0.32);">
+            <div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:.08em;color:${accent};font-weight:800;">${offer.access_level || 'offer'}</div>
+            <div style="font-family:'Cormorant Garamond',serif;font-size:1.35rem;margin-top:6px;">${offer.name || 'Offer'}</div>
+            <div style="font-size:1.8rem;font-weight:900;margin-top:8px;color:var(--accent3);">$${price.toLocaleString()}</div>
+            <div style="font-size:0.86rem;color:var(--muted);margin-top:8px;line-height:1.6;">${offer.promise || ''}</div>
+            <div style="font-size:0.84rem;color:var(--text);margin-top:8px;line-height:1.6;">${offer.outcome || ''}</div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;">
+              <a class="btn btn-primary" href="${offer.purchase_link || '#'}" target="_blank" rel="noopener noreferrer">Open Checkout</a>
+              <button class="btn btn-secondary" type="button" onclick="navigator.clipboard.writeText('${(offer.purchase_link || '').replace(/'/g, "\\'")}').then(()=>showToast('Checkout link copied')).catch(()=>showToast('Clipboard blocked'))">Copy Link</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    } catch (err) {
+      wrap.innerHTML = '<div class="panel" style="padding:16px;opacity:.8;">Error loading offers.</div>';
+      console.error('loadSalesOffers error:', err);
+    }
   }
 
   // ── Admin Dashboard ──
