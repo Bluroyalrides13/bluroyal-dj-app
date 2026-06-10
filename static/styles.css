@@ -452,6 +452,11 @@ h1 {
   color: var(--accent-2);
 }
 
+.sample-preview__list strong {
+  color: #1f2f55;
+  font-weight: 800;
+}
+
 .sample-preview__tag {
   width: fit-content;
   font-size: 0.7rem;

@@ -643,9 +643,9 @@
                   </div>
                   <strong>${item.title}</strong>
                   <span>${item.description}</span>
-                  <div class="sample-preview__section-label">Inside this sample</div>
+                  <div class="sample-preview__section-label">Sample pages inside</div>
                   <ul class="sample-preview__list">
-                    ${previewPoints.map((point) => `<li>${point}</li>`).join("")}
+                    ${previewPoints.map((point, pointIndex) => `<li><strong>Page ${pointIndex + 1}:</strong> ${point}</li>`).join("")}
                   </ul>
                 </div>
                 <h3>${item.title}</h3>
