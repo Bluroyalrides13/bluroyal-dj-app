@@ -609,24 +609,13 @@
         if (slug.includes("all about me")) return `/static/samples/thumb-all-about-me.svg?v=${COVER_VERSION}`;
         if (slug.includes("community helpers")) return `/static/samples/thumb-community-helpers.svg?v=${COVER_VERSION}`;
         if (slug.includes("seasons") || slug.includes("weather")) return `/static/samples/thumb-seasons-weather.svg?v=${COVER_VERSION}`;
+        if (slug.includes("little learners preschool pack")) return `${encodeURI(`/static/samples/ChatGPT Image May 22, 2026 at 06_46_09 PM.png`)}?v=${COVER_VERSION}`;
+        if (slug.includes("dungaree gang coloring book")) return `${encodeURI(`/static/samples/ChatGPT Image May 22, 2026 at 07_32_17 PM.png`)}?v=${COVER_VERSION}`;
 
         const pooled = COVER_POOL[index % COVER_POOL.length];
         if (pooled) return `${encodeURI(`/static/samples/${pooled}`)}?v=${COVER_VERSION}`;
 
         return `${encodeURI(DEFAULT_IMAGE_FALLBACK)}?v=${COVER_VERSION}`;
-      }
-
-      function getResourcePreviewSource(pdfFile, title, category) {
-        const slug = `${pdfFile} ${title} ${category}`.toLowerCase();
-
-        if (slug.includes("preschool pack") || slug.includes("little learners preschool pack")) {
-          return encodeURI(`/static/samples/cover-preschool-pack.pdf`);
-        }
-        if (slug.includes("dungaree gang coloring book")) {
-          return encodeURI(`/static/samples/Dungaree-Gang-Coloring-Book.pdf-2.pdf`);
-        }
-
-        return null;
       }
 
       function buildResourceCatalog() {
@@ -635,7 +624,6 @@
           const category = getResourceCategory(pdfFile, title);
           const ageRange = getResourceAgeRange(pdfFile, title);
           const description = getResourceDescription(pdfFile, title, category);
-          const previewSource = getResourcePreviewSource(pdfFile, title, category);
           return {
             title,
             category,
@@ -644,7 +632,6 @@
             pdfFile,
             pdfUrl: encodeURI(`/static/samples/${pdfFile}`),
             coverUrl: getResourceCoverUrl(pdfFile, title, category, index),
-            previewSource,
             tierLabel: getResourceTier(title, category),
             priceLabel: getResourcePrice(title, category),
           };
@@ -680,17 +667,12 @@
             const coverUrl = item.coverUrl || DEFAULT_COVER_URL || createFallbackCoverDataUri(item.title, item.category, index);
             const previewClass = getResourcePreviewClass(item.title, item.category);
             const previewPoints = getResourcePreviewPoints(item.title, item.category);
-            const previewVisual = item.previewSource
-              ? `<div class="sample-preview__pdf-wrap" data-pdf="${item.previewSource}" data-title="${item.title}">
-                  <canvas class="sample-preview__frame sample-preview__canvas" aria-label="${item.title} preview"></canvas>
-                </div>`
-              : `<img src="${coverUrl}" alt="${item.title} cover" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='${encodeURI(DEFAULT_IMAGE_FALLBACK)}?v=${COVER_VERSION}';" />`;
 
             return `
               <article class="sample-card">
                 <div class="sample-badge">Resource Pack</div>
                 <div class="sample-preview ${previewClass}">
-                  ${previewVisual}
+                  <img src="${coverUrl}" alt="${item.title} cover" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='${encodeURI(DEFAULT_IMAGE_FALLBACK)}?v=${COVER_VERSION}';" />
                   <div style="display:flex;gap:6px;flex-wrap:wrap;">
                     <div class="sample-preview__tag">${item.ageRange}</div>
                     <div class="sample-preview__tag">${item.category}</div>
@@ -717,72 +699,7 @@
           .join("");
       }
 
-      let pdfJsLoaderPromise = null;
-
-      function loadPdfJs() {
-        if (window.pdfjsLib) return Promise.resolve(window.pdfjsLib);
-        if (pdfJsLoaderPromise) return pdfJsLoaderPromise;
-
-        pdfJsLoaderPromise = new Promise((resolve, reject) => {
-          const script = document.createElement("script");
-          script.src = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js";
-          script.onload = () => {
-            if (!window.pdfjsLib) {
-              reject(new Error("pdf.js failed to load"));
-              return;
-            }
-            window.pdfjsLib.GlobalWorkerOptions.workerSrc =
-              "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js";
-            resolve(window.pdfjsLib);
-          };
-          script.onerror = () => reject(new Error("Unable to load pdf.js"));
-          document.head.appendChild(script);
-        });
-
-        return pdfJsLoaderPromise;
-      }
-
-      async function renderPdfPreviewCanvases() {
-        const wrappers = Array.from(document.querySelectorAll(".sample-preview__pdf-wrap[data-pdf]"));
-        if (!wrappers.length) return;
-
-        try {
-          const pdfjsLib = await loadPdfJs();
-
-          for (const wrapper of wrappers) {
-            const pdfUrl = wrapper.dataset.pdf;
-            const title = wrapper.dataset.title || "Resource preview";
-            const canvas = wrapper.querySelector("canvas");
-            if (!pdfUrl || !canvas) continue;
-
-            try {
-              const loadingTask = pdfjsLib.getDocument(pdfUrl);
-              const pdf = await loadingTask.promise;
-              const page = await pdf.getPage(1);
-              const baseViewport = page.getViewport({ scale: 1 });
-              const displayWidth = Math.max(canvas.clientWidth || 320, 320);
-              const scale = displayWidth / baseViewport.width;
-              const viewport = page.getViewport({ scale });
-              const context = canvas.getContext("2d", { alpha: false });
-
-              canvas.width = Math.floor(viewport.width);
-              canvas.height = Math.floor(viewport.height);
-
-              await page.render({ canvasContext: context, viewport }).promise;
-            } catch (error) {
-              wrapper.innerHTML = `<img src="${encodeURI(DEFAULT_IMAGE_FALLBACK)}?v=${COVER_VERSION}" alt="${title} cover" loading="lazy" decoding="async" />`;
-            }
-          }
-        } catch (error) {
-          wrappers.forEach((wrapper) => {
-            const title = wrapper.dataset.title || "Resource preview";
-            wrapper.innerHTML = `<img src="${encodeURI(DEFAULT_IMAGE_FALLBACK)}?v=${COVER_VERSION}" alt="${title} cover" loading="lazy" decoding="async" />`;
-          });
-        }
-      }
-
       renderResourceCards();
-      renderPdfPreviewCanvases();
 
       const form = document.getElementById("application-form");
       const result = document.getElementById("result");

@@ -422,21 +422,6 @@ h1 {
   background: #fff;
 }
 
-.sample-preview__pdf-wrap {
-  width: 100%;
-  min-height: 220px;
-  border-radius: 12px;
-  overflow: hidden;
-  background: #fff;
-  border: 1px solid rgba(18, 34, 74, 0.12);
-}
-
-.sample-preview__canvas {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-
 .sample-preview strong {
   font-family: var(--heading-font);
   letter-spacing: -0.02em;
