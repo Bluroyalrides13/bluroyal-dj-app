@@ -317,6 +317,7 @@
         "seasons-weather-es.pdf",
         "Little-Learners-6-Week-Program.pdf",
         "Little-Learners-Preschool-Pack.pdf",
+        "cover-preschool-pack.pdf",
         "Little-Learners-Routines-Ideas.pdf",
         "Little-Learners-Worksheets.pdf",
         "Ocean Animal Worksheets.pdf",
@@ -401,6 +402,7 @@
         if (slug.includes("seasons-weather-es")) return "Weather & Sky Activity Pack (Spanish)";
         if (slug.includes("little-learners-6-week-program")) return "Little Learners 6-Week Program";
         if (slug.includes("little-learners-preschool-pack")) return "Little Learners Preschool Pack";
+        if (slug.includes("cover-preschool-pack")) return "Preschool Pack Cover Preview";
         if (slug.includes("little-learners-routines-ideas")) return "Little Learners Routines Ideas";
         if (slug.includes("little-learners-worksheets")) return "Little Learners Worksheets";
         if (slug.includes("activities coloring book in black white style 2")) return "Activities Coloring Book - Vol. 2";
@@ -427,6 +429,7 @@
         if (slug.includes("tool kit")) return "Emergency Toolkit";
         if (slug.includes("lesson plan")) return "Lesson Plan Book";
         if (slug.includes("6-week program")) return "Program";
+        if (slug.includes("cover-preschool-pack")) return "Preview Cover";
         if (slug.includes("worksheets")) return "Worksheet Pack";
         if (slug.includes("routines ideas")) return "Routine Resource";
         if (slug.includes("coloring book")) return "Coloring Book";
@@ -479,6 +482,9 @@
         if (slug.includes("little learners 6-week program")) {
           return "A six-week preschool program with structured weekly themes and ready-to-use planning support.";
         }
+        if (slug.includes("cover-preschool-pack")) {
+          return "One-page branded cover preview for the preschool pack collection.";
+        }
         if (slug.includes("little learners teachers")) {
           return "Spanish printable activity set with 7 days of preschool-ready learning pages.";
         }
@@ -512,6 +518,7 @@
 
         if (slug.includes("lesson plan")) return "Full Program";
         if (slug.includes("6-week program")) return "Intermediate + Full";
+        if (slug.includes("preview cover")) return "Free Preview";
         if (slug.includes("tool kit")) return "Free Lead Magnet";
         if (slug.includes("sampler")) return "Basic + higher tiers";
         if (slug.includes("routines ideas")) return "Basic + higher tiers";
@@ -526,6 +533,7 @@
 
         if (slug.includes("lesson plan")) return "$497";
         if (slug.includes("6-week program")) return "$147";
+        if (slug.includes("preview cover")) return "FREE";
         if (slug.includes("preschool sampler")) return "$67";
         if (slug.includes("preschool pack")) return "$47";
         if (slug.includes("tool kit")) return "FREE";
@@ -565,6 +573,9 @@
         }
         if (slug.includes("little learners 6-week program")) {
           return ["Six-week theme arc", "Daily lesson flow", "Printable activities"];
+        }
+        if (slug.includes("preschool pack cover preview")) {
+          return ["Branded front cover", "Program title design", "Print-ready first page"];
         }
         if (slug.includes("little learners teachers")) {
           return ["Dia 1 activities", "Dia 2-6 printables", "Dia 7 review pages"];
