@@ -302,6 +302,8 @@
       const RESOURCE_FILES = [
         "Lesson Plan Printable Bound Notebook in Olive White Illustrative Style .pdf",
         "Jungle Adventure Activity Book For Kids Ages 3-6-2.pdf",
+        "Animals English Activity Book for Pre-School in Blue Cute Style 2.pdf",
+        "Animals English Activity Book for Pre-School in Blue Cute Style 3.pdf",
         "BLU ROYALADVENTURES   FREE EMERGENCY TOOL KIT.pdf",
         "Blu_Royal_7_Dias_Actividades_Daycare.pdf",
         "Activities Coloring Book in Black White Style.pdf",
@@ -393,6 +395,8 @@
 
         if (slug.includes("lesson plan printable bound notebook")) return "Pre-K Lesson Plan Book";
         if (slug.includes("jungle adventure activity book")) return "Jungle Adventure Activity Book";
+        if (slug.includes("animals english activity book for pre-school in blue cute style 3")) return "Animals Activity Book - Vol. 3";
+        if (slug.includes("animals english activity book for pre-school in blue cute style 2")) return "Animals Activity Book - Vol. 2";
         if (slug.includes("welcome to school")) return "Preschool Theme Sampler Pack";
         if (slug.includes("all-about-me-en")) return "All About Me Theme Pack";
         if (slug.includes("all-about-me-es")) return "All About Me Theme Pack (Spanish)";
@@ -466,6 +470,9 @@
         }
         if (slug.includes("jungle adventure")) {
           return "Jungle-themed printable activity book with coloring, tracing, matching, counting, and preschool learning fun.";
+        }
+        if (slug.includes("animals english activity book")) {
+          return "Animal-themed English activity book with preschool tracing, matching, coloring, and vocabulary pages.";
         }
         if (slug.includes("welcome to school")) {
           return "First-week preschool sampler with routines, classroom rules, names, greetings, and community-building activities.";
@@ -558,6 +565,12 @@
         }
         if (slug.includes("jungle adventure activity book")) {
           return ["Jungle animals", "Tracing and counting", "Coloring pages"];
+        }
+        if (slug.includes("animals activity book - vol. 3")) {
+          return ["Animal vocabulary pages", "Matching and tracing", "Coloring practice"];
+        }
+        if (slug.includes("animals activity book - vol. 2")) {
+          return ["Animal recognition", "Line tracing", "Simple activity pages"];
         }
         if (slug.includes("welcome to school")) {
           return ["Classroom routines", "Name practice", "First-week activities"];
