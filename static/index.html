@@ -681,7 +681,9 @@
             const previewClass = getResourcePreviewClass(item.title, item.category);
             const previewPoints = getResourcePreviewPoints(item.title, item.category);
             const previewVisual = item.previewSource
-              ? `<iframe class="sample-preview__frame" src="${item.previewSource}#page=1&view=FitH" title="${item.title} preview" loading="lazy"></iframe>`
+              ? `<div class="sample-preview__pdf-wrap" data-pdf="${item.previewSource}" data-title="${item.title}">
+                  <canvas class="sample-preview__frame sample-preview__canvas" aria-label="${item.title} preview"></canvas>
+                </div>`
               : `<img src="${coverUrl}" alt="${item.title} cover" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='${encodeURI(DEFAULT_IMAGE_FALLBACK)}?v=${COVER_VERSION}';" />`;
 
             return `
@@ -715,7 +717,72 @@
           .join("");
       }
 
+      let pdfJsLoaderPromise = null;
+
+      function loadPdfJs() {
+        if (window.pdfjsLib) return Promise.resolve(window.pdfjsLib);
+        if (pdfJsLoaderPromise) return pdfJsLoaderPromise;
+
+        pdfJsLoaderPromise = new Promise((resolve, reject) => {
+          const script = document.createElement("script");
+          script.src = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js";
+          script.onload = () => {
+            if (!window.pdfjsLib) {
+              reject(new Error("pdf.js failed to load"));
+              return;
+            }
+            window.pdfjsLib.GlobalWorkerOptions.workerSrc =
+              "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js";
+            resolve(window.pdfjsLib);
+          };
+          script.onerror = () => reject(new Error("Unable to load pdf.js"));
+          document.head.appendChild(script);
+        });
+
+        return pdfJsLoaderPromise;
+      }
+
+      async function renderPdfPreviewCanvases() {
+        const wrappers = Array.from(document.querySelectorAll(".sample-preview__pdf-wrap[data-pdf]"));
+        if (!wrappers.length) return;
+
+        try {
+          const pdfjsLib = await loadPdfJs();
+
+          for (const wrapper of wrappers) {
+            const pdfUrl = wrapper.dataset.pdf;
+            const title = wrapper.dataset.title || "Resource preview";
+            const canvas = wrapper.querySelector("canvas");
+            if (!pdfUrl || !canvas) continue;
+
+            try {
+              const loadingTask = pdfjsLib.getDocument(pdfUrl);
+              const pdf = await loadingTask.promise;
+              const page = await pdf.getPage(1);
+              const baseViewport = page.getViewport({ scale: 1 });
+              const displayWidth = Math.max(canvas.clientWidth || 320, 320);
+              const scale = displayWidth / baseViewport.width;
+              const viewport = page.getViewport({ scale });
+              const context = canvas.getContext("2d", { alpha: false });
+
+              canvas.width = Math.floor(viewport.width);
+              canvas.height = Math.floor(viewport.height);
+
+              await page.render({ canvasContext: context, viewport }).promise;
+            } catch (error) {
+              wrapper.innerHTML = `<img src="${encodeURI(DEFAULT_IMAGE_FALLBACK)}?v=${COVER_VERSION}" alt="${title} cover" loading="lazy" decoding="async" />`;
+            }
+          }
+        } catch (error) {
+          wrappers.forEach((wrapper) => {
+            const title = wrapper.dataset.title || "Resource preview";
+            wrapper.innerHTML = `<img src="${encodeURI(DEFAULT_IMAGE_FALLBACK)}?v=${COVER_VERSION}" alt="${title} cover" loading="lazy" decoding="async" />`;
+          });
+        }
+      }
+
       renderResourceCards();
+      renderPdfPreviewCanvases();
 
       const form = document.getElementById("application-form");
       const result = document.getElementById("result");
