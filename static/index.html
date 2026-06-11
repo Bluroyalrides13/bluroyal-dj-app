@@ -302,6 +302,7 @@
       const RESOURCE_FILES = [
         "Lesson Plan Printable Bound Notebook in Olive White Illustrative Style .pdf",
         "Jungle Adventure Activity Book For Kids Ages 3-6-2.pdf",
+        "BLU ROYALADVENTURES   FREE EMERGENCY TOOL KIT.pdf",
         "1. 🏫 Welcome to School 21. 🦕 Dinosaurs 2. 👤 All About Me 22. 🚗 Transportation 3. 💜 My Family 23. ❤️ Friendship & Kindness 4. 😊 Friends & Feelings 24. 🦷 Dental Health 5. 🌈 Colors All Around-4.pdf",
         "all-about-me-en.pdf",
         "all-about-me-es.pdf",
@@ -319,7 +320,6 @@
         "Pequenos-Aprendices-Programa-6-Semanas.pdf",
         "Pequenos-Aprendices-Rutinas-Ideas.pdf",
         "Dungaree-Gang-Coloring-Book.pdf-2.pdf",
-        "BLU ROYALADVENTURES   FREE EMERGENCY TOOL KIT.pdf",
         "Untitled design-4.pdf",
       ];
       const AVAILABLE_PDFS = new Set(RESOURCE_FILES.map((file) => file.toLowerCase()));
@@ -405,7 +405,7 @@
         if (slug.includes("pequenos-aprendices-rutinas-ideas")) return "Pequeños Aprendices Rutinas Ideas";
         if (slug.includes("dungaree-gang-coloring-book")) return "Dungaree Gang Coloring Book";
         if (slug.includes("free emergency tool kit")) return "Free Emergency Tool Kit";
-        if (slug.includes("untitled design")) return "Untitled Design Pack";
+        if (slug.includes("untitled design")) return "Resource Pack";
 
         return humanizeText(pdfFile.replace(/\.pdf$/i, ""));
       }
@@ -413,12 +413,12 @@
       function getResourceCategory(pdfFile, title) {
         const slug = `${pdfFile} ${title}`.toLowerCase();
 
+        if (slug.includes("tool kit")) return "Emergency Toolkit";
         if (slug.includes("lesson plan")) return "Lesson Plan Book";
         if (slug.includes("6-week program")) return "Program";
         if (slug.includes("worksheets")) return "Worksheet Pack";
         if (slug.includes("routines ideas")) return "Routine Resource";
         if (slug.includes("coloring book")) return "Coloring Book";
-        if (slug.includes("tool kit")) return "Support Resource";
         if (slug.includes("preschool pack")) return "Preschool Pack";
         if (slug.includes("theme pack")) return "Theme Pack";
         if (slug.includes("activity book")) return "Activity Book";
@@ -481,7 +481,7 @@
           return "Black-and-white preschool coloring pages and simple practice sheets for young learners.";
         }
         if (slug.includes("tool kit")) {
-          return "Quick-use support toolkit for preschool classrooms and homeschool planning.";
+          return "Free emergency toolkit with quick reference pages, preparedness checklists, and practical response templates.";
         }
         if (slug.includes("sampler")) {
           return "Multi-theme preschool sampler with a variety of learning topics and printable activities.";
@@ -495,7 +495,7 @@
 
         if (slug.includes("lesson plan")) return "Full Program";
         if (slug.includes("6-week program")) return "Intermediate + Full";
-        if (slug.includes("tool kit")) return "Basic + higher tiers";
+        if (slug.includes("tool kit")) return "Free Lead Magnet";
         if (slug.includes("sampler")) return "Basic + higher tiers";
         if (slug.includes("routines ideas")) return "Basic + higher tiers";
         if (slug.includes("worksheet")) return "Basic + higher tiers";
@@ -511,7 +511,7 @@
         if (slug.includes("6-week program")) return "$147";
         if (slug.includes("preschool sampler")) return "$67";
         if (slug.includes("preschool pack")) return "$47";
-        if (slug.includes("tool kit")) return "$37";
+        if (slug.includes("tool kit")) return "FREE";
         if (slug.includes("routines ideas")) return "$37";
         if (slug.includes("worksheet")) return "$37";
         if (slug.includes("coloring book")) return "$27";
@@ -574,7 +574,7 @@
           return ["Bold outline art", "Coloring pages", "Fine motor practice"];
         }
         if (slug.includes("free emergency tool kit")) {
-          return ["Quick contact sheet", "Safety checklist", "Emergency prep pages"];
+          return ["Emergency contact sheet", "Readiness checklist", "Action-response templates"];
         }
         if (slug.includes("untitled design")) {
           return ["Mixed preschool pages", "Reusable printables", "Starter activities"];
@@ -648,6 +648,8 @@
           .map((item, index) => {
             const pdfFilename = item.pdfFile ? item.pdfFile.trim().toLowerCase() : "";
             const hasPdf = Boolean(pdfFilename && AVAILABLE_PDFS.has(pdfFilename));
+            const isFreeToolkit = pdfFilename.includes("free emergency tool kit");
+            const priceMarkup = isFreeToolkit ? "" : `<span class="resource-meta__price">A la carte: ${item.priceLabel}</span>`;
             const samplePageLinks = hasPdf
               ? `<div class="sample-pages">
                   <a class="sample-pages__link" href="${item.pdfUrl}#page=1" target="_blank" rel="noopener">Sample Page 1</a>
@@ -657,8 +659,8 @@
               : "";
             const actionButtons = hasPdf
               ? `<div class="sample-actions">
-                  <a class="button button--primary" href="${item.pdfUrl}#page=1" target="_blank" rel="noopener">Preview Sample</a>
-                  <a class="button button--secondary" href="${item.pdfUrl}" target="_blank" rel="noopener">Open Full PDF</a>
+                  <a class="button button--primary" href="${item.pdfUrl}#page=1" target="_blank" rel="noopener">${isFreeToolkit ? "Get Free Toolkit" : "Preview Sample"}</a>
+                  <a class="button button--secondary" href="${item.pdfUrl}" target="_blank" rel="noopener">${isFreeToolkit ? "View Full Toolkit PDF" : "Open Full PDF"}</a>
                 </div>`
               : "";
             const statusBadge = hasPdf
@@ -689,7 +691,7 @@
                 <p>${item.description}</p>
                 <div class="resource-meta">
                   <span class="resource-meta__tier">Included: ${item.tierLabel}</span>
-                  <span class="resource-meta__price">A la carte: ${item.priceLabel}</span>
+                  ${priceMarkup}
                 </div>
                 ${actionButtons}
                 ${statusBadge}
