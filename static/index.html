@@ -303,6 +303,7 @@
         "Lesson Plan Printable Bound Notebook in Olive White Illustrative Style .pdf",
         "Jungle Adventure Activity Book For Kids Ages 3-6-2.pdf",
         "BLU ROYALADVENTURES   FREE EMERGENCY TOOL KIT.pdf",
+        "Blu_Royal_7_Dias_Actividades_Daycare.pdf",
         "little learners teachers.pdf",
         "little learners teachers 2.pdf",
         "1. 🏫 Welcome to School 21. 🦕 Dinosaurs 2. 👤 All About Me 22. 🚗 Transportation 3. 💜 My Family 23. ❤️ Friendship & Kindness 4. 😊 Friends & Feelings 24. 🦷 Dental Health 5. 🌈 Colors All Around-4.pdf",
@@ -400,6 +401,7 @@
         if (slug.includes("little-learners-preschool-pack")) return "Little Learners Preschool Pack";
         if (slug.includes("little-learners-routines-ideas")) return "Little Learners Routines Ideas";
         if (slug.includes("little-learners-worksheets")) return "Little Learners Worksheets";
+        if (slug.includes("blu_royal_7_dias_actividades")) return "7 DIAS DE ACTIVIDADES";
         if (slug.includes("little learners teachers 2")) return "7 DIAS DE ACTIVIDADES - Vol. 2";
         if (slug.includes("little learners teachers")) return "7 DIAS DE ACTIVIDADES";
         if (slug.includes("ocean animal worksheets")) return "Ocean Animal Worksheets";
@@ -417,6 +419,7 @@
       function getResourceCategory(pdfFile, title) {
         const slug = `${pdfFile} ${title}`.toLowerCase();
 
+        if (slug.includes("7 dias de actividades") || slug.includes("7_dias_actividades")) return "Worksheet Pack";
         if (slug.includes("tool kit")) return "Emergency Toolkit";
         if (slug.includes("lesson plan")) return "Lesson Plan Book";
         if (slug.includes("6-week program")) return "Program";
@@ -448,6 +451,9 @@
       function getResourceDescription(pdfFile, title, category) {
         const slug = `${pdfFile} ${title}`.toLowerCase();
 
+        if (slug.includes("7 dias de actividades") || slug.includes("7_dias_actividades")) {
+          return "Spanish printable activity set with 7 days of preschool-ready learning pages.";
+        }
         if (slug.includes("lesson plan printable bound notebook")) {
           return "Printable preschool lesson planning book with weekly themes, objectives, materials, songs, and teacher notes.";
         }
@@ -532,6 +538,9 @@
       function getResourcePreviewPoints(title, category) {
         const slug = `${title} ${category}`.toLowerCase();
 
+        if (slug.includes("7 dias de actividades")) {
+          return ["Dia 1 activities", "Dia 2-6 printables", "Dia 7 review pages"];
+        }
         if (slug.includes("lesson plan printable bound notebook")) {
           return ["Weekly theme planner", "Materials list", "Teacher notes pages"];
         }
