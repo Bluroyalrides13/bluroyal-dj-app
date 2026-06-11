@@ -409,6 +409,20 @@ async def get_offer_catalog():
     )
 
 
+@router.get("/api/offers/{offer_slug}/downloads")
+async def get_offer_downloads(offer_slug: str):
+    """Return downloadable files for a specific offer tier."""
+    downloads = funnel.get_tier_downloads(offer_slug)
+    if not downloads:
+        raise HTTPException(status_code=404, detail="No downloadable bundle configured for this offer tier")
+
+    return ApiResponse(
+        success=True,
+        message="Offer downloads retrieved",
+        data={"offer_slug": offer_slug, "downloads": downloads},
+    )
+
+
 @router.get("/api/tools/sales-tracker")
 async def sales_tracker(request: Request):
     """Return sales tracker metrics for dashboard."""

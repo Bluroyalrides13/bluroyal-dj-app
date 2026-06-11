@@ -7,6 +7,7 @@ from datetime import datetime
 from typing import Dict, List
 import re
 import uuid
+from pathlib import Path
 
 from config.settings import Settings
 from src.models.database import DatabaseManager
@@ -54,11 +55,13 @@ OFFER_TIERS: List[OfferTier] = [
 TIER_FILE_BUNDLES: Dict[str, List[str]] = {
     # $497: foundational starter files only
     "vault": [
-        "School-Year Theme Map Starter Pack",
-        "Weekly Lesson Plan Templates",
-        "Core Classroom Activity PDF Printables",
-        "Parent Take-Home Practice Sheets",
-        "Instagram Starter Promotion Copy",
+        "Little Learners 6-Week Program",
+        "Little Learners Worksheets",
+        "Little Learners Routines Ideas",
+        "Preschool Alphabet Workbook - Vol. 2",
+        "Activities Coloring Book",
+        "Activities Coloring Book - Vol. 2",
+        "Emergency Tool Kit Bonus",
     ],
     # $1500: starter + growth systems
     "accelerator": [
@@ -77,6 +80,20 @@ TIER_FILE_BUNDLES: Dict[str, List[str]] = {
         "High-Ticket Offer Positioning Framework",
         "Instagram Launch and Sales Sequence",
         "Done-with-you implementation playbook",
+    ],
+}
+
+
+# Tier-specific downloadable files served from /static/samples.
+TIER_DOWNLOAD_FILES: Dict[str, List[str]] = {
+    "vault": [
+        "Little-Learners-6-Week-Program.pdf",
+        "Little-Learners-Worksheets.pdf",
+        "Little-Learners-Routines-Ideas.pdf",
+        "Preschool Alphabet Workbook 2.pdf",
+        "Activities Coloring Book in Black White Style.pdf",
+        "Activities Coloring Book in Black White Style 2.pdf",
+        "BLU ROYALADVENTURES   FREE EMERGENCY TOOL KIT.pdf",
     ],
 }
 
@@ -104,11 +121,29 @@ class InfoProductFunnel:
                 "promise": tier.promise,
                 "outcome": tier.outcome,
                 "included_files": TIER_FILE_BUNDLES.get(tier.slug, []),
+                "download_files": self.get_tier_downloads(tier.slug),
                 "purchase_link": payment_links.get(tier.slug, ""),
                 "post_purchase_login_url": self.settings.POST_PURCHASE_LOGIN_URL,
             }
             for tier in OFFER_TIERS
         ]
+
+    def get_tier_downloads(self, offer_slug: str) -> List[Dict[str, str]]:
+        files = TIER_DOWNLOAD_FILES.get(offer_slug, [])
+        return [
+            {
+                "file_name": file_name,
+                "title": self._humanize_file_name(file_name),
+                "download_url": f"/static/samples/{file_name}",
+            }
+            for file_name in files
+        ]
+
+    def _humanize_file_name(self, file_name: str) -> str:
+        stem = Path(file_name).stem
+        cleaned = stem.replace("_", " ").replace("-", " ")
+        cleaned = re.sub(r"\s+", " ", cleaned).strip()
+        return cleaned
 
     def process_application(self, application: InfoProductApplicationRequest) -> Dict:
         evaluation = self.score_application(application)
