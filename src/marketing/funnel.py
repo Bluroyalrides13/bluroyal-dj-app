@@ -66,11 +66,12 @@ TIER_FILE_BUNDLES: Dict[str, List[str]] = {
     # $1500: starter + growth systems
     "accelerator": [
         "Everything in $497 Basic Kit",
-        "Seasonal and Monthly Unit Plan Expansion",
-        "Assessment Checklists and Tracking Sheets",
-        "Advanced Parent Communication Templates",
-        "Upsell and Bundle Offer Scripts",
-        "Instagram DM Conversion Prompts",
+        "Little Learners Preschool Pack",
+        "Jungle Adventure Activity Book",
+        "Animals Activity Book - Vol. 2",
+        "Animals Activity Book - Vol. 3",
+        "Ocean Animal Worksheets",
+        "Lesson Plan Printable Bound Notebook",
     ],
     # $3500: complete package
     "vip": [
@@ -94,6 +95,21 @@ TIER_DOWNLOAD_FILES: Dict[str, List[str]] = {
         "Activities Coloring Book in Black White Style.pdf",
         "Activities Coloring Book in Black White Style 2.pdf",
         "BLU ROYALADVENTURES   FREE EMERGENCY TOOL KIT.pdf",
+    ],
+    "accelerator": [
+        "Little-Learners-6-Week-Program.pdf",
+        "Little-Learners-Worksheets.pdf",
+        "Little-Learners-Routines-Ideas.pdf",
+        "Preschool Alphabet Workbook 2.pdf",
+        "Activities Coloring Book in Black White Style.pdf",
+        "Activities Coloring Book in Black White Style 2.pdf",
+        "BLU ROYALADVENTURES   FREE EMERGENCY TOOL KIT.pdf",
+        "Little-Learners-Preschool-Pack.pdf",
+        "Jungle Adventure Activity Book For Kids Ages 3-6-2.pdf",
+        "Animals English Activity Book for Pre-School in Blue Cute Style 2.pdf",
+        "Animals English Activity Book for Pre-School in Blue Cute Style 3.pdf",
+        "Ocean Animal Worksheets.pdf",
+        "Lesson Plan Printable Bound Notebook in Olive White Illustrative Style .pdf",
     ],
 }
 
