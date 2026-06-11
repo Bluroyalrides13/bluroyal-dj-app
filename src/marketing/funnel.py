@@ -84,6 +84,7 @@ TIER_FILE_BUNDLES: Dict[str, List[str]] = {
         "Pequeños Aprendices Programa 6 Semanas",
         "Pequeños Aprendices Rutinas e Ideas",
         "Dungaree Gang Coloring Book",
+        "Blu Royal Academy App Access (lesson plan generator + printables workspace)",
     ],
 }
 
