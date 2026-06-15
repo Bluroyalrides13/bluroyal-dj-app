@@ -87,10 +87,10 @@ TIER_FILE_BUNDLES: Dict[str, List[str]] = {
         "7 Days Daycare Activities (Spanish)",
         "Little Learners Teacher Guide",
         "Little Learners Teacher Guide Vol. 2",
-        "Pequenos Aprendices Hojas Imprimibles",
-        "Pequenos Aprendices Paquete Preescolar",
-        "Pequenos Aprendices Programa 6 Semanas",
-        "Pequenos Aprendices Rutinas e Ideas",
+        "Pequeños Aprendices Hojas Imprimibles",
+        "Pequeños Aprendices Paquete Preescolar",
+        "Pequeños Aprendices Programa 6 Semanas",
+        "Pequeños Aprendices Rutinas e Ideas",
         "Dungaree Gang Coloring Book",
         "Blu Royal Academy App Access (lesson plan generator + printables workspace)",
     ],
@@ -172,16 +172,12 @@ class InfoProductFunnel:
         self.settings = Settings()
         self.db = DatabaseManager(self.settings.DATABASE_URL)
 
-    @staticmethod
-    def _clean_link(value: str) -> str:
-        return (value or "").replace("\n", "").replace("\r", "").strip()
-
     def get_offer_catalog(self) -> List[Dict]:
         payment_links = {
-            "vault": self._clean_link(self.settings.STARTER_PAYMENT_LINK),
-            "accelerator": self._clean_link(self.settings.GUIDED_PAYMENT_LINK),
-            "vip": self._clean_link(self.settings.VIP_PAYMENT_LINK),
-            "fine_motor_skills": self._clean_link(self.settings.FINE_MOTOR_SKILLS_PAYMENT_LINK),
+            "vault": self.settings.STARTER_PAYMENT_LINK,
+            "accelerator": self.settings.GUIDED_PAYMENT_LINK,
+            "vip": self.settings.VIP_PAYMENT_LINK,
+            "fine_motor_skills": self.settings.FINE_MOTOR_SKILLS_PAYMENT_LINK,
         }
 
         return [

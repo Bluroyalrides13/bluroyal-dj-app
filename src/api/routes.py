@@ -411,16 +411,15 @@ async def get_offer_catalog():
 
 @router.get("/api/offers/{offer_slug}/downloads")
 async def get_offer_downloads(offer_slug: str):
-    """Return downloadable file list for a specific offer tier."""
-    offer_slugs = {offer.get("slug") for offer in funnel.get_offer_catalog()}
+    """Return downloadable files for a specific offer tier."""
     downloads = funnel.get_tier_downloads(offer_slug)
-    if offer_slug not in offer_slugs:
-        raise HTTPException(status_code=404, detail="Offer not found")
+    if not downloads:
+        raise HTTPException(status_code=404, detail="No downloadable bundle configured for this offer tier")
 
     return ApiResponse(
         success=True,
         message="Offer downloads retrieved",
-        data={"slug": offer_slug, "downloads": downloads},
+        data={"offer_slug": offer_slug, "downloads": downloads},
     )
 
 
