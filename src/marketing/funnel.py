@@ -49,6 +49,14 @@ OFFER_TIERS: List[OfferTier] = [
         promise="A premium done-with-you launch package combining full-year curriculum assets with high-ticket positioning support.",
         outcome="Sell a complete premium program through Instagram with confidence.",
     ),
+    OfferTier(
+        slug="fine_motor_skills",
+        name="Fine Motor Skills Mega Pack",
+        price=17,
+        access_level="starter",
+        promise="Essential fine motor development activities to build hand strength and coordination in young learners.",
+        outcome="Give kids the foundational motor skills they need to succeed with handwriting and creativity.",
+    ),
 ]
 
 
@@ -86,6 +94,8 @@ TIER_FILE_BUNDLES: Dict[str, List[str]] = {
         "Dungaree Gang Coloring Book",
         "Blu Royal Academy App Access (lesson plan generator + printables workspace)",
     ],
+    # $17: fine motor skills
+    "fine_motor_skills": [],
 }
 
 
@@ -138,6 +148,7 @@ TIER_DOWNLOAD_FILES: Dict[str, List[str]] = {
         "Pequenos-Aprendices-Rutinas-Ideas.pdf",
         "Dungaree-Gang-Coloring-Book.pdf-2.pdf",
     ],
+    "fine_motor_skills": [],
 }
 
 
@@ -157,6 +168,7 @@ class InfoProductFunnel:
             "vault": self._clean_link(self.settings.STARTER_PAYMENT_LINK),
             "accelerator": self._clean_link(self.settings.GUIDED_PAYMENT_LINK),
             "vip": self._clean_link(self.settings.VIP_PAYMENT_LINK),
+            "fine_motor_skills": self._clean_link(self.settings.FINE_MOTOR_SKILLS_PAYMENT_LINK),
         }
 
         return [

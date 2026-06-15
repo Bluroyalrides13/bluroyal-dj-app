@@ -27,6 +27,7 @@ class Settings(BaseSettings):
     STARTER_PAYMENT_LINK: str = os.getenv("STARTER_PAYMENT_LINK", "").replace('\n', '').replace('\r', '').strip()
     GUIDED_PAYMENT_LINK: str = os.getenv("GUIDED_PAYMENT_LINK", "").replace('\n', '').replace('\r', '').strip()
     VIP_PAYMENT_LINK: str = os.getenv("VIP_PAYMENT_LINK", "").replace('\n', '').replace('\r', '').strip()
+    FINE_MOTOR_SKILLS_PAYMENT_LINK: str = os.getenv("FINE_MOTOR_SKILLS_PAYMENT_LINK", "").replace('\n', '').replace('\r', '').strip()
     POST_PURCHASE_LOGIN_URL: str = os.getenv(
         "POST_PURCHASE_LOGIN_URL",
         "https://app.bluroyaladventures.com/academy/login",
