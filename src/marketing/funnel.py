@@ -87,7 +87,12 @@ TIER_FILE_BUNDLES: Dict[str, List[str]] = {
         "Done-with-you implementation playbook",
     ],
     "fine_motor_skills": [
-        "Fine Motor Skills Mega Pack (printables)",
+        "Little Learners Worksheets",
+        "Preschool Alphabet Workbook - Vol. 2",
+        "Activities Coloring Book",
+        "Activities Coloring Book - Vol. 2",
+        "Ocean Animal Worksheets",
+        "Jungle Adventure Activity Book",
     ],
 }
 
