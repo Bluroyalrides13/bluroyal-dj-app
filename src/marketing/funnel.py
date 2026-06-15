@@ -7,7 +7,6 @@ from datetime import datetime
 from typing import Dict, List
 import re
 import uuid
-from pathlib import Path
 
 from config.settings import Settings
 from src.models.database import DatabaseManager
@@ -54,8 +53,8 @@ OFFER_TIERS: List[OfferTier] = [
         name="Fine Motor Skills Mega Pack",
         price=17,
         access_level="starter",
-        promise="Essential fine motor development activities to build hand strength and coordination in young learners.",
-        outcome="Give kids the foundational motor skills they need to succeed with handwriting and creativity.",
+        promise="A compact, affordable printable bundle focused on grip strength, tracing, cutting, and coordination.",
+        outcome="Help children build fine motor confidence fast with ready-to-use practice pages.",
     ),
 ]
 
@@ -63,92 +62,33 @@ OFFER_TIERS: List[OfferTier] = [
 TIER_FILE_BUNDLES: Dict[str, List[str]] = {
     # $497: foundational starter files only
     "vault": [
-        "Little Learners 6-Week Program",
-        "Little Learners Worksheets",
-        "Little Learners Routines Ideas",
-        "Preschool Alphabet Workbook - Vol. 2",
-        "Activities Coloring Book",
-        "Activities Coloring Book - Vol. 2",
-        "Emergency Tool Kit Bonus",
+        "School-Year Theme Map Starter Pack",
+        "Weekly Lesson Plan Templates",
+        "Core Classroom Activity PDF Printables",
+        "Parent Take-Home Practice Sheets",
+        "Instagram Starter Promotion Copy",
     ],
     # $1500: starter + growth systems
     "accelerator": [
         "Everything in $497 Basic Kit",
-        "Little Learners Preschool Pack",
-        "Jungle Adventure Activity Book",
-        "Animals Activity Book - Vol. 2",
-        "Animals Activity Book - Vol. 3",
-        "Ocean Animal Worksheets",
-        "Lesson Plan Printable Bound Notebook",
+        "Seasonal and Monthly Unit Plan Expansion",
+        "Assessment Checklists and Tracking Sheets",
+        "Advanced Parent Communication Templates",
+        "Upsell and Bundle Offer Scripts",
+        "Instagram DM Conversion Prompts",
     ],
     # $3500: complete package
     "vip": [
         "Everything in $1500 Intermediate Kit",
-        "7 Days Daycare Activities (Spanish)",
-        "Little Learners Teacher Guide",
-        "Little Learners Teacher Guide Vol. 2",
-        "Pequeños Aprendices Hojas Imprimibles",
-        "Pequeños Aprendices Paquete Preescolar",
-        "Pequeños Aprendices Programa 6 Semanas",
-        "Pequeños Aprendices Rutinas e Ideas",
-        "Dungaree Gang Coloring Book",
-        "Blu Royal Academy App Access (lesson plan generator + printables workspace)",
+        "Full-Year Curriculum Blueprint",
+        "Premium Printable Bundle Library",
+        "High-Ticket Offer Positioning Framework",
+        "Instagram Launch and Sales Sequence",
+        "Done-with-you implementation playbook",
     ],
-    # $17: fine motor skills
-    "fine_motor_skills": [],
-}
-
-
-# Tier-specific downloadable files served from /static/samples.
-TIER_DOWNLOAD_FILES: Dict[str, List[str]] = {
-    "vault": [
-        "Little-Learners-6-Week-Program.pdf",
-        "Little-Learners-Worksheets.pdf",
-        "Little-Learners-Routines-Ideas.pdf",
-        "Preschool Alphabet Workbook 2.pdf",
-        "Activities Coloring Book in Black White Style.pdf",
-        "Activities Coloring Book in Black White Style 2.pdf",
-        "BLU ROYALADVENTURES   FREE EMERGENCY TOOL KIT.pdf",
+    "fine_motor_skills": [
+        "Fine Motor Skills Mega Pack (printables)",
     ],
-    "accelerator": [
-        "Little-Learners-6-Week-Program.pdf",
-        "Little-Learners-Worksheets.pdf",
-        "Little-Learners-Routines-Ideas.pdf",
-        "Preschool Alphabet Workbook 2.pdf",
-        "Activities Coloring Book in Black White Style.pdf",
-        "Activities Coloring Book in Black White Style 2.pdf",
-        "BLU ROYALADVENTURES   FREE EMERGENCY TOOL KIT.pdf",
-        "Little-Learners-Preschool-Pack.pdf",
-        "Jungle Adventure Activity Book For Kids Ages 3-6-2.pdf",
-        "Animals English Activity Book for Pre-School in Blue Cute Style 2.pdf",
-        "Animals English Activity Book for Pre-School in Blue Cute Style 3.pdf",
-        "Ocean Animal Worksheets.pdf",
-        "Lesson Plan Printable Bound Notebook in Olive White Illustrative Style .pdf",
-    ],
-    "vip": [
-        "Little-Learners-6-Week-Program.pdf",
-        "Little-Learners-Worksheets.pdf",
-        "Little-Learners-Routines-Ideas.pdf",
-        "Preschool Alphabet Workbook 2.pdf",
-        "Activities Coloring Book in Black White Style.pdf",
-        "Activities Coloring Book in Black White Style 2.pdf",
-        "BLU ROYALADVENTURES   FREE EMERGENCY TOOL KIT.pdf",
-        "Little-Learners-Preschool-Pack.pdf",
-        "Jungle Adventure Activity Book For Kids Ages 3-6-2.pdf",
-        "Animals English Activity Book for Pre-School in Blue Cute Style 2.pdf",
-        "Animals English Activity Book for Pre-School in Blue Cute Style 3.pdf",
-        "Ocean Animal Worksheets.pdf",
-        "Lesson Plan Printable Bound Notebook in Olive White Illustrative Style .pdf",
-        "Blu_Royal_7_Dias_Actividades_Daycare.pdf",
-        "little learners teachers.pdf",
-        "little learners teachers 2.pdf",
-        "Pequenos-Aprendices-Hojas-Imprimibles.pdf",
-        "Pequenos-Aprendices-Paquete-Preescolar.pdf",
-        "Pequenos-Aprendices-Programa-6-Semanas.pdf",
-        "Pequenos-Aprendices-Rutinas-Ideas.pdf",
-        "Dungaree-Gang-Coloring-Book.pdf-2.pdf",
-    ],
-    "fine_motor_skills": [],
 }
 
 
@@ -159,16 +99,12 @@ class InfoProductFunnel:
         self.settings = Settings()
         self.db = DatabaseManager(self.settings.DATABASE_URL)
 
-    @staticmethod
-    def _clean_link(value: str) -> str:
-        return (value or "").replace("\n", "").replace("\r", "").strip()
-
     def get_offer_catalog(self) -> List[Dict]:
         payment_links = {
-            "vault": self._clean_link(self.settings.STARTER_PAYMENT_LINK),
-            "accelerator": self._clean_link(self.settings.GUIDED_PAYMENT_LINK),
-            "vip": self._clean_link(self.settings.VIP_PAYMENT_LINK),
-            "fine_motor_skills": self._clean_link(self.settings.FINE_MOTOR_SKILLS_PAYMENT_LINK),
+            "vault": self.settings.STARTER_PAYMENT_LINK,
+            "accelerator": self.settings.GUIDED_PAYMENT_LINK,
+            "vip": self.settings.VIP_PAYMENT_LINK,
+            "fine_motor_skills": self.settings.FINE_MOTOR_SKILLS_PAYMENT_LINK,
         }
 
         return [
@@ -180,29 +116,11 @@ class InfoProductFunnel:
                 "promise": tier.promise,
                 "outcome": tier.outcome,
                 "included_files": TIER_FILE_BUNDLES.get(tier.slug, []),
-                "download_files": self.get_tier_downloads(tier.slug),
                 "purchase_link": payment_links.get(tier.slug, ""),
                 "post_purchase_login_url": self.settings.POST_PURCHASE_LOGIN_URL,
             }
             for tier in OFFER_TIERS
         ]
-
-    def get_tier_downloads(self, offer_slug: str) -> List[Dict[str, str]]:
-        files = TIER_DOWNLOAD_FILES.get(offer_slug, [])
-        return [
-            {
-                "file_name": file_name,
-                "title": self._humanize_file_name(file_name),
-                "download_url": f"/static/samples/{file_name}",
-            }
-            for file_name in files
-        ]
-
-    def _humanize_file_name(self, file_name: str) -> str:
-        stem = Path(file_name).stem
-        cleaned = stem.replace("_", " ").replace("-", " ")
-        cleaned = re.sub(r"\s+", " ", cleaned).strip()
-        return cleaned
 
     def process_application(self, application: InfoProductApplicationRequest) -> Dict:
         evaluation = self.score_application(application)
