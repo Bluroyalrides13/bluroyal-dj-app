@@ -24,10 +24,13 @@ class Settings(BaseSettings):
     ACADEMY_APP_PASSWORD: str = os.getenv("ACADEMY_APP_PASSWORD", "change-this-now")
 
     # Payment Link Configuration
-    STARTER_PAYMENT_LINK: str = os.getenv("STARTER_PAYMENT_LINK", "").replace('\n', '').replace('\r', '').strip()
-    GUIDED_PAYMENT_LINK: str = os.getenv("GUIDED_PAYMENT_LINK", "").replace('\n', '').replace('\r', '').strip()
-    VIP_PAYMENT_LINK: str = os.getenv("VIP_PAYMENT_LINK", "").replace('\n', '').replace('\r', '').strip()
-    FINE_MOTOR_SKILLS_PAYMENT_LINK: str = os.getenv("FINE_MOTOR_SKILLS_PAYMENT_LINK", "").replace('\n', '').replace('\r', '').strip()
+    STARTER_PAYMENT_LINK: str = os.getenv("STARTER_PAYMENT_LINK", "")
+    GUIDED_PAYMENT_LINK: str = os.getenv("GUIDED_PAYMENT_LINK", "")
+    VIP_PAYMENT_LINK: str = os.getenv("VIP_PAYMENT_LINK", "")
+    FINE_MOTOR_SKILLS_PAYMENT_LINK: str = os.getenv(
+        "FINE_MOTOR_SKILLS_PAYMENT_LINK",
+        "https://buy.stripe.com/cNi4gBdwg0DjetbdZhc7u0g",
+    )
     POST_PURCHASE_LOGIN_URL: str = os.getenv(
         "POST_PURCHASE_LOGIN_URL",
         "https://app.bluroyaladventures.com/academy/login",
