@@ -172,12 +172,16 @@ class InfoProductFunnel:
         self.settings = Settings()
         self.db = DatabaseManager(self.settings.DATABASE_URL)
 
+    @staticmethod
+    def _clean_link(value: str) -> str:
+        return (value or "").replace("\\n", "").replace("\\r", "").replace("\n", "").replace("\r", "").strip()
+
     def get_offer_catalog(self) -> List[Dict]:
         payment_links = {
-            "vault": self.settings.STARTER_PAYMENT_LINK,
-            "accelerator": self.settings.GUIDED_PAYMENT_LINK,
-            "vip": self.settings.VIP_PAYMENT_LINK,
-            "fine_motor_skills": self.settings.FINE_MOTOR_SKILLS_PAYMENT_LINK,
+            "vault": self._clean_link(self.settings.STARTER_PAYMENT_LINK),
+            "accelerator": self._clean_link(self.settings.GUIDED_PAYMENT_LINK),
+            "vip": self._clean_link(self.settings.VIP_PAYMENT_LINK),
+            "fine_motor_skills": self._clean_link(self.settings.FINE_MOTOR_SKILLS_PAYMENT_LINK),
         }
 
         return [
