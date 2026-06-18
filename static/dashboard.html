@@ -450,6 +450,19 @@
         color: #7a6a52;
         margin-top: 6px;
       }
+      .kpi-card__badge {
+        display: inline-flex;
+        align-items: center;
+        margin-top: 8px;
+        padding: 4px 8px;
+        border-radius: 999px;
+        background: rgba(184, 134, 11, 0.12);
+        color: #8a5c00;
+        font-size: 0.68rem;
+        font-weight: 800;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
       .admin-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -467,6 +480,78 @@
       .admin-table td { padding: 9px 10px; border-bottom: 1px solid #f0e8d6; color: #3a2e1e; }
       .admin-table tr:last-child td { border-bottom: none; }
       .admin-table tr:hover td { background: #fdf8ef; }
+      .admin-table tr.mt-row--selected td {
+        background: rgba(184, 134, 11, 0.12);
+      }
+      .admin-table tr.mt-row--selected:hover td {
+        background: rgba(184, 134, 11, 0.18);
+      }
+      .admin-table tr.mt-row--selected td:first-child {
+        box-shadow: inset 3px 0 0 #b8860b;
+      }
+      .app-controls { display: grid; grid-template-columns: 1.5fr 0.8fr 0.7fr 0.7fr auto; gap: 10px; margin-bottom: 14px; }
+      .app-controls input, .app-controls select {
+        width: 100%;
+        border: 1px solid #d9c8a9;
+        border-radius: 12px;
+        background: #fffaf1;
+        color: #3a2e1e;
+        padding: 10px 12px;
+        font: inherit;
+      }
+      .app-controls input:focus, .app-controls select:focus {
+        outline: none;
+        border-color: #b8860b;
+        box-shadow: 0 0 0 2px rgba(184, 134, 11, 0.15);
+      }
+      .app-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+      .app-chip {
+        display: inline-flex; align-items: center; gap: 6px;
+        padding: 6px 10px; border-radius: 999px;
+        border: 1px solid #e2d2b4; background: #fffdf8;
+        font-size: 0.78rem; color: #6b573d;
+      }
+      .app-status-pill { font-weight: 800; color: #8a5c00; }
+      .app-row-button { background: none; border: none; color: inherit; font: inherit; text-align: left; width: 100%; cursor: pointer; }
+      .mt-row-select { accent-color: #b8860b; width: 16px; height: 16px; }
+      .mt-selected-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 10px;
+        border-radius: 999px;
+        background: rgba(184, 134, 11, 0.14);
+        border: 1px solid rgba(184, 134, 11, 0.26);
+        color: #8a5c00;
+        font-size: 0.74rem;
+        font-weight: 800;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+      .app-drawer-backdrop {
+        position: fixed; inset: 0; background: rgba(20, 14, 6, 0.54);
+        display: none; align-items: center; justify-content: center; padding: 18px; z-index: 9999;
+      }
+      .app-drawer-backdrop.show { display: flex; }
+      .app-drawer {
+        width: min(860px, 100%);
+        max-height: 90vh; overflow: auto;
+        border-radius: 20px; border: 1px solid #d8c19a;
+        background: linear-gradient(180deg, #fffefb, #fff8ee);
+        box-shadow: 0 28px 60px rgba(45, 25, 2, 0.35);
+        padding: 22px;
+      }
+      .app-drawer-head { display: flex; justify-content: space-between; gap: 16px; align-items: flex-start; margin-bottom: 16px; }
+      .app-drawer-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+      .app-drawer-card { border: 1px solid #ead9bc; border-radius: 16px; padding: 14px; background: #fffdf8; }
+      .app-drawer-card h3 { margin-bottom: 10px; font-size: 0.95rem; color: #463114; }
+      .app-drawer textarea, .app-drawer select {
+        width: 100%; border: 1px solid #d9c8a9; border-radius: 12px; background: #fff; color: #3a2e1e; padding: 10px 12px; font: inherit;
+      }
+      .app-drawer-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
+      @media (max-width: 900px) {
+        .app-controls, .app-drawer-grid { grid-template-columns: 1fr; }
+      }
       .ref-bar-wrap { display: flex; align-items: center; gap: 10px; margin: 6px 0; }
       .ref-bar-bg { flex: 1; height: 10px; background: #f0e8d6; border-radius: 5px; overflow: hidden; }
       .ref-bar-fill { height: 100%; background: linear-gradient(90deg,#b8860b,#d4a017); border-radius: 5px; transition: width .5s ease; }
@@ -514,11 +599,14 @@
     <button class="nav-item" onclick="showPage('crm', this); loadLeadCrmTemplate();">
       <span class="nav-icon">VIII</span> Lead Management
     </button>
+    <button class="nav-item" onclick="showPage('applications', this); loadApplications();">
+      <span class="nav-icon">IX</span> MT360 Applications
+    </button>
     <button class="nav-item" onclick="showPage('agreements', this); loadServiceAgreementTemplate();">
-      <span class="nav-icon">IX</span> Service Agreements
+      <span class="nav-icon">X</span> Service Agreements
     </button>
     <button class="nav-item" onclick="showPage('resources', this);">
-      <span class="nav-icon">X</span> DJ Resources
+      <span class="nav-icon">XI</span> DJ Resources
     </button>
   </nav>
 
@@ -570,6 +658,10 @@
         <div class="kpi-card">
           <div class="kpi-card__value" id="kpi-sales-revenue">—</div>
           <div class="kpi-card__label">Sales Revenue</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-card__value" id="kpi-mt-applications">—</div>
+          <div class="kpi-card__label">MT360 Applications</div>
         </div>
       </div>
 
@@ -1223,6 +1315,92 @@
         <div id="crm-result-pre" style="font-size:0.9rem;line-height:1.8;"></div>
       </div>
     </div>
+
+      <!-- ──────────── MULTITASKING360 APPLICATIONS ──────────── -->
+      <div class="page" id="page-applications">
+        <div class="page-header">
+          <h1>MultiTasking360 Applications</h1>
+          <p>Private owner-only submissions view with filtering, detail review, and status updates.</p>
+        </div>
+
+        <div class="panel">
+          <div class="app-controls">
+            <input id="mt-search" type="text" placeholder="Search name, email, Instagram, notes..." onkeydown="if(event.key==='Enter'){loadApplications();}" />
+            <select id="mt-status-filter">
+              <option value="all">All statuses</option>
+              <option value="nurture">Nurture</option>
+              <option value="contacted">Contacted</option>
+              <option value="booked">Booked</option>
+              <option value="won">Won</option>
+              <option value="lost">Lost</option>
+            </select>
+            <input id="mt-date-from" type="date" />
+            <input id="mt-date-to" type="date" />
+            <button class="btn btn-primary" onclick="loadApplications()">Filter</button>
+          </div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin-bottom:14px;">
+            <div style="color:var(--muted);font-size:0.9rem;" id="mt-applications-summary">Loading...</div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+                <select id="mt-bulk-status" style="min-width:150px;">
+                  <option value="contacted">Mark Contacted</option>
+                  <option value="booked">Mark Booked</option>
+                  <option value="won">Mark Won</option>
+                  <option value="lost">Mark Lost</option>
+                  <option value="nurture">Mark Nurture</option>
+                </select>
+                <button class="btn btn-secondary" id="mt-bulk-update" onclick="bulkUpdateApplicationsStatus()" disabled>Apply to Selected</button>
+                <div class="mt-selected-chip" id="mt-selected-chip">0 selected</div>
+                <button class="btn btn-secondary" id="mt-clear-selection" onclick="clearApplicationSelection()" disabled>Clear Selection</button>
+              <button class="btn btn-secondary" onclick="loadApplications()">Refresh</button>
+              <button class="btn btn-secondary" onclick="exportApplications('csv')">Download CSV</button>
+              <button class="btn btn-secondary" onclick="exportApplications('json')">Download JSON</button>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;color:#7a6a52;font-size:0.82rem;">
+            <input type="checkbox" id="mt-select-all" onchange="toggleAllApplications(this.checked)" />
+            <span id="mt-selected-count">Select applications to bulk update</span>
+          </div>
+          <div id="mt-applications-wrap"><p class="stat-empty">Loading...</p></div>
+        </div>
+      </div>
+
+      <div class="app-drawer-backdrop" id="mt-drawer-backdrop" onclick="if(event.target===this) closeApplicationDetails();">
+        <div class="app-drawer">
+          <div class="app-drawer-head">
+            <div>
+              <h2 id="mt-detail-title" style="margin-bottom:6px;">Application</h2>
+              <div id="mt-detail-subtitle" style="color:#7a6a52;font-size:0.9rem;">—</div>
+              <div class="app-meta" id="mt-detail-fields"></div>
+            </div>
+            <button class="btn btn-secondary" onclick="closeApplicationDetails()">Close</button>
+          </div>
+
+          <div class="app-drawer-grid">
+            <div class="app-drawer-card">
+              <h3>Summary</h3>
+              <div class="app-chip"><strong>Score:</strong> <span id="mt-detail-score">—</span></div>
+              <div class="app-chip" style="margin-top:8px;"><strong>Recommended:</strong> <span id="mt-detail-recommended">—</span></div>
+              <div class="app-chip" style="margin-top:8px;"><strong>Created:</strong> <span id="mt-detail-created">—</span></div>
+              <div class="app-chip" style="margin-top:8px;"><strong>Updated:</strong> <span id="mt-detail-updated">—</span></div>
+            </div>
+            <div class="app-drawer-card">
+              <h3>Update Status</h3>
+              <select id="mt-detail-status">
+                <option value="nurture">Nurture</option>
+                <option value="contacted">Contacted</option>
+                <option value="booked">Booked</option>
+                <option value="won">Won</option>
+                <option value="lost">Lost</option>
+              </select>
+              <textarea id="mt-detail-notes" rows="8" style="margin-top:10px;" placeholder="Internal notes..."></textarea>
+              <div class="app-drawer-actions">
+                <button class="btn btn-primary" onclick="saveApplicationStatus()">Save Update</button>
+                <button class="btn btn-secondary" onclick="document.getElementById('mt-detail-status').value='contacted'; saveApplicationStatus();">Mark Contacted</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
     <!-- ──────────── DJ SERVICE AGREEMENTS ──────────── -->
     <div class="page" id="page-agreements">
@@ -2135,7 +2313,7 @@ POST-EVENT
 
   // ── API helper ──
   async function post(url, body) {
-    const r = await fetch(url, { method: 'POST', credentials: 'include', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    const r = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
     return r.json();
   }
 
@@ -2862,80 +3040,89 @@ POST-EVENT
     weeksEl.innerHTML = '';
     const sampleLabel = document.getElementById('lp-sample-label').value || 'Teacher Approved';
 
-    // PROFESSIONAL COMPREHENSIVE FORMAT - KID FRIENDLY & COLORFUL
+    // PROFESSIONAL COMPREHENSIVE FORMAT
     if (d.is_comprehensive) {
       weeksEl.innerHTML = `
-        <div class="dm-card" style="border: 3px solid #ff6b9d; padding: 20px; background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 50%, #ff7675 100%); border-radius: 15px;">
-          <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 20px; background: white; padding: 15px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-            <span style="font-size: 40px; filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.2));">${d.emoji || '📚'}</span>
+        <div class="dm-card" style="border-left: 4px solid #4da6ff; padding: 20px;">
+          <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+            <span style="font-size: 28px;">${d.emoji || '📚'}</span>
             <div>
-              <strong style="font-size: 22px; background: linear-gradient(135deg, #ff6b9d, #4ecdc4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; display: block;">🎨 ${d.theme} 🎨</strong>
-              <span style="color: #555; font-weight: bold; font-size: 12px;">📅 ${d.month}</span>
+
+              <strong style="font-size: 20px; display: block;">${d.theme}</strong>
+              <span style="color: #666; font-size: 13px;">${d.month}</span>
             </div>
           </div>
 
-          <div class="dm-card" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); margin-bottom: 14px; border: 2px dashed #ff6b9d; border-radius: 10px;">
-            <strong style="color: #d63031; font-size: 14px;">📖 Overview</strong>
-            <div style="margin: 8px 0; line-height: 1.6; color: #2d3436; font-weight: 500; font-size: 12px;">${d.overview}</div>
+          <div class="dm-card" style="background: #f0f4ff; margin-bottom: 12px;">
+            <strong>Overview</strong>
+            <div style="margin: 8px 0; line-height: 1.6; font-size: 13px;">${d.overview}</div>
           </div>
 
-          <strong style="font-size: 14px; color: #d63031; display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">🎯 Learning Objectives</strong>
-          <div style="margin-bottom: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-            ${Object.entries(d.learning_objectives || {}).map(([subject, goals], idx) => {
-              const colors = ['#ff7675', '#a29bfe', '#00b894', '#fdcb6e'];
-              const subjectEmojis = {'Literacy': '📚', 'Math': '🔢', 'Science': '🔬', 'Social-Emotional': '💖'};
-              const color = colors[idx % colors.length];
-              return `
-                <div style="background: white; padding: 10px; border-radius: 8px; border-left: 4px solid ${color}; box-shadow: 0 2px 6px rgba(0,0,0,0.08);">
-                  <strong style="color: ${color}; font-size: 12px;">${subjectEmojis[subject] || '✨'} ${subject}</strong>
-                  <ul style="margin: 6px 0 0 14px; padding: 0;">
-                    ${goals.slice(0, 2).map(g => `<li style="margin: 3px 0; font-size: 11px; color: #2d3436;">✓ ${g}</li>`).join('')}
-                  </ul>
-                </div>
-              `;
-            }).join('')}
+          <strong style="display: block; margin-bottom: 8px;">Learning Objectives</strong>
+          <div style="margin-bottom: 12px;">
+            ${Object.entries(d.learning_objectives || {}).map(([subject, goals]) => `
+              <div style="margin-bottom: 8px;">
+                <strong style="color: #2c5aa0; font-size: 13px;">${subject}</strong>
+                <ul style="margin: 4px 0 0 20px; padding: 0; font-size: 12px;">
+                  ${goals.map(g => `<li style="margin: 2px 0;">${g}</li>`).join('')}
+                </ul>
+              </div>
+            `).join('')}
           </div>
 
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 12px 0;">
-            <div class="dm-card" style="background: linear-gradient(135deg, #fffacd 0%, #ffe66d 100%); border-radius: 8px; border: 2px solid #f1c40f; box-shadow: 0 3px 10px rgba(241, 196, 15, 0.2);">
-              <strong style="color: #e67e22; font-size: 12px;">🗣️ Vocabulary</strong>
-              <p style="margin: 6px 0; font-size: 11px; line-height: 1.4; color: #2d3436;">${d.key_vocabulary.substring(0, 80)}...</p>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 12px 0;">
+            <div class="dm-card" style="background: #fff9e6;">
+              <strong style="color: #cc8800; font-size: 13px;">Key Vocabulary</strong>
+              <div style="margin: 6px 0; font-size: 12px; line-height: 1.4;">${d.key_vocabulary}</div>
             </div>
 
-            <div class="dm-card" style="background: linear-gradient(135deg, #b4e7ff 0%, #81ecec 100%); border-radius: 8px; border: 2px solid #0984e3; box-shadow: 0 3px 10px rgba(9, 132, 227, 0.2);">
-              <strong style="color: #0984e3; font-size: 12px;">📦 Materials</strong>
-              <ul style="margin: 6px 0 0 14px; padding: 0; font-size: 11px;">
-                ${(d.materials_needed || []).slice(0, 2).map(m => `<li style="margin: 2px 0; color: #2d3436;">🎁 ${m}</li>`).join('')}
-                ${(d.materials_needed || []).length > 2 ? `<li style="color: #636e72;"><em>+ ${d.materials_needed.length - 2} more</em></li>` : ''}
+            <div class="dm-card" style="background: #e6f2ff;">
+              <strong style="color: #2c5aa0; font-size: 13px;">Materials Needed</strong>
+              <ul style="margin: 4px 0 0 16px; padding: 0; font-size: 12px;">
+                ${(d.materials_needed || []).slice(0, 4).map(m => `<li>${m}</li>`).join('')}
+                ${(d.materials_needed || []).length > 4 ? `<li><em>+ ${d.materials_needed.length - 4} more</em></li>` : ''}
               </ul>
             </div>
           </div>
 
-          <strong style="font-size: 14px; color: #d63031; display: flex; align-items: center; gap: 8px; margin: 12px 0 8px 0;">⭐ Daily Activities</strong>
-          <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 12px;">
-            ${(d.daily_activities || []).map((day, idx) => {
-              const dayEmojis = ['🌅', '🌤️', '☀️', '🌞', '🌅'];
-              const dayColors = ['#fab1a0', '#ffbe76', '#74b9ff', '#a29bfe', '#ff7675'];
-              return `
-                <div class="dm-card" style="background: linear-gradient(135deg, ${dayColors[idx]} 0%, ${dayColors[(idx+1) % 5]} 100%); color: white; margin-bottom: 0; padding: 10px; border-radius: 8px; box-shadow: 0 3px 10px rgba(0,0,0,0.12); border: 2px solid white; text-align: center;">
-                  <div style="font-size: 20px; margin-bottom: 4px;">${dayEmojis[idx]}</div>
-                  <strong style="font-size: 12px; display: block;">${day.day}</strong>
-                  <div style="font-size: 10px; margin-top: 4px; background: rgba(255,255,255,0.9); color: #2d3436; padding: 4px; border-radius: 4px; font-weight: bold;">${day.title}</div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 12px 0;">
+            <div class="dm-card" style="background: #ffe6e6;">
+              <strong style="color: #cc4444; font-size: 13px;">Songs & Plays</strong>
+              <ul style="margin: 4px 0 0 16px; padding: 0; font-size: 12px;">
+                ${(d.songs_and_fingerplays || []).map(s => `<li>${s}</li>`).join('')}
+              </ul>
+            </div>
+
+            <div class="dm-card" style="background: #e6e6ff;">
+              <strong style="color: #5555cc; font-size: 13px;">Read Alouds</strong>
+              <ul style="margin: 4px 0 0 16px; padding: 0; font-size: 12px;">
+                ${(d.read_alouds || []).map(b => `<li>${b}</li>`).join('')}
+              </ul>
+            </div>
+          </div>
+
+          <strong style="display: block; margin: 12px 0 8px 0; font-size: 13px;">Daily Activities</strong>
+          <div style="margin: 8px 0;">
+            ${(d.daily_activities || []).map(day => `
+              <div class="dm-card" style="background: linear-gradient(135deg, #4da6ff 0%, #66b3ff 100%); color: white; margin-bottom: 8px; padding: 10px;">
+                <strong style="font-size: 13px;">⭐ ${day.day} - ${day.title}</strong>
+                <div style="margin-top: 8px; font-size: 12px; line-height: 1.5;">
+                  ${Object.entries(day.activities || {}).map(([type, content]) => `
+                    <div><strong>${type}:</strong> ${content}</div>
+                  `).join('')}
                 </div>
-              `;
-            }).join('')}
+              </div>
+            `).join('')}
           </div>
 
-          <div class="dm-card" style="background: linear-gradient(135deg, #ffcccc 0%, #ffb3b3 100%); border-radius: 8px; border: 2px solid #ff6b6b; box-shadow: 0 3px 10px rgba(255, 107, 107, 0.2); margin-bottom: 8px;">
-            <strong style="color: #c92a2a; font-size: 12px;">🎵 Songs</strong>
-            <ul style="margin: 4px 0 0 14px; padding: 0; font-size: 10px;">
-              ${(d.songs_and_fingerplays || []).slice(0, 2).map(s => `<li style="margin: 2px 0; color: #2d3436;">🎶 ${s}</li>`).join('')}
-            </ul>
+          <div class="dm-card" style="background: #fff0e6; border-left: 4px solid #ff9900; margin-top: 12px;">
+            <strong style="color: #ff9900; font-size: 13px;">💡 Teacher Tip</strong>
+            <div style="margin: 6px 0; font-size: 12px; line-height: 1.5;">${d.teacher_tip}</div>
           </div>
 
-          <div class="dm-card" style="background: linear-gradient(135deg, #fff0e6 0%, #ffe5cc 100%); border-left: 4px solid #ff9800; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.08);">
-            <strong style="color: #e65100; font-size: 12px;">💡 Teacher Tip</strong>
-            <p style="margin: 6px 0; font-size: 11px; line-height: 1.5; color: #2d3436;">${d.teacher_tip.substring(0, 100)}...</p>
+          <div class="dm-card" style="background: #fff0f0; border-left: 4px solid #ff6666; margin-top: 8px;">
+            <strong style="color: #ff6666; font-size: 13px;">👨‍👩‍👧 Family Note</strong>
+            <div style="margin: 6px 0; font-size: 12px; line-height: 1.5; font-style: italic;">${d.family_take_home_note}</div>
           </div>
         </div>
       `;
@@ -2969,22 +3156,17 @@ POST-EVENT
       printablesEl.innerHTML = '<div class="dm-card"><div class="dm-text">No printables selected for this plan.</div></div>';
     } else {
       docs.forEach((doc) => {
-        let preview = '';
-        if (doc.format === 'html') {
-          preview = `<iframe srcdoc="${doc.content.replace(/"/g, '&quot;')}" style="width:100%;height:500px;border:1px solid #ddd;border-radius:8px;margin:10px 0;" title="${doc.title}"></iframe>`;
-        } else {
-          preview = `<div class="dm-text" style="white-space:pre-wrap;">${doc.content}</div>`;
-        }
-        printablesEl.innerHTML += `<div class="dm-card"><div class="dm-label">${doc.title}</div>${preview}<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;"><button class="btn btn-secondary" type="button" onclick="downloadLessonPrintable('${doc.id}')">Download</button><button class="btn btn-secondary" type="button" onclick="printLessonPrintable('${doc.id}')">Print</button></div></div>`;
+        printablesEl.innerHTML += `<div class="dm-card"><div class="dm-label">${doc.title}</div><div class="dm-text" style="white-space:pre-wrap;">${doc.content}</div><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;"><button class="btn btn-secondary" type="button" onclick="downloadLessonPrintable('${doc.id}')">Download</button><button class="btn btn-secondary" type="button" onclick="printLessonPrintable('${doc.id}')">Print</button></div></div>`;
       });
     }
 
     window.lastLessonPrintableDocs = docs;
 
-    const hookItems = d.instagram_promo_hooks || [];
-    window.lastLessonHooks = hookItems;
-    window.lastLessonHooksFilter = 'all';
-    renderLessonHooksDashboard();
+    const hooksEl = document.getElementById('lp-hooks-output');
+    hooksEl.innerHTML = '';
+    (d.instagram_promo_hooks || []).forEach((hook) => {
+      hooksEl.innerHTML += `<div class="dm-card"><div class="dm-text">${hook}</div></div>`;
+    });
 
     const panel = document.getElementById('lp-result');
     panel.classList.add('show');
@@ -3003,14 +3185,11 @@ POST-EVENT
     const doc = getLessonPrintableDoc(docId);
     if (!doc) return;
 
-    const isHtml = doc.format === 'html';
-    const mimeType = isHtml ? 'text/html;charset=utf-8' : 'text/plain;charset=utf-8';
-    const extension = isHtml ? '.html' : '.txt';
-    const blob = new Blob([doc.content], { type: mimeType });
+    const blob = new Blob([doc.content], { type: 'text/plain;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `${doc.title.replace(/[^a-z0-9]+/gi, '_').toLowerCase()}${extension}`;
+    a.download = `${doc.title.replace(/[^a-z0-9]+/gi, '_').toLowerCase()}.txt`;
     document.body.appendChild(a);
     a.click();
     a.remove();
@@ -3023,91 +3202,8 @@ POST-EVENT
     if (!doc) return;
 
     const win = window.open('', '_blank');
-    if (doc.format === 'html') {
-      win.document.write(doc.content);
-    } else {
-      win.document.write(`<!doctype html><html><head><title>${doc.title}</title><style>body{font-family:Arial,sans-serif;padding:24px;white-space:pre-wrap;line-height:1.5;}h1{font-size:20px;}</style></head><body><h1>${doc.title}</h1><pre>${doc.content.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</pre><script>window.onload=()=>window.print();<\/script></body></html>`);
-    }
+    win.document.write(`<!doctype html><html><head><title>${doc.title}</title><style>body{font-family:Arial,sans-serif;padding:24px;white-space:pre-wrap;line-height:1.5;}h1{font-size:20px;}</style></head><body><h1>${doc.title}</h1><pre>${doc.content.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</pre><script>window.onload=()=>window.print();<\/script></body></html>`);
     win.document.close();
-    win.onload = () => win.print();
-  }
-
-  function getFilteredLessonHooksDashboard() {
-    const hooks = window.lastLessonHooks || [];
-    const filter = window.lastLessonHooksFilter || 'all';
-    if (filter === 'all') return hooks;
-    return hooks.filter((h) => h.startsWith(filter.toUpperCase()));
-  }
-
-  function renderLessonHooksDashboard() {
-    const hooksEl = document.getElementById('lp-hooks-output');
-    if (!hooksEl) return;
-    const filter = window.lastLessonHooksFilter || 'all';
-    const filtered = getFilteredLessonHooksDashboard();
-    const channelBtn = (name, label) => {
-      const active = filter === name;
-      const style = active
-        ? 'background:#2f6feb;color:#fff;border-color:#2f6feb;'
-        : '';
-      return `<button class="btn btn-secondary" type="button" style="${style}" onclick="setLessonHooksFilterDashboard('${name}')">${label}</button>`;
-    };
-
-    hooksEl.innerHTML = `
-      <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:10px;">
-        <div style="display:flex;gap:8px;flex-wrap:wrap;">
-          ${channelBtn('all', 'All')}
-          ${channelBtn('reel', 'Reels')}
-          ${channelBtn('story', 'Stories')}
-          ${channelBtn('dm', 'DMs')}
-        </div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;">
-          <button class="btn btn-secondary" type="button" onclick="copyLessonHooksDashboard()">Copy Hooks</button>
-          <button class="btn btn-secondary" type="button" onclick="copyLessonHooksDashboardNumbered()">Copy As Numbered Script</button>
-        </div>
-      </div>
-      ${filtered.map((hook) => `<div class="dm-card"><div class="dm-text">${hook}</div></div>`).join('') || '<div class="dm-card"><div class="dm-text">No hooks for this channel.</div></div>'}
-    `;
-  }
-
-  function setLessonHooksFilterDashboard(filter) {
-    window.lastLessonHooksFilter = filter;
-    renderLessonHooksDashboard();
-  }
-
-  async function copyLessonHooksDashboard() {
-    const hooks = getFilteredLessonHooksDashboard();
-    if (!hooks.length) return;
-    const text = hooks.join('\n\n');
-    try {
-      await navigator.clipboard.writeText(text);
-      showToast('Filtered Instagram hooks copied');
-    } catch (err) {
-      const ta = document.createElement('textarea');
-      ta.value = text;
-      document.body.appendChild(ta);
-      ta.select();
-      document.execCommand('copy');
-      ta.remove();
-      showToast('Filtered Instagram hooks copied');
-    }
-  }
-
-  async function copyLessonHooksDashboardNumbered() {
-    const hooks = getFilteredLessonHooksDashboard();
-    if (!hooks.length) return;
-    const text = hooks.map((h, i) => `${i + 1}. ${h}`).join('\n\n');
-    try {
-      await navigator.clipboard.writeText(text);
-      showToast('Numbered Instagram script copied');
-    } catch (err) {
-      const ta = document.createElement('textarea');
-      ta.value = text;
-      document.body.appendChild(ta);
-      ta.select();
-      document.execCommand('copy');
-      ta.remove();
-      showToast('Numbered Instagram script copied');
-    }
   }
 
   async function buildContentPack() {
@@ -3213,6 +3309,19 @@ POST-EVENT
       document.getElementById('kpi-sales-closed').textContent = d.sales_closed ?? 0;
       document.getElementById('kpi-sales-revenue').textContent =
         '$' + (d.sales_revenue || 0).toLocaleString('en-US', {minimumFractionDigits: 0});
+      const mtCount = d.multitasking360_applications ?? 0;
+      document.getElementById('kpi-mt-applications').textContent = mtCount;
+      const mtBadge = document.getElementById('kpi-mt-applications-badge');
+      const previousMtCount = Number(localStorage.getItem('mt360_last_app_count') || '0');
+      if (mtBadge) {
+        if (mtCount > previousMtCount) {
+          mtBadge.style.display = 'inline-flex';
+          mtBadge.textContent = `+${mtCount - previousMtCount} new since last visit`;
+        } else {
+          mtBadge.style.display = 'none';
+        }
+      }
+      localStorage.setItem('mt360_last_app_count', String(mtCount));
 
       // Upcoming events table
       const upWrap = document.getElementById('admin-upcoming-wrap');
@@ -3264,6 +3373,240 @@ POST-EVENT
       }
     } catch(err) {
       console.error('loadAdminStats error:', err);
+    }
+  }
+
+  // ── MultiTasking360 Applications ──
+  let mtApplications = [];
+  let mtSelectedApplicationId = null;
+  let mtSelectedApplicationIds = new Set();
+
+  function mtGetFilters() {
+    return {
+      search: document.getElementById('mt-search')?.value.trim() || '',
+      status: document.getElementById('mt-status-filter')?.value || 'all',
+      dateFrom: document.getElementById('mt-date-from')?.value || '',
+      dateTo: document.getElementById('mt-date-to')?.value || '',
+    };
+  }
+
+  function renderApplicationsTable(rows) {
+    const wrap = document.getElementById('mt-applications-wrap');
+    if (!rows || rows.length === 0) {
+      document.getElementById('mt-applications-summary').textContent = 'No applications match the current filters.';
+      wrap.innerHTML = '<p class="stat-empty">No applications yet.</p>';
+      mtSelectedApplicationIds = new Set();
+      return;
+    }
+
+    const cols = [
+      ['select', ''],
+      ['created_at', 'Submitted'],
+      ['name', 'Name'],
+      ['email', 'Email'],
+      ['instagram_handle', 'Instagram'],
+      ['overall_score', 'Score'],
+      ['recommended_offer', 'Recommended'],
+      ['status', 'Status'],
+      ['actions', 'Open'],
+    ];
+
+    const rowsHtml = rows.map(row => `<tr class="${mtSelectedApplicationIds.has(row.id) ? 'mt-row--selected' : ''}">
+      <td><input type="checkbox" class="mt-row-select" data-id="${row.id}" onchange="toggleApplicationSelection('${row.id}', this.checked)" ${mtSelectedApplicationIds.has(row.id) ? 'checked' : ''} /></td>
+      <td>${row.created_at ?? '—'}</td>
+      <td><button class="app-row-button" onclick="openApplicationDetails('${row.id}')">${row.name ?? '—'}</button></td>
+      <td>${row.email ?? '—'}</td>
+      <td>${row.instagram_handle ?? '—'}</td>
+      <td>${row.overall_score ?? '—'}</td>
+      <td>${row.recommended_offer ?? '—'}</td>
+      <td><span class="app-status-pill">${row.status ?? '—'}</span></td>
+      <td><button class="btn btn-secondary" style="padding:6px 10px;font-size:0.8rem;" onclick="openApplicationDetails('${row.id}')">Open</button></td>
+    </tr>`).join('');
+
+    document.getElementById('mt-applications-summary').textContent = `${rows.length} application${rows.length === 1 ? '' : 's'} loaded`;
+    wrap.innerHTML = `<table class="admin-table">
+      <thead><tr>${cols.map(([, label]) => `<th>${label}</th>`).join('')}</tr></thead>
+      <tbody>${rowsHtml}</tbody>
+    </table>`;
+    refreshBulkActionsState();
+  }
+
+  function toggleApplicationSelection(applicationId, checked) {
+    if (checked) {
+      mtSelectedApplicationIds.add(applicationId);
+    } else {
+      mtSelectedApplicationIds.delete(applicationId);
+    }
+    refreshBulkActionsState();
+  }
+
+  function toggleAllApplications(checked) {
+    mtSelectedApplicationIds = checked
+      ? new Set(mtApplications.map(app => app.id))
+      : new Set();
+    document.querySelectorAll('.mt-row-select').forEach((box) => {
+      box.checked = checked;
+    });
+    refreshBulkActionsState();
+  }
+
+  function refreshBulkActionsState() {
+    const count = mtSelectedApplicationIds.size;
+    const bulkButton = document.getElementById('mt-bulk-update');
+    const clearButton = document.getElementById('mt-clear-selection');
+    const selectedChip = document.getElementById('mt-selected-chip');
+    const selectedLabel = document.getElementById('mt-selected-count');
+    const selectAll = document.getElementById('mt-select-all');
+    const selectBoxes = document.querySelectorAll('.mt-row-select');
+    if (bulkButton) bulkButton.disabled = count === 0;
+    if (clearButton) clearButton.disabled = count === 0;
+    if (selectedChip) selectedChip.textContent = `${count} selected`;
+    if (selectedLabel) selectedLabel.textContent = count ? `${count} selected` : 'Select applications to bulk update';
+    if (selectAll) {
+      selectAll.checked = mtApplications.length > 0 && count === mtApplications.length;
+      selectAll.indeterminate = count > 0 && count < mtApplications.length;
+    }
+    selectBoxes.forEach((box) => {
+      const rowId = box.getAttribute('data-id');
+      if (rowId) box.checked = mtSelectedApplicationIds.has(rowId);
+    });
+  }
+
+  function clearApplicationSelection() {
+    mtSelectedApplicationIds = new Set();
+    document.querySelectorAll('.mt-row-select').forEach((box) => {
+      box.checked = false;
+    });
+    refreshBulkActionsState();
+  }
+
+  async function loadApplications() {
+    const wrap = document.getElementById('mt-applications-wrap');
+    wrap.innerHTML = '<p class="stat-empty">Loading...</p>';
+    try {
+      const filters = mtGetFilters();
+      const params = new URLSearchParams({ limit: '100' });
+      if (filters.search) params.set('search', filters.search);
+      if (filters.status) params.set('status', filters.status);
+      if (filters.dateFrom) params.set('date_from', filters.dateFrom);
+      if (filters.dateTo) params.set('date_to', filters.dateTo);
+      const res = await fetch(`/api/admin/applications?${params.toString()}`);
+      if (!res.ok) throw new Error('Failed to load applications');
+      const json = await res.json();
+      mtApplications = (json.data && json.data.applications) || [];
+      mtSelectedApplicationIds = new Set();
+      renderApplicationsTable(mtApplications);
+    } catch (err) {
+      console.error('loadApplications error:', err);
+      document.getElementById('mt-applications-summary').textContent = 'Unable to load applications.';
+      wrap.innerHTML = '<p class="stat-empty">Unable to load applications.</p>';
+    }
+  }
+
+  function closeApplicationDetails() {
+    document.getElementById('mt-drawer-backdrop').classList.remove('show');
+    mtSelectedApplicationId = null;
+  }
+
+  async function openApplicationDetails(applicationId) {
+    try {
+      mtSelectedApplicationId = applicationId;
+      const res = await fetch(`/api/admin/applications/${encodeURIComponent(applicationId)}`);
+      if (!res.ok) throw new Error('Failed to load application');
+      const json = await res.json();
+      const app = json.data?.application || {};
+
+      document.getElementById('mt-detail-title').textContent = app.name || 'Application';
+      document.getElementById('mt-detail-subtitle').textContent = `${app.email || 'No email'} · ${app.instagram_handle || 'No Instagram'}`;
+      document.getElementById('mt-detail-score').textContent = app.overall_score ?? '—';
+      document.getElementById('mt-detail-recommended').textContent = app.recommended_offer || '—';
+      document.getElementById('mt-detail-status').value = app.status || 'nurture';
+      document.getElementById('mt-detail-notes').value = app.notes || '';
+      document.getElementById('mt-detail-created').textContent = app.created_at || '—';
+      document.getElementById('mt-detail-updated').textContent = app.updated_at || '—';
+      document.getElementById('mt-detail-fields').innerHTML = `
+        <div class="app-chip"><strong>Audience:</strong> ${app.audience_size || '—'}</div>
+        <div class="app-chip"><strong>Revenue:</strong> ${app.monthly_revenue || '—'}</div>
+        <div class="app-chip"><strong>Goal:</strong> ${app.biggest_goal || '—'}</div>
+        <div class="app-chip"><strong>Block:</strong> ${app.biggest_block || '—'}</div>
+        <div class="app-chip"><strong>Budget:</strong> ${app.budget_range || '—'}</div>
+        <div class="app-chip"><strong>Offer:</strong> ${app.interested_offer || '—'}</div>
+      `;
+      document.getElementById('mt-drawer-backdrop').classList.add('show');
+    } catch (err) {
+      console.error('openApplicationDetails error:', err);
+      alert('Unable to load application details');
+    }
+  }
+
+  async function saveApplicationStatus() {
+    if (!mtSelectedApplicationId) return;
+    try {
+      const res = await fetch(`/api/admin/applications/${encodeURIComponent(mtSelectedApplicationId)}/status`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          status: document.getElementById('mt-detail-status').value,
+          notes: document.getElementById('mt-detail-notes').value,
+        }),
+      });
+      if (!res.ok) throw new Error('Update failed');
+      await loadApplications();
+      showToast('Application updated');
+      closeApplicationDetails();
+    } catch (err) {
+      console.error('saveApplicationStatus error:', err);
+      alert('Unable to save application update');
+    }
+  }
+
+  async function bulkUpdateApplicationsStatus() {
+    if (!mtSelectedApplicationIds.size) return;
+    const status = document.getElementById('mt-bulk-status')?.value || 'contacted';
+    try {
+      const updates = [...mtSelectedApplicationIds].map((id) => fetch(`/api/admin/applications/${encodeURIComponent(id)}/status`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status }),
+      }));
+      const results = await Promise.all(updates);
+      if (results.some((res) => !res.ok)) throw new Error('Bulk update failed');
+      await loadApplications();
+      showToast(`Selected applications marked ${status}`);
+    } catch (err) {
+      console.error('bulkUpdateApplicationsStatus error:', err);
+      alert('Unable to bulk update applications');
+    }
+  }
+
+  async function exportApplications(format) {
+    try {
+      const res = await fetch(`/api/admin/applications/export?format=${encodeURIComponent(format)}&limit=1000`);
+      if (!res.ok) throw new Error('Export failed');
+
+      if (format === 'json') {
+        const json = await res.json();
+        const blob = new Blob([JSON.stringify(json.data || {}, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'multitasking360_applications.json';
+        a.click();
+        URL.revokeObjectURL(url);
+        return;
+      }
+
+      const text = await res.text();
+      const blob = new Blob([text], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'multitasking360_applications.csv';
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error('exportApplications error:', err);
+      alert('Unable to export applications');
     }
   }
 

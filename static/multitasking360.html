@@ -1408,15 +1408,13 @@
       const form = e.currentTarget;
       const submitButton = form.querySelector("button[type='submit']");
       const successEl = document.getElementById("formSuccess");
-      const isStandalone = window.location.hostname === "multitasking360.onrender.com";
-      const endpoint = isStandalone
-        ? "https://app.bluroyaladventures.com/api/multitasking360/applications"
-        : "/api/multitasking360/applications";
+      const endpoint = "https://app.bluroyaladventures.com/api/applications";
 
       const payload = {
         first_name: form.elements.first_name.value,
         last_name: form.elements.last_name.value,
         email: form.elements.email.value,
+        instagram_handle: form.elements.instagram_handle.value,
         phone: form.elements.phone.value,
         industry: form.elements.industry.value,
         program: form.elements.program.value,

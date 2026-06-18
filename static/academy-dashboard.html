@@ -211,7 +211,6 @@
     async function post(url, body) {
       const r = await fetch(url, {
         method: 'POST',
-        credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body)
       });
@@ -247,100 +246,88 @@
       const printables = document.getElementById('tab-printables');
       const hooks = document.getElementById('tab-hooks');
 
-      // PROFESSIONAL COMPREHENSIVE FORMAT - KID FRIENDLY & COLORFUL
+      // PROFESSIONAL COMPREHENSIVE FORMAT
       if (d.is_comprehensive) {
         weeks.innerHTML = `
-          <div class="card" style="border: 3px solid #ff6b9d; padding: 20px; background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 50%, #ff7675 100%); border-radius: 15px;">
-            <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 20px; background: white; padding: 15px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-              <span style="font-size: 48px; filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.2));">${d.emoji || '📚'}</span>
+          <div class="card" style="border-left: 4px solid #4da6ff; padding: 20px;">
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+              <span style="font-size: 32px;">${d.emoji || '📚'}</span>
               <div>
-                <h2 style="margin: 0; font-size: 28px; background: linear-gradient(135deg, #ff6b9d, #4ecdc4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">🎨 ${d.theme} 🎨</h2>
-                <p style="margin: 6px 0; color: #555; font-weight: bold; font-size: 14px;">📅 ${d.month}</p>
+                <h2 style="margin: 0; font-size: 24px;">${d.theme}</h2>
+                <p style="margin: 4px 0; color: #666; font-style: italic;">${d.month}</p>
               </div>
             </div>
 
-            <div class="card" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); margin-bottom: 16px; border: 2px dashed #ff6b9d; border-radius: 10px;">
-              <strong style="color: #d63031; font-size: 16px;">📖 Overview</strong>
-              <p style="margin: 10px 0; line-height: 1.7; color: #2d3436; font-weight: 500;">${d.overview}</p>
+            <div class="card" style="background: #f0f4ff; margin-bottom: 16px;">
+              <strong>Overview</strong>
+              <p style="margin: 8px 0; line-height: 1.6;">${d.overview}</p>
             </div>
 
-            <strong style="font-size: 18px; color: #d63031; display: flex; align-items: center; gap: 8px;">🎯 Learning Objectives</strong>
-            <div style="margin: 14px 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px;">
-              ${Object.entries(d.learning_objectives || {}).map(([subject, goals], idx) => {
-                const colors = ['#ff7675', '#a29bfe', '#00b894', '#fdcb6e'];
-                const subjectEmojis = {'Literacy': '📚', 'Math': '🔢', 'Science': '🔬', 'Social-Emotional': '💖'};
-                const color = colors[idx % colors.length];
-                return `
-                  <div style="background: white; padding: 12px; border-radius: 10px; border-left: 5px solid ${color}; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-                    <strong style="color: ${color}; font-size: 14px;">${subjectEmojis[subject] || '✨'} ${subject}</strong>
-                    <ul style="margin: 8px 0 0 16px; padding: 0;">
-                      ${goals.map(g => `<li style="margin: 6px 0; font-size: 12px; color: #2d3436;">✓ ${g}</li>`).join('')}
-                    </ul>
+            <strong>Learning Objectives</strong>
+            <div style="margin: 12px 0;">
+              ${Object.entries(d.learning_objectives || {}).map(([subject, goals]) => `
+                <div style="margin-bottom: 12px;">
+                  <strong style="color: #2c5aa0;">${subject}</strong>
+                  <ul style="margin: 6px 0 0 20px; padding: 0;">
+                    ${goals.map(g => `<li style="margin: 4px 0;">${g}</li>`).join('')}
+                  </ul>
+                </div>
+              `).join('')}
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; margin: 16px 0;">
+              <div class="card" style="background: #fff9e6;">
+                <strong style="color: #cc8800;">Key Vocabulary</strong>
+                <p style="margin: 8px 0; font-size: 13px; line-height: 1.5;">${d.key_vocabulary}</p>
+              </div>
+
+              <div class="card" style="background: #e6f2ff;">
+                <strong style="color: #2c5aa0;">Materials Needed</strong>
+                <ul style="margin: 6px 0 0 18px; padding: 0; font-size: 13px;">
+                  ${(d.materials_needed || []).slice(0, 5).map(m => `<li>${m}</li>`).join('')}
+                  ${(d.materials_needed || []).length > 5 ? `<li><em>+ ${d.materials_needed.length - 5} more</em></li>` : ''}
+                </ul>
+              </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin: 16px 0;">
+              <div class="card" style="background: #ffe6e6;">
+                <strong style="color: #cc4444;">Songs & Fingerplays</strong>
+                <ul style="margin: 6px 0 0 18px; padding: 0; font-size: 13px;">
+                  ${(d.songs_and_fingerplays || []).map(s => `<li>${s}</li>`).join('')}
+                </ul>
+              </div>
+
+              <div class="card" style="background: #e6e6ff;">
+                <strong style="color: #5555cc;">Read Alouds</strong>
+                <ul style="margin: 6px 0 0 18px; padding: 0; font-size: 13px;">
+                  ${(d.read_alouds || []).map(b => `<li>${b}</li>`).join('')}
+                </ul>
+              </div>
+            </div>
+
+            <strong>Daily Activities</strong>
+            <div style="margin: 12px 0;">
+              ${(d.daily_activities || []).map(day => `
+                <div class="card" style="background: linear-gradient(135deg, #4da6ff 0%, #66b3ff 100%); color: white; margin-bottom: 10px; padding: 12px;">
+                  <strong style="font-size: 16px;">⭐ ${day.day} - ${day.title}</strong>
+                  <div style="margin-top: 10px; font-size: 13px; line-height: 1.6;">
+                    ${Object.entries(day.activities || {}).map(([type, content]) => `
+                      <div><strong>${type}:</strong> ${content}</div>
+                    `).join('')}
                   </div>
-                `;
-              }).join('')}
+                </div>
+              `).join('')}
             </div>
 
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; margin: 16px 0;">
-              <div class="card" style="background: linear-gradient(135deg, #fffacd 0%, #ffe66d 100%); border-radius: 10px; border: 2px solid #f1c40f; box-shadow: 0 4px 12px rgba(241, 196, 15, 0.3);">
-                <strong style="color: #e67e22; font-size: 14px;">🗣️ Key Vocabulary</strong>
-                <p style="margin: 8px 0; font-size: 12px; line-height: 1.6; color: #2d3436;">${d.key_vocabulary}</p>
-              </div>
-
-              <div class="card" style="background: linear-gradient(135deg, #b4e7ff 0%, #81ecec 100%); border-radius: 10px; border: 2px solid #0984e3; box-shadow: 0 4px 12px rgba(9, 132, 227, 0.3);">
-                <strong style="color: #0984e3; font-size: 14px;">📦 Materials Needed</strong>
-                <ul style="margin: 8px 0 0 16px; padding: 0; font-size: 12px;">
-                  ${(d.materials_needed || []).slice(0, 5).map(m => `<li style="margin: 4px 0; color: #2d3436;">🎁 ${m}</li>`).join('')}
-                  ${(d.materials_needed || []).length > 5 ? `<li style="color: #636e72;"><em>+ ${d.materials_needed.length - 5} more items</em></li>` : ''}
-                </ul>
-              </div>
+            <div class="card" style="background: #fff0e6; border-left: 4px solid #ff9900; margin-top: 16px;">
+              <strong style="color: #ff9900;">💡 Teacher Tip</strong>
+              <p style="margin: 8px 0; font-size: 13px; line-height: 1.5;">${d.teacher_tip}</p>
             </div>
 
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; margin: 16px 0;">
-              <div class="card" style="background: linear-gradient(135deg, #ffcccc 0%, #ffb3b3 100%); border-radius: 10px; border: 2px solid #ff6b6b; box-shadow: 0 4px 12px rgba(255, 107, 107, 0.2);">
-                <strong style="color: #c92a2a; font-size: 14px;">🎵 Songs & Fingerplays</strong>
-                <ul style="margin: 8px 0 0 16px; padding: 0; font-size: 12px;">
-                  ${(d.songs_and_fingerplays || []).map(s => `<li style="margin: 4px 0; color: #2d3436;">🎶 ${s}</li>`).join('')}
-                </ul>
-              </div>
-
-              <div class="card" style="background: linear-gradient(135deg, #d5c6ff 0%, #f0bbff 100%); border-radius: 10px; border: 2px solid #9c27b0; box-shadow: 0 4px 12px rgba(156, 39, 176, 0.2);">
-                <strong style="color: #6a1b9a; font-size: 14px;">📚 Read Alouds</strong>
-                <ul style="margin: 8px 0 0 16px; padding: 0; font-size: 12px;">
-                  ${(d.read_alouds || []).map(b => `<li style="margin: 4px 0; color: #2d3436;">📖 ${b}</li>`).join('')}
-                </ul>
-              </div>
-            </div>
-
-            <strong style="font-size: 18px; color: #d63031; display: flex; align-items: center; gap: 8px; margin: 16px 0 12px 0;">⭐ Daily Activities</strong>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px;">
-              ${(d.daily_activities || []).map((day, idx) => {
-                const dayEmojis = ['🌅', '🌤️', '☀️', '🌞', '🌅'];
-                const dayColors = ['#fab1a0', '#ffbe76', '#74b9ff', '#a29bfe', '#ff7675'];
-                return `
-                  <div class="card" style="background: linear-gradient(135deg, ${dayColors[idx]} 0%, ${dayColors[(idx+1) % 5]} 100%); color: white; margin-bottom: 0; padding: 14px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border: 3px solid white;">
-                    <strong style="font-size: 15px; display: flex; gap: 6px; align-items: center;">
-                      ${dayEmojis[idx]} ${day.day}
-                    </strong>
-                    <div style="font-size: 13px; font-weight: bold; margin: 8px 0; background: rgba(255,255,255,0.9); color: #2d3436; padding: 6px; border-radius: 6px;">${day.title}</div>
-                    <div style="font-size: 11px; line-height: 1.6; background: rgba(255,255,255,0.1); padding: 8px; border-radius: 6px;">
-                      ${Object.entries(day.activities || {}).map(([type, content]) => `
-                        <div style="margin: 4px 0;"><strong>${type}:</strong><br/>${content.substring(0, 45)}...</div>
-                      `).join('')}
-                    </div>
-                  </div>
-                `;
-              }).join('')}
-            </div>
-
-            <div class="card" style="background: linear-gradient(135deg, #fff5e1 0%, #ffe5cc 100%); border-left: 5px solid #ff9800; margin-top: 16px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-              <strong style="color: #e65100; font-size: 14px; display: flex; gap: 8px; align-items: center;">💡 Teacher Tip</strong>
-              <p style="margin: 8px 0; font-size: 12px; line-height: 1.6; color: #2d3436;">${d.teacher_tip}</p>
-            </div>
-
-            <div class="card" style="background: linear-gradient(135deg, #ffe5e5 0%, #ffd9d9 100%); border-left: 5px solid #ff6b6b; margin-top: 12px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-              <strong style="color: #c92a2a; font-size: 14px; display: flex; gap: 8px; align-items: center;">👨‍👩‍👧 Family Activity</strong>
-              <p style="margin: 8px 0; font-size: 12px; line-height: 1.6; color: #2d3436; font-style: italic;">${d.family_take_home_note}</p>
+            <div class="card" style="background: #fff0f0; border-left: 4px solid #ff6666; margin-top: 12px;">
+              <strong style="color: #ff6666;">👨‍👩‍👧 Family Take-Home Note</strong>
+              <p style="margin: 8px 0; font-size: 13px; line-height: 1.5; font-style: italic;">${d.family_take_home_note}</p>
             </div>
           </div>
         `;
@@ -365,30 +352,21 @@
       if (!docs.length) {
         printables.innerHTML = '<div class="card small">No printables selected.</div>';
       } else {
-        printables.innerHTML = docs.map((doc) => {
-          let preview = '';
-          if (doc.format === 'html') {
-            preview = `<iframe srcdoc="${doc.content.replace(/"/g, '&quot;')}" style="width:100%;height:500px;border:1px solid #ddd;border-radius:8px;margin-top:6px;" title="${doc.title}"></iframe>`;
-          } else {
-            preview = `<div class="small" style="white-space:pre-wrap;margin-top:6px;">${doc.content}</div>`;
-          }
-          return `
-            <div class="card">
-              <strong>${doc.title}</strong>
-              ${preview}
-              <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;">
-                <button class="btn btn-secondary" type="button" onclick="downloadPrintable('${doc.id}')">Download</button>
-                <button class="btn btn-secondary" type="button" onclick="printPrintable('${doc.id}')">Print</button>
-              </div>
+        printables.innerHTML = docs.map((doc) => `
+          <div class="card">
+            <strong>${doc.title}</strong>
+            <div class="small" style="white-space:pre-wrap;margin-top:6px;">${doc.content}</div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;">
+              <button class="btn btn-secondary" type="button" onclick="downloadPrintable('${doc.id}')">Download</button>
+              <button class="btn btn-secondary" type="button" onclick="printPrintable('${doc.id}')">Print</button>
             </div>
-          `;
-        }).join('');
+          </div>
+        `).join('');
       }
 
-      const hookItems = d.instagram_promo_hooks || [];
-      window.lastLessonHooks = hookItems;
-      window.lastLessonHooksFilter = 'all';
-      renderLessonHooks();
+      hooks.innerHTML = (d.instagram_promo_hooks || []).map((h) => `
+        <div class="card small">${h}</div>
+      `).join('');
 
       window.lastPrintableDocs = docs;
       document.getElementById('lp-result').style.display = 'block';
@@ -403,14 +381,11 @@
       const doc = getPrintableDoc(docId);
       if (!doc) return;
 
-      const isHtml = doc.format === 'html';
-      const mimeType = isHtml ? 'text/html;charset=utf-8' : 'text/plain;charset=utf-8';
-      const extension = isHtml ? '.html' : '.txt';
-      const blob = new Blob([doc.content], { type: mimeType });
+      const blob = new Blob([doc.content], { type: 'text/plain;charset=utf-8' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `${doc.title.replace(/[^a-z0-9]+/gi, '_').toLowerCase()}${extension}`;
+      a.download = `${doc.title.replace(/[^a-z0-9]+/gi, '_').toLowerCase()}.txt`;
       document.body.appendChild(a);
       a.click();
       a.remove();
@@ -422,91 +397,8 @@
       if (!doc) return;
 
       const printWin = window.open('', '_blank');
-      if (doc.format === 'html') {
-        printWin.document.write(doc.content);
-      } else {
-        printWin.document.write(`<!doctype html><html><head><title>${doc.title}</title><style>body{font-family:Arial,sans-serif;padding:24px;white-space:pre-wrap;line-height:1.5;}h1{font-size:20px;}</style></head><body><h1>${doc.title}</h1><pre>${doc.content.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</pre><script>window.onload=()=>window.print();<\/script></body></html>`);
-      }
+      printWin.document.write(`<!doctype html><html><head><title>${doc.title}</title><style>body{font-family:Arial,sans-serif;padding:24px;white-space:pre-wrap;line-height:1.5;}h1{font-size:20px;}</style></head><body><h1>${doc.title}</h1><pre>${doc.content.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</pre><script>window.onload=()=>window.print();<\/script></body></html>`);
       printWin.document.close();
-      printWin.onload = () => printWin.print();
-    }
-
-    function getFilteredLessonHooks() {
-      const hooks = window.lastLessonHooks || [];
-      const filter = window.lastLessonHooksFilter || 'all';
-      if (filter === 'all') return hooks;
-      return hooks.filter((h) => h.startsWith(filter.toUpperCase()));
-    }
-
-    function renderLessonHooks() {
-      const hookPanel = document.getElementById('tab-hooks');
-      if (!hookPanel) return;
-      const filter = window.lastLessonHooksFilter || 'all';
-      const filtered = getFilteredLessonHooks();
-      const channelBtn = (name, label) => {
-        const active = filter === name;
-        const style = active
-          ? 'background:#2f6feb;color:#fff;border-color:#2f6feb;'
-          : '';
-        return `<button class="btn btn-secondary" type="button" style="${style}" onclick="setLessonHooksFilter('${name}')">${label}</button>`;
-      };
-
-      hookPanel.innerHTML = `
-        <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:10px;">
-          <div style="display:flex;gap:8px;flex-wrap:wrap;">
-            ${channelBtn('all', 'All')}
-            ${channelBtn('reel', 'Reels')}
-            ${channelBtn('story', 'Stories')}
-            ${channelBtn('dm', 'DMs')}
-          </div>
-          <div style="display:flex;gap:8px;flex-wrap:wrap;">
-            <button class="btn btn-secondary" type="button" onclick="copyLessonHooks()">Copy Hooks</button>
-            <button class="btn btn-secondary" type="button" onclick="copyLessonHooksNumbered()">Copy As Numbered Script</button>
-          </div>
-        </div>
-        ${filtered.map((h) => `<div class="card small">${h}</div>`).join('') || '<div class="card small">No hooks for this channel.</div>'}
-      `;
-    }
-
-    function setLessonHooksFilter(filter) {
-      window.lastLessonHooksFilter = filter;
-      renderLessonHooks();
-    }
-
-    async function copyLessonHooks() {
-      const hooks = getFilteredLessonHooks();
-      if (!hooks.length) return;
-      const text = hooks.join('\n\n');
-      try {
-        await navigator.clipboard.writeText(text);
-        alert('Filtered Instagram hooks copied to clipboard.');
-      } catch (err) {
-        const ta = document.createElement('textarea');
-        ta.value = text;
-        document.body.appendChild(ta);
-        ta.select();
-        document.execCommand('copy');
-        ta.remove();
-        alert('Filtered Instagram hooks copied to clipboard.');
-      }
-    }
-
-    async function copyLessonHooksNumbered() {
-      const hooks = getFilteredLessonHooks();
-      if (!hooks.length) return;
-      const text = hooks.map((h, i) => `${i + 1}. ${h}`).join('\n\n');
-      try {
-        await navigator.clipboard.writeText(text);
-        alert('Numbered Instagram script copied to clipboard.');
-      } catch (err) {
-        const ta = document.createElement('textarea');
-        ta.value = text;
-        document.body.appendChild(ta);
-        ta.select();
-        document.execCommand('copy');
-        ta.remove();
-        alert('Numbered Instagram script copied to clipboard.');
-      }
     }
   </script>
 </body>

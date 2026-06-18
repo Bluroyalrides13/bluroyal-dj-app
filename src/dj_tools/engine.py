@@ -19,6 +19,9 @@ import json
 import threading
 from pathlib import Path
 
+from config.settings import Settings
+from src.models.database import DatabaseManager
+
 
 # ─────────────────────────────────────────────
 # 1. EVENT TIMELINE BUILDER
@@ -1766,23 +1769,18 @@ def _format_comprehensive_theme(theme_data: Dict, language_mode: str, weeks: int
 
 
 def _build_theme_printables(theme_data: Dict, language_mode: str, printable_count: int = 4) -> List[Dict[str, str]]:
-    """Generate colorful, kid-friendly printable worksheets based on theme learning objectives."""
+    """Generate printable worksheets based on theme learning objectives."""
     documents: List[Dict[str, str]] = []
     theme_title = theme_data.get("title", "Theme")
     learning_objectives = theme_data.get("learning_objectives", {})
-    theme_emoji = theme_data.get("emoji", "📚")
     
     subjects = list(learning_objectives.keys())
-    subject_emojis = {'Literacy': '📚', 'Math': '🔢', 'Science': '🔬', 'Social-Emotional': '💖'}
-    subject_colors = {'Literacy': '#ff7675', 'Math': '#a29bfe', 'Science': '#00b894', 'Social-Emotional': '#fdcb6e'}
     
     for idx in range(printable_count):
         subject = subjects[idx % len(subjects)] if subjects else "Learning"
         objective = learning_objectives.get(subject, [""])[0] if learning_objectives.get(subject) else ""
         
-        worksheet_title = f"Worksheet {idx + 1}: {theme_title} - {subject}"
-        subject_emoji = subject_emojis.get(subject, "✨")
-        color = subject_colors.get(subject, "#4da6ff")
+        title = f"Worksheet {idx + 1}: {theme_title} - {subject}"
         
         instructions = _bilingual(
             "Instructions: Complete the activity with your learner. Review answers together and celebrate progress!",
@@ -1796,136 +1794,40 @@ def _build_theme_printables(theme_data: Dict, language_mode: str, printable_coun
             language_mode,
         )
         
-        # Generate beautiful HTML content
-        html_content = f"""
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <style>
-        body {{ font-family: 'Arial', sans-serif; margin: 20px; background: white; }}
-        .worksheet {{ max-width: 800px; margin: 0 auto; }}
-        .header {{ background: linear-gradient(135deg, {color} 0%, rgba({color}, 0.1) 100%); padding: 20px; border-radius: 10px; border: 3px solid {color}; margin-bottom: 20px; }}
-        .title {{ font-size: 28px; font-weight: bold; color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); display: flex; gap: 10px; align-items: center; }}
-        .title-text {{ background: linear-gradient(135deg, white, #f0f0f0); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }}
-        .emoji-large {{ font-size: 40px; }}
-        .info-box {{ background: #f8f9fa; padding: 15px; border-left: 5px solid {color}; margin: 15px 0; border-radius: 5px; }}
-        .label {{ font-weight: bold; color: {color}; font-size: 12px; }}
-        .content {{ color: #333; line-height: 1.6; }}
-        .section {{ margin: 20px 0; }}
-        .section-title {{ font-size: 16px; font-weight: bold; color: {color}; display: flex; gap: 8px; align-items: center; border-bottom: 2px solid {color}; padding-bottom: 8px; margin-bottom: 12px; }}
-        .fill-line {{ border-bottom: 1px solid #ccc; height: 20px; margin: 8px 0; }}
-        .checkbox {{ margin: 5px; display: inline-block; }}
-        .footer {{ margin-top: 30px; text-align: center; font-size: 12px; color: #999; }}
-        .emoji {{ font-size: 20px; margin-right: 5px; }}
-    </style>
-</head>
-<body>
-    <div class="worksheet">
-        <div class="header">
-            <div class="title">
-                <span class="emoji-large">{theme_emoji}</span>
-                <span class="title-text">{worksheet_title}</span>
-            </div>
-        </div>
-
-        <div class="info-box">
-            <div class="label">📚 {focus}</div>
-        </div>
-
-        <div class="info-box">
-            <div class="label">ℹ️ {instructions}</div>
-        </div>
-
-        <div class="info-box">
-            <div class="label">👤 {_bilingual("Student Name:", "Nombre del estudiante:", language_mode)}</div>
-            <div class="fill-line"></div>
-            <div class="label">📅 {_bilingual("Date:", "Fecha:", language_mode)}</div>
-            <div class="fill-line"></div>
-        </div>
-
-        <div class="section">
-            <div class="section-title">
-                <span>✏️</span>
-                <span>{_bilingual("Activity 1: Letter Tracing Practice", "Actividad 1: Práctica de Trazado de Letras", language_mode)}</span>
-            </div>
-            <div style="margin: 15px 0; font-size: 14px; color: #666;">
-                {_bilingual("Trace the letters with your finger or pencil:", "Traza las letras con tu dedo o lápiz:", language_mode)}
-            </div>
-            <div style="border: 2px dashed {color}; padding: 30px 20px; border-radius: 8px; background: rgba({color}, 0.05); text-align: center; margin: 15px 0;">
-                <div style="font-family: cursive; font-size: 48px; letter-spacing: 30px; color: {color}; opacity: 0.3; font-weight: bold; margin-bottom: 20px;">A B C D E</div>
-                <div style="border-bottom: 2px dashed {color}; height: 40px; margin: 20px 0;"></div>
-                <div style="border-bottom: 2px dashed {color}; height: 40px; margin: 20px 0;"></div>
-            </div>
-        </div>
-
-        <div class="section">
-            <div class="section-title">
-                <span>⭐</span>
-                <span>{_bilingual("Activity 2: Letter Learning", "Actividad 2: Aprendizaje de Letras", language_mode)}</span>
-            </div>
-            <div style="background: linear-gradient(135deg, rgba({color}, 0.1) 0%, rgba({color}, 0.05) 100%); padding: 20px; border-radius: 8px; border: 2px solid {color}; margin: 15px 0;">
-                <div style="margin-bottom: 15px;">
-                    <div class="label" style="margin-bottom: 8px;">🔤 {_bilingual("Letter Sound:", "Sonido de la Letra:", language_mode)}</div>
-                    <div style="font-size: 18px; color: {color}; font-weight: bold; margin: 8px 0;">_____________________</div>
-                </div>
-                <div style="margin-bottom: 15px;">
-                    <div class="label" style="margin-bottom: 8px;">✍️ {_bilingual("Write the Letter:", "Escribe la Letra:", language_mode)}</div>
-                    <div style="font-size: 40px; margin: 15px 0; text-align: center; color: {color};">__ __ __</div>
-                </div>
-                <div style="margin-bottom: 15px;">
-                    <div class="label" style="margin-bottom: 8px;">🎯 {_bilingual("Circle Words that Start with This Letter:", "Encierra Palabras que Comienzan con Esta Letra:", language_mode)}</div>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px;">
-                        <div style="padding: 10px; border: 2px solid #ddd; border-radius: 6px; text-align: center; cursor: pointer; background: white;">☐ Word 1</div>
-                        <div style="padding: 10px; border: 2px solid #ddd; border-radius: 6px; text-align: center; cursor: pointer; background: white;">☐ Word 2</div>
-                        <div style="padding: 10px; border: 2px solid #ddd; border-radius: 6px; text-align: center; cursor: pointer; background: white;">☐ Word 3</div>
-                        <div style="padding: 10px; border: 2px solid #ddd; border-radius: 6px; text-align: center; cursor: pointer; background: white;">☐ Word 4</div>
-                    </div>
-                </div>
-                    <div class="section">
-                        <div class="section-title">
-                            <span>🎨</span>
-                            <span>{_bilingual("Activity 3: Draw or Write Your Answer", "Actividad 3: Dibuja o escribe tu respuesta", language_mode)}</span>
-                        </div>
-                        <div style="border: 2px dashed {color}; padding: 20px; min-height: 100px; border-radius: 8px; background: rgba({color}, 0.05);"></div>
-                    </div>
-
-                    <div class="section">
-                        <div class="section-title">
-                            <span>🌟</span>
-                            <span>{_bilingual("Activity 4: Circle the Best Answer", "Actividad 4: Encierra la mejor respuesta", language_mode)}</span>
-                        </div>
-                        <div style="font-size: 18px; margin: 15px 0;">
-                            <div class="checkbox">☑ {_bilingual("A", "A", language_mode)}</div>
-                            <div class="checkbox">☐ {_bilingual("B", "B", language_mode)}</div>
-                            <div class="checkbox">☐ {_bilingual("C", "C", language_mode)}</div>
-                        </div>
-                    </div>
-
-            </div>
-        </div>
-
-        <div class="info-box">
-            <div class="label">📝 {_bilingual("Teacher/Parent Notes:", "Notas del maestro/padre:", language_mode)}</div>
-            <div class="fill-line"></div>
-            <div class="fill-line"></div>
-        </div>
-
-        <div class="footer">
-            <p>🌟 {_bilingual("Great work!", "¡Buen trabajo!", language_mode)} 🌟</p>
-            <p>{theme_title} • {_bilingual("Preschool Learning", "Aprendizaje Preescolar", language_mode)}</p>
-        </div>
-    </div>
-</body>
-</html>
-"""
+        content = "\n".join(
+            [
+                title,
+                "=" * len(title),
+                "",
+                focus,
+                instructions,
+                "",
+                _bilingual("Name: ____________________", "Nombre: ____________________", language_mode),
+                _bilingual("Date: ____________________", "Fecha: ____________________", language_mode),
+                "",
+                _bilingual("Activity:", "Actividad:", language_mode),
+                "_" * 50,
+                "_" * 50,
+                "_" * 50,
+                "",
+                _bilingual("Draw or write your answer:", "Dibuja o escribe tu respuesta:", language_mode),
+                "_" * 50,
+                "_" * 50,
+                "",
+                _bilingual("Circle the best answer:", "Encierra la mejor respuesta:", language_mode),
+                "☐ A          ☐ B          ☐ C",
+                "",
+                _bilingual("Teacher/Parent Notes:", "Notas del maestro/padre:", language_mode),
+                "_" * 50,
+            ]
+        )
         
         documents.append(
             {
                 "id": f"printable_{idx + 1}",
-                "title": worksheet_title,
-                "content": html_content,
-                "format": "html",
+                "title": title,
+                "content": content,
+                "format": "txt",
             }
         )
     
@@ -1966,18 +1868,8 @@ def _build_printable_documents(
     language_mode: str,
     printable_resources: List[str],
 ) -> List[Dict[str, str]]:
-    """Create colorful, kid-friendly printable worksheet documents for UI download/printing."""
+    """Create worksheet-ready printable document payloads for UI download/printing."""
     documents: List[Dict[str, str]] = []
-    
-    # Color scheme
-    focus_colors = {
-        'literacy': '#ff7675',
-        'math': '#a29bfe',
-        'science': '#00b894',
-        'social_emotional': '#fdcb6e',
-        'mixed': '#4da6ff'
-    }
-    color = focus_colors.get(focus_area.lower(), '#4da6ff')
 
     for idx, title in enumerate(printable_resources, start=1):
         if language_mode == "bilingual" and " / " in title:
@@ -1988,7 +1880,6 @@ def _build_printable_documents(
                 f"Hoja de trabajo {idx}: {title}",
                 language_mode,
             )
-        
         instructions = _bilingual(
             "Instructions: Complete the activity with your learner and review answers together.",
             "Instrucciones: Completa la actividad con tu estudiante y revisen las respuestas juntos.",
@@ -2010,141 +1901,37 @@ def _build_printable_documents(
             language_mode,
         )
 
-        # Generate beautiful HTML content
-        html_content = f"""
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <style>
-        body {{ font-family: 'Arial', sans-serif; margin: 20px; background: white; }}
-        .worksheet {{ max-width: 800px; margin: 0 auto; }}
-        .header {{ background: linear-gradient(135deg, {color} 0%, rgba({color}, 0.1) 100%); padding: 20px; border-radius: 10px; border: 3px solid {color}; margin-bottom: 20px; }}
-        .title {{ font-size: 28px; font-weight: bold; color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); }}
-        .theme-label {{ font-size: 14px; margin-top: 8px; opacity: 0.9; }}
-        .info-box {{ background: #f8f9fa; padding: 15px; border-left: 5px solid {color}; margin: 15px 0; border-radius: 5px; }}
-        .label {{ font-weight: bold; color: {color}; font-size: 12px; }}
-        .content {{ color: #333; line-height: 1.6; }}
-        .section {{ margin: 20px 0; }}
-        .section-title {{ font-size: 16px; font-weight: bold; color: {color}; display: flex; gap: 8px; align-items: center; border-bottom: 2px solid {color}; padding-bottom: 8px; margin-bottom: 12px; }}
-        .fill-line {{ border-bottom: 1px solid #ccc; height: 20px; margin: 8px 0; }}
-        .checkbox {{ margin: 8px 15px 8px 0; display: inline-block; }}
-        .activity-box {{ border: 2px dashed {color}; padding: 20px; min-height: 100px; border-radius: 8px; background: rgba({color}, 0.05); }}
-        .footer {{ margin-top: 30px; text-align: center; font-size: 12px; color: #999; }}
-        .emoji {{ font-size: 20px; margin-right: 5px; }}
-    </style>
-</head>
-<body>
-    <div class="worksheet">
-        <div class="header">
-            <div class="title">✨ {worksheet_title} ✨</div>
-            <div class="theme-label">📚 {theme} • {audience_type.title()}</div>
-        </div>
-
-        <div class="info-box">
-            <div class="label">🎯 {skill_focus}</div>
-            <div class="label" style="margin-top: 8px;">📋 {audience_line}</div>
-        </div>
-
-        <div class="info-box">
-            <div class="label">ℹ️ {_bilingual("Instructions", "Instrucciones", language_mode)}</div>
-            <div style="margin-top: 8px; font-size: 13px;">{instructions}</div>
-        </div>
-
-        <div class="info-box">
-            <div class="label">💭 {_bilingual("Prompt", "Actividad", language_mode)}</div>
-            <div style="margin-top: 8px; font-size: 13px;">{prompt_line}</div>
-        </div>
-
-        <div class="info-box">
-            <div class="label">👤 {_bilingual("Student Name:", "Nombre del estudiante:", language_mode)}</div>
-            <div class="fill-line"></div>
-            <div class="label">📅 {_bilingual("Date:", "Fecha:", language_mode)}</div>
-            <div class="fill-line"></div>
-        </div>
-
-        <div class="section">
-            <div class="section-title">
-                <span>1️⃣</span>
-                <span>{_bilingual("Letter Tracing Practice", "Práctica de Trazado de Letras", language_mode)}</span>
-            </div>
-            <div style="margin: 15px 0; font-size: 14px; color: #666;">
-                {_bilingual("Trace the letters with your finger or pencil:", "Traza las letras con tu dedo o lápiz:", language_mode)}
-            </div>
-            <div style="border: 2px dashed {color}; padding: 30px 20px; border-radius: 8px; background: rgba({color}, 0.05); text-align: center; margin: 15px 0;">
-                <div style="font-family: cursive; font-size: 48px; letter-spacing: 30px; color: {color}; opacity: 0.3; font-weight: bold; margin-bottom: 20px;">A B C D E</div>
-                <div style="border-bottom: 2px dashed {color}; height: 40px; margin: 20px 0;"></div>
-                <div style="border-bottom: 2px dashed {color}; height: 40px; margin: 20px 0;"></div>
-            </div>
-        </div>
-
-        <div class="section">
-            <div class="section-title">
-                <span>2️⃣</span>
-                <span>{_bilingual("Letter Learning", "Aprendizaje de Letras", language_mode)}</span>
-            </div>
-            <div style="background: linear-gradient(135deg, rgba({color}, 0.1) 0%, rgba({color}, 0.05) 100%); padding: 20px; border-radius: 8px; border: 2px solid {color}; margin: 15px 0;">
-                <div style="margin-bottom: 15px;">
-                    <div class="label" style="margin-bottom: 8px;">🔤 {_bilingual("Letter Sound:", "Sonido de la Letra:", language_mode)}</div>
-                    <div style="font-size: 18px; color: {color}; font-weight: bold; margin: 8px 0;">_____________________</div>
-                </div>
-                <div style="margin-bottom: 15px;">
-                    <div class="label" style="margin-bottom: 8px;">✍️ {_bilingual("Write the Letter:", "Escribe la Letra:", language_mode)}</div>
-                    <div style="font-size: 40px; margin: 15px 0; text-align: center; color: {color};">__ __ __</div>
-                </div>
-                <div style="margin-bottom: 15px;">
-                    <div class="label" style="margin-bottom: 8px;">🎯 {_bilingual("Circle Words that Start with This Letter:", "Encierra Palabras que Comienzan con Esta Letra:", language_mode)}</div>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px;">
-                        <div style="padding: 10px; border: 2px solid #ddd; border-radius: 6px; text-align: center; cursor: pointer; background: white;">☐ Word 1</div>
-                        <div style="padding: 10px; border: 2px solid #ddd; border-radius: 6px; text-align: center; cursor: pointer; background: white;">☐ Word 2</div>
-                        <div style="padding: 10px; border: 2px solid #ddd; border-radius: 6px; text-align: center; cursor: pointer; background: white;">☐ Word 3</div>
-                        <div style="padding: 10px; border: 2px solid #ddd; border-radius: 6px; text-align: center; cursor: pointer; background: white;">☐ Word 4</div>
-                    </div>
-                </div>
-                    <div class="section">
-                        <div class="section-title">
-                            <span>3️⃣</span>
-                            <span>{_bilingual("Draw or Write Your Response", "Dibuja o escribe tu respuesta", language_mode)}</span>
-                        </div>
-                        <div class="activity-box"></div>
-                    </div>
-
-                    <div class="section">
-                        <div class="section-title">
-                            <span>4️⃣</span>
-                            <span>{_bilingual("Circle the Best Answer", "Encierra la mejor respuesta", language_mode)}</span>
-                        </div>
-                        <div style="font-size: 16px; margin: 15px 0;">
-                            <div class="checkbox">☐ A)</div>
-                            <div class="checkbox">☐ B)</div>
-                            <div class="checkbox">☐ C)</div>
-                        </div>
-                    </div>
-
-            </div>
-        </div>
-
-        <div class="info-box">
-            <div class="label">📝 {_bilingual("Teacher/Parent Notes:", "Notas del maestro/padre:", language_mode)}</div>
-            <div class="fill-line"></div>
-            <div class="fill-line"></div>
-        </div>
-
-        <div class="footer">
-            <p>🌟 {_bilingual("Excellent Work!", "¡Excelente trabajo!", language_mode)} 🌟</p>
-            <p>{theme} Theme • {_bilingual("Preschool Learning", "Aprendizaje Preescolar", language_mode)}</p>
-        </div>
-    </div>
-</body>
-</html>
-"""
+        content = "\n".join(
+            [
+                worksheet_title,
+                "=" * len(worksheet_title),
+                audience_line,
+                skill_focus,
+                instructions,
+                prompt_line,
+                "",
+                _bilingual("Student Name: ____________________", "Nombre del estudiante: ____________________", language_mode),
+                _bilingual("Date: ____________________", "Fecha: ____________________", language_mode),
+                "",
+                _bilingual("1. Draw or write your response below:", "1. Dibuja o escribe tu respuesta abajo:", language_mode),
+                "__________________________________________",
+                "__________________________________________",
+                "",
+                _bilingual("2. Circle or mark the best answer.", "2. Encierra o marca la mejor respuesta.", language_mode),
+                "A) ____    B) ____    C) ____",
+                "",
+                _bilingual("Teacher/Parent Notes:", "Notas del maestro/padre:", language_mode),
+                "__________________________________________",
+                "__________________________________________",
+            ]
+        )
 
         documents.append(
             {
                 "id": f"printable_{idx}",
                 "title": worksheet_title,
-                "content": html_content,
-                "format": "html",
+                "content": content,
+                "format": "txt",
             }
         )
 
@@ -2354,155 +2141,18 @@ def generate_lesson_plan(
         "is_comprehensive": False,
         "instagram_promo_hooks": [
             _bilingual(
-                f"REEL 1: Parents ask how we teach {normalized_theme.lower()} without burnout. We use a done-for-you {weeks}-week structure.",
-                f"REEL 1: Las familias preguntan como ensenamos {normalized_theme.lower()} sin agotamiento. Usamos una estructura lista para {weeks} semanas.",
+                f"Parents asked for done-for-you {normalized_theme.lower()} lesson plans, so we built them.",
+                f"Las familias pidieron planes de {normalized_theme.lower()} listos para usar, y por eso los creamos.",
                 normalized_language,
             ),
             _bilingual(
-                f"REEL 2: Stop planning from scratch. This {normalized_theme.lower()} system gives you weekly lessons + printables in one flow.",
-                f"REEL 2: Deja de planificar desde cero. Este sistema de {normalized_theme.lower()} te da lecciones semanales + printables en un solo flujo.",
+                f"Stop planning from scratch: this {weeks}-week {normalized_theme.lower()} kit is classroom-ready.",
+                f"Deja de planear desde cero: este kit de {weeks} semanas sobre {normalized_theme.lower()} esta listo para clase.",
                 normalized_language,
             ),
             _bilingual(
-                f"REEL 3: Premium classrooms are built on repeatable systems. Here is our {normalized_theme.lower()} lesson engine.",
-                f"REEL 3: Las aulas premium se construyen con sistemas repetibles. Este es nuestro motor de lecciones de {normalized_theme.lower()}.",
-                normalized_language,
-            ),
-            _bilingual(
-                f"REEL 4: If you teach preschool or homeschool, this {normalized_theme.lower()} pack saves hours every week.",
-                f"REEL 4: Si ensenas preescolar o homeschool, este paquete de {normalized_theme.lower()} te ahorra horas cada semana.",
-                normalized_language,
-            ),
-            _bilingual(
-                "REEL 5: We turned teacher overwhelm into a clear weekly plan parents love.",
-                "REEL 5: Convertimos el estres docente en un plan semanal claro que las familias aman.",
-                normalized_language,
-            ),
-            _bilingual(
-                "REEL 6: Basic tier starts at $497 for fast implementation with ready-to-use assets.",
-                "REEL 6: El nivel Basico inicia en $497 para una implementacion rapida con recursos listos.",
-                normalized_language,
-            ),
-            _bilingual(
-                "REEL 7: Intermediate tier at $1,500 is for educators ready to scale quality and consistency.",
-                "REEL 7: El nivel Intermedio de $1,500 es para educadores listos para escalar calidad y consistencia.",
-                normalized_language,
-            ),
-            _bilingual(
-                "REEL 8: Full implementation at $3,500 is for premium positioning and complete rollout.",
-                "REEL 8: La implementacion completa de $3,500 es para posicionamiento premium y despliegue total.",
-                normalized_language,
-            ),
-            _bilingual(
-                "REEL 9 CTA: Comment LESSONS and I will send the exact tier that matches your goals.",
-                "REEL 9 CTA: Comenta LECCIONES y te envio el nivel exacto que coincide con tus metas.",
-                normalized_language,
-            ),
-            _bilingual(
-                "REEL 10 CTA: Save this, share with a teacher friend, then DM LESSONS for pricing + checkout links.",
-                "REEL 10 CTA: Guarda esto, compartelo con una maestra amiga y luego envia LECCIONES por DM para precios + checkout.",
-                normalized_language,
-            ),
-
-            _bilingual(
-                "STORY 1: Behind the scenes - this is how we map weekly learning in minutes, not hours.",
-                "HISTORIA 1: Detras de camara - asi mapeamos aprendizaje semanal en minutos, no horas.",
-                normalized_language,
-            ),
-            _bilingual(
-                f"STORY 2: Theme spotlight: {normalized_theme.title()} with classroom-ready activities.",
-                f"HISTORIA 2: Tema destacado: {normalized_theme.title()} con actividades listas para el aula.",
-                normalized_language,
-            ),
-            _bilingual(
-                "STORY 3 POLL: Do you want done-for-you weekly plans? YES / SEND IT",
-                "HISTORIA 3 ENCUESTA: Quieres planes semanales listos? SI / ENVIAMELO",
-                normalized_language,
-            ),
-            _bilingual(
-                "STORY 4 POLL: Biggest challenge? Planning time / Parent engagement",
-                "HISTORIA 4 ENCUESTA: Tu mayor reto? Tiempo de planificacion / Participacion de familias",
-                normalized_language,
-            ),
-            _bilingual(
-                "STORY 5: We have 3 tiers: Basic $497, Intermediate $1,500, Full $3,500.",
-                "HISTORIA 5: Tenemos 3 niveles: Basico $497, Intermedio $1,500, Completo $3,500.",
-                normalized_language,
-            ),
-            _bilingual(
-                "STORY 6: Basic is ideal when you need quick wins and ready resources now.",
-                "HISTORIA 6: Basico es ideal cuando necesitas avances rapidos y recursos listos ahora.",
-                normalized_language,
-            ),
-            _bilingual(
-                "STORY 7: Intermediate is for stronger systems and more complete implementation.",
-                "HISTORIA 7: Intermedio es para sistemas mas solidos e implementacion mas completa.",
-                normalized_language,
-            ),
-            _bilingual(
-                "STORY 8: Full is for founders building a premium education offer end-to-end.",
-                "HISTORIA 8: Completo es para fundadores que construyen una oferta educativa premium de inicio a fin.",
-                normalized_language,
-            ),
-            _bilingual(
-                "STORY 9 CTA: Reply LESSONS and I will send your best-fit recommendation.",
-                "HISTORIA 9 CTA: Responde LECCIONES y te envio la recomendacion ideal para ti.",
-                normalized_language,
-            ),
-            _bilingual(
-                "STORY 10 CTA: Want checkout now? DM START and I will send your private link.",
-                "HISTORIA 10 CTA: Quieres checkout ahora? Envia EMPEZAR por DM y te envio tu enlace privado.",
-                normalized_language,
-            ),
-
-            _bilingual(
-                "DM 1 OPENER: Thanks for reaching out. Are you serving preschool classrooms, homeschool families, or both?",
-                "DM 1 APERTURA: Gracias por escribir. Atiendes aulas de preescolar, familias homeschool o ambos?",
-                normalized_language,
-            ),
-            _bilingual(
-                "DM 2 QUALIFIER: What is your main goal right now: save planning time, improve outcomes, or sell a premium offer?",
-                "DM 2 CALIFICACION: Cual es tu meta principal ahora: ahorrar tiempo, mejorar resultados o vender una oferta premium?",
-                normalized_language,
-            ),
-            _bilingual(
-                "DM 3 QUALIFIER: What is your monthly budget for curriculum and printable resources?",
-                "DM 3 CALIFICACION: Cual es tu presupuesto mensual para curriculum y recursos imprimibles?",
-                normalized_language,
-            ),
-            _bilingual(
-                "DM 4 ROUTING: Great. Basic ($497) fits quick-start needs with ready-to-teach assets.",
-                "DM 4 RUTA: Excelente. Basico ($497) encaja para iniciar rapido con recursos listos para ensenar.",
-                normalized_language,
-            ),
-            _bilingual(
-                "DM 5 ROUTING: Intermediate ($1,500) is best when you want stronger structure and expansion.",
-                "DM 5 RUTA: Intermedio ($1,500) es ideal cuando quieres estructura mas solida y expansion.",
-                normalized_language,
-            ),
-            _bilingual(
-                "DM 6 ROUTING: Full ($3,500) is for complete implementation and premium positioning.",
-                "DM 6 RUTA: Completo ($3,500) es para implementacion total y posicionamiento premium.",
-                normalized_language,
-            ),
-            _bilingual(
-                "DM 7 PROOF: Clients choose this because it replaces guesswork with a repeatable teaching system.",
-                "DM 7 PRUEBA: Clientes eligen esto porque reemplaza improvisacion con un sistema repetible de ensenanza.",
-                normalized_language,
-            ),
-            _bilingual(
-                "DM 8 OBJECTION: If timing is your concern, you can start with Basic and upgrade later.",
-                "DM 8 OBJECION: Si te preocupa el momento, puedes iniciar con Basico y subir de nivel despues.",
-                normalized_language,
-            ),
-            _bilingual(
-                "DM 9 CLOSE: I can send checkout now and you can start today with lesson plans + printables.",
-                "DM 9 CIERRE: Puedo enviarte checkout ahora y puedes iniciar hoy con planes + printables.",
-                normalized_language,
-            ),
-            _bilingual(
-                "DM 10 CLOSE: Reply START and I will send your direct payment link.",
-                "DM 10 CIERRE: Responde EMPEZAR y te envio tu enlace directo de pago.",
+                "Comment LESSONS and we will send the tier that fits your school-year goals.",
+                "Comenta LECCIONES y te enviamos el nivel que mejor se adapta a tus metas escolares.",
                 normalized_language,
             ),
         ],
@@ -2888,6 +2538,7 @@ def get_admin_stats() -> Dict:
     quotes = _load_json(QUOTES_FILE)
     now = datetime.utcnow()
     current_month = now.strftime("%Y-%m")
+    app_db = DatabaseManager(Settings().DATABASE_URL)
 
     # Monthly revenue — sum quotes generated this calendar month
     monthly_revenue = sum(
@@ -2949,6 +2600,7 @@ def get_admin_stats() -> Dict:
         "monthly_revenue": round(monthly_revenue, 2),
         "upcoming_events_count": len(upcoming_events),
         "upcoming_events": upcoming_events[:5],
+        "multitasking360_applications": app_db.count_info_product_applications(),
         "new_leads": new_leads_count,
         "contracts_outstanding": contracts_outstanding,
         "payments_due": payments_due,

@@ -322,3 +322,50 @@ class DatabaseManager:
         conn.close()
 
         return [dict(zip(columns, row)) for row in rows]
+
+    def count_info_product_applications(self) -> int:
+        """Return the total number of info product applications."""
+        conn = self.get_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT COUNT(*) FROM info_product_applications")
+        count = int(cursor.fetchone()[0] or 0)
+        conn.close()
+        return count
+
+    def get_info_product_application(self, application_id: str) -> Optional[dict]:
+        """Return a single info product application by ID."""
+        conn = self.get_connection()
+        cursor = conn.cursor()
+
+        cursor.execute(
+            "SELECT * FROM info_product_applications WHERE id = ?",
+            (application_id,),
+        )
+        row = cursor.fetchone()
+        columns = [description[0] for description in cursor.description] if row else []
+        conn.close()
+
+        if row:
+            return dict(zip(columns, row))
+        return None
+
+    def update_info_product_application(self, application_id: str, updates: dict) -> bool:
+        """Update fields on an info product application."""
+        if not updates:
+            return True
+
+        updates = dict(updates)
+        updates["updated_at"] = datetime.utcnow().isoformat()
+
+        conn = self.get_connection()
+        cursor = conn.cursor()
+        set_clause = ", ".join([f"{key} = ?" for key in updates.keys()])
+        values = list(updates.values()) + [application_id]
+
+        cursor.execute(
+            f"UPDATE info_product_applications SET {set_clause} WHERE id = ?",
+            values,
+        )
+        conn.commit()
+        conn.close()
+        return cursor.rowcount > 0

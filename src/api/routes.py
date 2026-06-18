@@ -5,8 +5,6 @@ Main endpoints for chat, bookings, quotes, and webhooks
 
 import logging
 import uuid
-import smtplib
-from email.message import EmailMessage
 from pathlib import Path
 from fastapi import APIRouter, HTTPException, Header, Request, Form
 from fastapi.responses import FileResponse, RedirectResponse
@@ -55,37 +53,6 @@ funnel = InfoProductFunnel()
 STATIC_DIR = Path(__file__).resolve().parents[2] / "static"
 
 
-def _send_multitasking360_notification(lead_payload: dict, record_id: str) -> bool:
-    """Send email notification for a new MultiTasking360 application."""
-    recipient = settings.SMTP_TO_EMAIL or settings.SUPPORT_EMAIL
-    sender = settings.SMTP_FROM_EMAIL or settings.SMTP_USERNAME
-    if not (settings.SMTP_HOST and settings.SMTP_USERNAME and settings.SMTP_PASSWORD and recipient and sender):
-        logger.info("SMTP not configured; skipping application email notification")
-        return False
-
-    subject = f"New MultiTasking360 Application: {lead_payload.get('name', 'Unknown')}"
-    body_lines = ["A new MultiTasking360 application was submitted.", "", f"Record ID: {record_id}"]
-    for key, value in lead_payload.items():
-        if value in (None, "", []):
-            continue
-        label = key.replace("_", " ").title()
-        body_lines.append(f"{label}: {value}")
-    body = "\n".join(body_lines) + "\n"
-
-    msg = EmailMessage()
-    msg["Subject"] = subject
-    msg["From"] = sender
-    msg["To"] = recipient
-    msg.set_content(body)
-
-    with smtplib.SMTP(settings.SMTP_HOST, settings.SMTP_PORT, timeout=15) as smtp:
-        if settings.SMTP_USE_TLS:
-            smtp.starttls()
-        smtp.login(settings.SMTP_USERNAME, settings.SMTP_PASSWORD)
-        smtp.send_message(msg)
-    return True
-
-
 def _is_dashboard_authenticated(request: Request) -> bool:
     return request.cookies.get("dj_dashboard_auth") == "1"
 
@@ -101,6 +68,15 @@ def _is_academy_authenticated(request: Request) -> bool:
 
 def _require_academy_auth(request: Request):
     if not _is_academy_authenticated(request):
+        raise HTTPException(status_code=401, detail="Unauthorized")
+
+
+def _is_mt360_admin_authenticated(request: Request) -> bool:
+    return request.cookies.get("mt360_admin_auth") == "1"
+
+
+def _require_mt360_admin_auth(request: Request):
+    if not _is_mt360_admin_authenticated(request):
         raise HTTPException(status_code=401, detail="Unauthorized")
 
 
@@ -190,6 +166,46 @@ async def academy_page(request: Request):
     if not _is_academy_authenticated(request):
         return RedirectResponse(url="/academy/login", status_code=303)
     return FileResponse(STATIC_DIR / "academy-dashboard.html")
+
+
+# ===================== MultiTasking360 Admin Portal =====================
+
+@router.get("/mt360-admin/login", include_in_schema=False)
+async def mt360_admin_login_page():
+    """Serve MT360 admin login page"""
+    return FileResponse(STATIC_DIR / "mt360-admin-login.html")
+
+
+@router.post("/mt360-admin/login", include_in_schema=False)
+async def mt360_admin_login(username: str = Form(...), password: str = Form(...)):
+    """Authenticate MT360 admin access"""
+    if username != settings.MT360_ADMIN_USERNAME or password != settings.MT360_ADMIN_PASSWORD:
+        return RedirectResponse(url="/mt360-admin/login?error=1", status_code=303)
+
+    response = RedirectResponse(url="/mt360-admin", status_code=303)
+    response.set_cookie(
+        key="mt360_admin_auth",
+        value="1",
+        httponly=True,
+        samesite="lax",
+    )
+    return response
+
+
+@router.post("/mt360-admin/logout", include_in_schema=False)
+async def mt360_admin_logout():
+    """Log out MT360 admin session"""
+    response = RedirectResponse(url="/mt360-admin/login", status_code=303)
+    response.delete_cookie("mt360_admin_auth")
+    return response
+
+
+@router.get("/mt360-admin", include_in_schema=False)
+async def mt360_admin_page(request: Request):
+    """Serve the MT360 admin applications dashboard"""
+    if not _is_mt360_admin_authenticated(request):
+        return RedirectResponse(url="/mt360-admin/login", status_code=303)
+    return FileResponse(STATIC_DIR / "mt360-admin.html")
 
 
 # ===================== DJ Tool Endpoints =====================
@@ -432,30 +448,6 @@ async def apply_page():
     return FileResponse(STATIC_DIR / "index.html")
 
 
-@router.get("/multitasking360", include_in_schema=False)
-async def multitasking360_page():
-    """Serve the standalone MultiTasking360 landing page."""
-    return FileResponse(STATIC_DIR / "multitasking360.html")
-
-
-@router.get("/multitasking360/apply", include_in_schema=False)
-async def multitasking360_apply_page():
-    """Serve MultiTasking360 page with the apply section available."""
-    return FileResponse(STATIC_DIR / "multitasking360.html")
-
-
-@router.get("/multitasking360/editorial", include_in_schema=False)
-async def multitasking360_editorial_page():
-    """Serve the Ultra-Luxury Editorial design variant."""
-    return FileResponse(STATIC_DIR / "multitasking360-editorial.html")
-
-
-@router.get("/multitasking360/corporate", include_in_schema=False)
-async def multitasking360_corporate_page():
-    """Serve the Corporate Premium design variant."""
-    return FileResponse(STATIC_DIR / "multitasking360-corporate.html")
-
-
 @router.get("/api/offers")
 async def get_offer_catalog():
     """Return the offer stack for the info product funnel"""
@@ -516,91 +508,13 @@ async def submit_application(application: InfoProductApplicationRequest):
     """Capture a lead and score it for the right high-ticket offer"""
     try:
         result = funnel.process_application(application)
-        lead_payload = {
-            "source": "multitasking360_site",
-            "name": application.name,
-            "email": application.email,
-            "instagram_handle": application.instagram_handle,
-            "audience_size": application.audience_size,
-            "monthly_revenue": application.monthly_revenue,
-            "biggest_goal": application.biggest_goal,
-            "biggest_block": application.biggest_block,
-            "budget_range": application.budget_range,
-            "interested_offer": application.interested_offer,
-        }
-
-        notification_sent = False
-        try:
-            notification_sent = _send_multitasking360_notification(
-                lead_payload=lead_payload,
-                record_id=result.get("application_id", ""),
-            )
-        except Exception as notify_err:
-            logger.error(f"Application saved but email notification failed: {notify_err}")
-
         return ApiResponse(
             success=True,
             message="Application captured",
-            data={
-                **result,
-                "notification_sent": notification_sent,
-            },
+            data=result,
         )
     except Exception as e:
         logger.error(f"Error capturing application: {e}")
-        raise HTTPException(status_code=500, detail="Error capturing application")
-
-
-@router.post("/api/multitasking360/applications")
-async def submit_multitasking360_application(request: Request):
-    """Capture public MultiTasking360 applications from the standalone site."""
-    # deploy-marker: multitasking360-email-endpoint
-    try:
-        body = await request.json()
-        full_name = f"{(body.get('first_name') or '').strip()} {(body.get('last_name') or '').strip()}".strip()
-        if not full_name:
-            full_name = (body.get("name") or "").strip()
-
-        email = (body.get("email") or "").strip()
-        if not full_name or not email:
-            raise HTTPException(status_code=400, detail="Name and email are required")
-
-        lead_payload = {
-            "source": "multitasking360_site",
-            "name": full_name,
-            "email": email,
-            "phone": (body.get("phone") or "").strip(),
-            "industry": (body.get("industry") or "").strip(),
-            "program": (body.get("program") or "").strip(),
-            "goal": (body.get("goal") or "").strip(),
-        }
-
-        result = save_lead_crm_record(
-            lead_id=body.get("lead_id", str(uuid.uuid4())),
-            lead=lead_payload,
-        )
-
-        notification_sent = False
-        try:
-            notification_sent = _send_multitasking360_notification(
-                lead_payload=lead_payload,
-                record_id=result.get("record_id", ""),
-            )
-        except Exception as notify_err:
-            logger.error(f"Application saved but email notification failed: {notify_err}")
-
-        return ApiResponse(
-            success=True,
-            message="Application captured",
-            data={
-                **result,
-                "notification_sent": notification_sent,
-            },
-        )
-    except HTTPException:
-        raise
-    except Exception as e:
-        logger.error(f"Error capturing MultiTasking360 application: {e}")
         raise HTTPException(status_code=500, detail="Error capturing application")
 
 

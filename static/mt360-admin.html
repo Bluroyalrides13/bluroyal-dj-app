@@ -1,0 +1,713 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MultiTasking360 Admin — Applications</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&display=swap');
+
+    :root {
+      --bg: #0a1118;
+      --surface: #0f1b26;
+      --surface2: #132331;
+      --border: rgba(201, 168, 109, 0.18);
+      --text: #f7f2e8;
+      --muted: #bcae93;
+      --accent: #c9a86d;
+      --accent2: #84b6a4;
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Manrope", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      letter-spacing: 0.01em;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 32px;
+    }
+
+    header {
+      margin-bottom: 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--text), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .btn {
+      padding: 10px 18px;
+      border: none;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent) 0%, #d4af37 100%);
+      color: #0a1118;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(201, 168, 109, 0.3);
+    }
+
+    .btn-secondary {
+      background: var(--surface2);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(201, 168, 109, 0.1);
+      border-color: var(--accent);
+    }
+
+    .btn-danger {
+      background: rgba(239, 68, 68, 0.12);
+      color: #fca5a5;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .btn-danger:hover {
+      background: rgba(239, 68, 68, 0.2);
+    }
+
+    .filters {
+      background: linear-gradient(180deg, var(--surface) 0%, rgba(15, 27, 38, 0.8) 100%);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 24px;
+      display: grid;
+      grid-template-columns: 1fr 1fr auto auto;
+      gap: 14px;
+      align-items: end;
+    }
+
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .filter-group label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    input,
+    select {
+      padding: 10px 12px;
+      background: rgba(12, 23, 33, 0.6);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.9rem;
+    }
+
+    input:focus,
+    select:focus {
+      outline: none;
+      border-color: var(--accent2);
+      background: rgba(132, 182, 164, 0.08);
+      box-shadow: 0 0 0 2px rgba(132, 182, 164, 0.12);
+    }
+
+    .bulk-actions {
+      background: linear-gradient(180deg, var(--surface) 0%, rgba(15, 27, 38, 0.8) 100%);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 24px;
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .bulk-actions-left {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .mt-selected-chip {
+      background: rgba(201, 168, 109, 0.2);
+      border: 1px solid rgba(201, 168, 109, 0.4);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--accent);
+    }
+
+    .admin-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: linear-gradient(180deg, var(--surface) 0%, rgba(15, 27, 38, 0.8) 100%);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .admin-table thead {
+      background: rgba(0, 0, 0, 0.3);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .admin-table th {
+      padding: 14px;
+      text-align: left;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .admin-table td {
+      padding: 14px;
+      border-bottom: 1px solid rgba(201, 168, 109, 0.1);
+      font-size: 0.9rem;
+    }
+
+    .admin-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .admin-table tbody tr {
+      transition: all 0.15s;
+    }
+
+    .admin-table tbody tr:hover td {
+      background: rgba(201, 168, 109, 0.05);
+    }
+
+    .admin-table tr.mt-row--selected td {
+      background: rgba(184, 134, 11, 0.12);
+    }
+
+    .admin-table tr.mt-row--selected td:first-child {
+      box-shadow: inset 3px 0 0 #b8860b;
+    }
+
+    .mt-row-select {
+      accent-color: #b8860b;
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+    }
+
+    .detail-drawer {
+      position: fixed;
+      right: 0;
+      top: 0;
+      width: 500px;
+      height: 100vh;
+      background: var(--surface);
+      border-left: 1px solid var(--border);
+      transform: translateX(100%);
+      transition: transform 0.3s ease;
+      z-index: 1000;
+      overflow-y: auto;
+      box-shadow: -8px 0 24px rgba(0, 0, 0, 0.4);
+    }
+
+    .detail-drawer.show {
+      transform: translateX(0);
+    }
+
+    .drawer-header {
+      padding: 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      background: var(--surface);
+    }
+
+    .drawer-close {
+      background: none;
+      border: none;
+      color: var(--text);
+      cursor: pointer;
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    .drawer-content {
+      padding: 20px;
+    }
+
+    .drawer-field {
+      margin-bottom: 20px;
+    }
+
+    .drawer-field label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 8px;
+    }
+
+    .drawer-field input,
+    .drawer-field select,
+    .drawer-field textarea {
+      width: 100%;
+      padding: 10px 12px;
+      background: rgba(12, 23, 33, 0.6);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.9rem;
+    }
+
+    .drawer-field textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .drawer-actions {
+      padding: 20px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 12px;
+      position: sticky;
+      bottom: 0;
+      background: var(--surface);
+    }
+
+    .drawer-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 999;
+    }
+
+    .drawer-overlay.show {
+      display: block;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: var(--muted);
+    }
+
+    .error {
+      background: rgba(239, 68, 68, 0.12);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #fca5a5;
+      padding: 14px;
+      border-radius: var(--radius);
+      margin-bottom: 24px;
+      font-size: 0.9rem;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: capitalize;
+    }
+
+    .status-contacted { background: rgba(132, 182, 164, 0.2); color: var(--accent2); }
+    .status-booked { background: rgba(201, 168, 109, 0.2); color: var(--accent); }
+    .status-won { background: rgba(34, 197, 94, 0.2); color: #86efac; }
+    .status-lost { background: rgba(239, 68, 68, 0.2); color: #fca5a5; }
+    .status-nurture { background: rgba(168, 85, 247, 0.2); color: #d8b4fe; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>MultiTasking360 Applications</h1>
+      <div class="header-actions">
+        <button class="btn btn-secondary" onclick="exportApplications('csv')">Export CSV</button>
+        <button class="btn btn-secondary" onclick="logOut()">Sign Out</button>
+      </div>
+    </header>
+
+    <div class="filters">
+      <div class="filter-group">
+        <label>Search</label>
+        <input
+          type="text"
+          id="mt-search"
+          placeholder="Name, email, phone..."
+          onkeyup="loadApplications()"
+        />
+      </div>
+
+      <div class="filter-group">
+        <label>Status</label>
+        <select id="mt-status-filter" onchange="loadApplications()">
+          <option value="">All Statuses</option>
+          <option value="new">New</option>
+          <option value="contacted">Contacted</option>
+          <option value="booked">Booked</option>
+          <option value="won">Won</option>
+          <option value="lost">Lost</option>
+          <option value="nurture">Nurture</option>
+        </select>
+      </div>
+
+      <button class="btn btn-secondary" onclick="loadApplications()">Refresh</button>
+      <button class="btn btn-primary" onclick="toggleAllApplications(document.getElementById('mt-select-all').checked)">Select All</button>
+    </div>
+
+    <div class="bulk-actions">
+      <div class="bulk-actions-left">
+        <div class="mt-selected-chip"><span id="mt-selected-count">0 selected</span></div>
+        <select id="mt-bulk-status">
+          <option value="">Choose status...</option>
+          <option value="contacted">Mark Contacted</option>
+          <option value="booked">Mark Booked</option>
+          <option value="won">Mark Won</option>
+          <option value="lost">Mark Lost</option>
+          <option value="nurture">Mark Nurture</option>
+        </select>
+      </div>
+      <div>
+        <button class="btn btn-primary" id="mt-bulk-update" onclick="bulkUpdateApplicationsStatus()" disabled>Apply to Selected</button>
+        <button class="btn btn-secondary" id="mt-clear-selection" onclick="clearApplicationSelection()" disabled>Clear Selection</button>
+      </div>
+    </div>
+
+    <div id="mt-error" class="error" style="display: none;"></div>
+
+    <div id="mt-table-wrap">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th style="width: 40px;"><input type="checkbox" id="mt-select-all" onchange="toggleAllApplications(this.checked)" /></th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Status</th>
+            <th>Date</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="mt-tbody">
+          <tr>
+            <td colspan="7" class="loading">Loading applications...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="drawer-overlay" id="mt-drawer-overlay" onclick="closeApplicationDetails()"></div>
+
+  <div class="detail-drawer" id="mt-detail-drawer">
+    <div class="drawer-header">
+      <h2 style="font-size: 1.2rem;">Application Details</h2>
+      <button class="drawer-close" onclick="closeApplicationDetails()">×</button>
+    </div>
+
+    <div class="drawer-content">
+      <div class="drawer-field">
+        <label>Name</label>
+        <input type="text" id="mt-detail-name" readonly />
+      </div>
+
+      <div class="drawer-field">
+        <label>Email</label>
+        <input type="text" id="mt-detail-email" readonly />
+      </div>
+
+      <div class="drawer-field">
+        <label>Phone</label>
+        <input type="text" id="mt-detail-phone" readonly />
+      </div>
+
+      <div class="drawer-field">
+        <label>Service Tier</label>
+        <input type="text" id="mt-detail-tier" readonly />
+      </div>
+
+      <div class="drawer-field">
+        <label>Status</label>
+        <select id="mt-detail-status">
+          <option value="new">New</option>
+          <option value="contacted">Contacted</option>
+          <option value="booked">Booked</option>
+          <option value="won">Won</option>
+          <option value="lost">Lost</option>
+          <option value="nurture">Nurture</option>
+        </select>
+      </div>
+
+      <div class="drawer-field">
+        <label>Notes</label>
+        <textarea id="mt-detail-notes" placeholder="Add notes about this application..."></textarea>
+      </div>
+
+      <div class="drawer-field">
+        <label>Submitted</label>
+        <input type="text" id="mt-detail-created" readonly />
+      </div>
+    </div>
+
+    <div class="drawer-actions">
+      <button class="btn btn-primary" style="flex: 1;" onclick="saveApplicationStatus()">Save</button>
+      <button class="btn btn-secondary" style="flex: 1;" onclick="closeApplicationDetails()">Cancel</button>
+    </div>
+  </div>
+
+  <script>
+    let mtApplications = [];
+    let mtSelectedApplicationIds = new Set();
+    let mtSelectedApplicationId = null;
+
+    async function loadApplications() {
+      const search = document.getElementById('mt-search').value;
+      const status = document.getElementById('mt-status-filter').value;
+
+      const params = new URLSearchParams();
+      if (search) params.append('search', search);
+      if (status) params.append('status', status);
+
+      try {
+        const response = await fetch(`/api/admin/applications?${params}`);
+        if (!response.ok) throw new Error('Failed to load applications');
+
+        mtApplications = await response.json();
+        renderApplicationsTable(mtApplications);
+      } catch (error) {
+        showError('Failed to load applications: ' + error.message);
+      }
+    }
+
+    function renderApplicationsTable(rows) {
+      const tbody = document.getElementById('mt-tbody');
+
+      if (rows.length === 0) {
+        tbody.innerHTML =
+          '<tr><td colspan="7" class="loading">No applications found.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = rows
+        .map(
+          (row) => `
+        <tr class="mt-row ${mtSelectedApplicationIds.has(row.id) ? 'mt-row--selected' : ''}">
+          <td>
+            <input
+              type="checkbox"
+              class="mt-row-select"
+              ${mtSelectedApplicationIds.has(row.id) ? 'checked' : ''}
+              onchange="toggleApplicationSelection(${row.id}, this.checked)"
+            />
+          </td>
+          <td>${row.name || '-'}</td>
+          <td>${row.email || '-'}</td>
+          <td>${row.phone || '-'}</td>
+          <td><span class="status-badge status-${row.status || 'new'}">${row.status || 'new'}</span></td>
+          <td>${new Date(row.created_at).toLocaleDateString()}</td>
+          <td><button class="btn btn-secondary" onclick="openApplicationDetails(${row.id})">View</button></td>
+        </tr>
+      `
+        )
+        .join('');
+
+      refreshBulkActionsState();
+    }
+
+    function toggleApplicationSelection(id, checked) {
+      if (checked) {
+        mtSelectedApplicationIds.add(id);
+      } else {
+        mtSelectedApplicationIds.delete(id);
+      }
+      refreshBulkActionsState();
+    }
+
+    function toggleAllApplications(checked) {
+      if (checked) {
+        mtApplications.forEach((app) => mtSelectedApplicationIds.add(app.id));
+      } else {
+        mtSelectedApplicationIds.clear();
+      }
+      renderApplicationsTable(mtApplications);
+    }
+
+    function refreshBulkActionsState() {
+      const count = mtSelectedApplicationIds.size;
+      document.getElementById('mt-selected-count').textContent =
+        count === 1 ? '1 selected' : count + ' selected';
+      document.getElementById('mt-bulk-update').disabled = count === 0;
+      document.getElementById('mt-clear-selection').disabled = count === 0;
+
+      // Update checkboxes
+      document.querySelectorAll('.mt-row-select').forEach((checkbox, index) => {
+        checkbox.checked = mtSelectedApplicationIds.has(mtApplications[index].id);
+      });
+
+      // Update select-all checkbox
+      const selectAllCheckbox = document.getElementById('mt-select-all');
+      selectAllCheckbox.checked = mtSelectedApplicationIds.size === mtApplications.length && mtApplications.length > 0;
+    }
+
+    function clearApplicationSelection() {
+      mtSelectedApplicationIds.clear();
+      renderApplicationsTable(mtApplications);
+    }
+
+    async function openApplicationDetails(id) {
+      try {
+        const response = await fetch(`/api/admin/applications/${id}`);
+        if (!response.ok) throw new Error('Failed to load application');
+
+        const app = await response.json();
+        mtSelectedApplicationId = id;
+
+        document.getElementById('mt-detail-name').value = app.name || '';
+        document.getElementById('mt-detail-email').value = app.email || '';
+        document.getElementById('mt-detail-phone').value = app.phone || '';
+        document.getElementById('mt-detail-tier').value = app.service_tier || '';
+        document.getElementById('mt-detail-status').value = app.status || 'new';
+        document.getElementById('mt-detail-notes').value = app.notes || '';
+        document.getElementById('mt-detail-created').value = new Date(
+          app.created_at
+        ).toLocaleString();
+
+        document.getElementById('mt-detail-drawer').classList.add('show');
+        document.getElementById('mt-drawer-overlay').classList.add('show');
+      } catch (error) {
+        showError('Failed to load application details: ' + error.message);
+      }
+    }
+
+    function closeApplicationDetails() {
+      document.getElementById('mt-detail-drawer').classList.remove('show');
+      document.getElementById('mt-drawer-overlay').classList.remove('show');
+      mtSelectedApplicationId = null;
+    }
+
+    async function saveApplicationStatus() {
+      if (!mtSelectedApplicationId) return;
+
+      const status = document.getElementById('mt-detail-status').value;
+      const notes = document.getElementById('mt-detail-notes').value;
+
+      try {
+        const response = await fetch(`/api/admin/applications/${mtSelectedApplicationId}/status`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status, notes }),
+        });
+
+        if (!response.ok) throw new Error('Failed to save application');
+
+        closeApplicationDetails();
+        loadApplications();
+      } catch (error) {
+        showError('Failed to save application: ' + error.message);
+      }
+    }
+
+    async function bulkUpdateApplicationsStatus() {
+      const status = document.getElementById('mt-bulk-status').value;
+      if (!status) {
+        showError('Please select a status');
+        return;
+      }
+
+      const ids = Array.from(mtSelectedApplicationIds);
+      const promises = ids.map((id) =>
+        fetch(`/api/admin/applications/${id}/status`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status, notes: '' }),
+        })
+      );
+
+      try {
+        await Promise.all(promises);
+        mtSelectedApplicationIds.clear();
+        loadApplications();
+      } catch (error) {
+        showError('Failed to update applications: ' + error.message);
+      }
+    }
+
+    async function exportApplications(format) {
+      const search = document.getElementById('mt-search').value;
+      const status = document.getElementById('mt-status-filter').value;
+
+      const params = new URLSearchParams({ format });
+      if (search) params.append('search', search);
+      if (status) params.append('status', status);
+
+      window.location.href = `/api/admin/applications/export?${params}`;
+    }
+
+    function showError(message) {
+      const errorDiv = document.getElementById('mt-error');
+      errorDiv.textContent = message;
+      errorDiv.style.display = 'block';
+      setTimeout(() => {
+        errorDiv.style.display = 'none';
+      }, 5000);
+    }
+
+    function logOut() {
+      fetch('/mt360-admin/logout', { method: 'POST' }).then(() => {
+        window.location.href = '/mt360-admin/login';
+      });
+    }
+
+    // Load applications on page load
+    loadApplications();
+  </script>
+</body>
+</html>

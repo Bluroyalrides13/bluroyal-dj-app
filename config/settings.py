@@ -22,29 +22,20 @@ class Settings(BaseSettings):
     DASHBOARD_PASSWORD: str = os.getenv("DASHBOARD_PASSWORD", "change-this-now")
     ACADEMY_APP_USERNAME: str = os.getenv("ACADEMY_APP_USERNAME", "academyadmin")
     ACADEMY_APP_PASSWORD: str = os.getenv("ACADEMY_APP_PASSWORD", "change-this-now")
+    
+    # MultiTasking360 Admin Portal
+    MT360_ADMIN_USERNAME: str = os.getenv("MT360_ADMIN_USERNAME", "multitask360official")
+    MT360_ADMIN_PASSWORD: str = os.getenv("MT360_ADMIN_PASSWORD", "multitask360-admin-2026")
 
     # Payment Link Configuration
-    STARTER_PAYMENT_LINK: str = os.getenv("STARTER_PAYMENT_LINK", "").replace("\\n", "").replace("\\r", "").replace("\n", "").replace("\r", "").strip()
-    GUIDED_PAYMENT_LINK: str = os.getenv("GUIDED_PAYMENT_LINK", "").replace("\\n", "").replace("\\r", "").replace("\n", "").replace("\r", "").strip()
-    VIP_PAYMENT_LINK: str = os.getenv("VIP_PAYMENT_LINK", "").replace("\\n", "").replace("\\r", "").replace("\n", "").replace("\r", "").strip()
-    FINE_MOTOR_SKILLS_PAYMENT_LINK: str = os.getenv(
-        "FINE_MOTOR_SKILLS_PAYMENT_LINK",
-        "https://buy.stripe.com/cNi4gBdwg0DjetbdZhc7u0g",
-    ).replace("\\n", "").replace("\\r", "").replace("\n", "").replace("\r", "").strip()
+    STARTER_PAYMENT_LINK: str = os.getenv("STARTER_PAYMENT_LINK", "").replace('\n', '').replace('\r', '').strip()
+    GUIDED_PAYMENT_LINK: str = os.getenv("GUIDED_PAYMENT_LINK", "").replace('\n', '').replace('\r', '').strip()
+    VIP_PAYMENT_LINK: str = os.getenv("VIP_PAYMENT_LINK", "").replace('\n', '').replace('\r', '').strip()
     POST_PURCHASE_LOGIN_URL: str = os.getenv(
         "POST_PURCHASE_LOGIN_URL",
         "https://app.bluroyaladventures.com/academy/login",
     )
-    SUPPORT_EMAIL: str = os.getenv("SUPPORT_EMAIL", "multitask360official@gmail.com")
-
-    # Email Notification Configuration
-    SMTP_HOST: str = os.getenv("SMTP_HOST", "")
-    SMTP_PORT: int = int(os.getenv("SMTP_PORT", "587"))
-    SMTP_USERNAME: str = os.getenv("SMTP_USERNAME", "")
-    SMTP_PASSWORD: str = os.getenv("SMTP_PASSWORD", "")
-    SMTP_FROM_EMAIL: str = os.getenv("SMTP_FROM_EMAIL", "")
-    SMTP_TO_EMAIL: str = os.getenv("SMTP_TO_EMAIL", "")
-    SMTP_USE_TLS: bool = os.getenv("SMTP_USE_TLS", "true").lower() == "true"
+    SUPPORT_EMAIL: str = os.getenv("SUPPORT_EMAIL", "")
     
     # Claude AI Configuration
     ANTHROPIC_API_KEY: str = os.getenv("ANTHROPIC_API_KEY", "")
@@ -72,11 +63,9 @@ class Settings(BaseSettings):
         "http://localhost",
         "http://localhost:3000",
         "http://localhost:8000",
-        "http://127.0.0.1:8000",
         "https://bluroyaladventures.com",
         "https://www.bluroyaladventures.com",
         "https://app.bluroyaladventures.com",
-        "https://multitasking360.onrender.com",
         "https://*.wix.com",
         "https://*.wixpress.com",
     ]
