@@ -64,16 +64,13 @@ def _send_multitasking360_notification(lead_payload: dict, record_id: str) -> bo
         return False
 
     subject = f"New MultiTasking360 Application: {lead_payload.get('name', 'Unknown')}"
-    body = (
-        "A new MultiTasking360 application was submitted.\n\n"
-        f"Record ID: {record_id}\n"
-        f"Name: {lead_payload.get('name', '')}\n"
-        f"Email: {lead_payload.get('email', '')}\n"
-        f"Phone: {lead_payload.get('phone', '')}\n"
-        f"Industry: {lead_payload.get('industry', '')}\n"
-        f"Program: {lead_payload.get('program', '')}\n"
-        f"Goal: {lead_payload.get('goal', '')}\n"
-    )
+    body_lines = ["A new MultiTasking360 application was submitted.", "", f"Record ID: {record_id}"]
+    for key, value in lead_payload.items():
+        if value in (None, "", []):
+            continue
+        label = key.replace("_", " ").title()
+        body_lines.append(f"{label}: {value}")
+    body = "\n".join(body_lines) + "\n"
 
     msg = EmailMessage()
     msg["Subject"] = subject
@@ -519,10 +516,35 @@ async def submit_application(application: InfoProductApplicationRequest):
     """Capture a lead and score it for the right high-ticket offer"""
     try:
         result = funnel.process_application(application)
+        lead_payload = {
+            "source": "multitasking360_site",
+            "name": application.name,
+            "email": application.email,
+            "instagram_handle": application.instagram_handle,
+            "audience_size": application.audience_size,
+            "monthly_revenue": application.monthly_revenue,
+            "biggest_goal": application.biggest_goal,
+            "biggest_block": application.biggest_block,
+            "budget_range": application.budget_range,
+            "interested_offer": application.interested_offer,
+        }
+
+        notification_sent = False
+        try:
+            notification_sent = _send_multitasking360_notification(
+                lead_payload=lead_payload,
+                record_id=result.get("application_id", ""),
+            )
+        except Exception as notify_err:
+            logger.error(f"Application saved but email notification failed: {notify_err}")
+
         return ApiResponse(
             success=True,
             message="Application captured",
-            data=result,
+            data={
+                **result,
+                "notification_sent": notification_sent,
+            },
         )
     except Exception as e:
         logger.error(f"Error capturing application: {e}")
