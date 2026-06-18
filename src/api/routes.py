@@ -5,9 +5,11 @@ Main endpoints for chat, bookings, quotes, and webhooks
 
 import logging
 import uuid
+import csv
+import io
 from pathlib import Path
 from fastapi import APIRouter, HTTPException, Header, Request, Form
-from fastapi.responses import FileResponse, RedirectResponse
+from fastapi.responses import FileResponse, RedirectResponse, StreamingResponse
 from typing import List, Optional
 
 from src.models.schemas import (
@@ -78,6 +80,12 @@ def _is_mt360_admin_authenticated(request: Request) -> bool:
 def _require_mt360_admin_auth(request: Request):
     if not _is_mt360_admin_authenticated(request):
         raise HTTPException(status_code=401, detail="Unauthorized")
+
+
+def _require_admin_portal_auth(request: Request):
+    if _is_dashboard_authenticated(request) or _is_mt360_admin_authenticated(request):
+        return
+    raise HTTPException(status_code=401, detail="Unauthorized")
 
 
 # ===================== DJ Dashboard UI =====================
@@ -516,6 +524,158 @@ async def submit_application(application: InfoProductApplicationRequest):
     except Exception as e:
         logger.error(f"Error capturing application: {e}")
         raise HTTPException(status_code=500, detail="Error capturing application")
+
+
+def _fetch_info_product_applications(
+    limit: int = 500,
+    search: Optional[str] = None,
+    status: Optional[str] = None,
+    date_from: Optional[str] = None,
+    date_to: Optional[str] = None,
+) -> List[dict]:
+    rows = funnel.db.get_recent_info_product_applications(limit=limit)
+
+    if search:
+        needle = search.strip().lower()
+        rows = [
+            row for row in rows
+            if needle in (row.get("name") or "").lower()
+            or needle in (row.get("email") or "").lower()
+            or needle in (row.get("instagram_handle") or "").lower()
+        ]
+
+    if status:
+        rows = [row for row in rows if (row.get("status") or "").lower() == status.lower()]
+
+    if date_from:
+        from_iso = f"{date_from}T00:00:00"
+        rows = [row for row in rows if (row.get("created_at") or "") >= from_iso]
+
+    if date_to:
+        to_iso = f"{date_to}T23:59:59.999999"
+        rows = [row for row in rows if (row.get("created_at") or "") <= to_iso]
+
+    return rows
+
+
+def _applications_csv_response(rows: List[dict]) -> StreamingResponse:
+    output = io.StringIO()
+    fieldnames = [
+        "id",
+        "name",
+        "email",
+        "instagram_handle",
+        "audience_size",
+        "monthly_revenue",
+        "biggest_goal",
+        "biggest_block",
+        "budget_range",
+        "interested_offer",
+        "overall_score",
+        "recommended_offer",
+        "status",
+        "notes",
+        "created_at",
+        "updated_at",
+    ]
+    writer = csv.DictWriter(output, fieldnames=fieldnames)
+    writer.writeheader()
+    for row in rows:
+        writer.writerow({key: row.get(key, "") for key in fieldnames})
+
+    output.seek(0)
+    return StreamingResponse(
+        iter([output.getvalue()]),
+        media_type="text/csv",
+        headers={"Content-Disposition": "attachment; filename=mt360-applications.csv"},
+    )
+
+
+@router.get("/api/admin/applications")
+async def list_info_product_applications(
+    request: Request,
+    limit: int = 500,
+    search: Optional[str] = None,
+    status: Optional[str] = None,
+    date_from: Optional[str] = None,
+    date_to: Optional[str] = None,
+):
+    _require_admin_portal_auth(request)
+    try:
+        return _fetch_info_product_applications(
+            limit=limit,
+            search=search,
+            status=status,
+            date_from=date_from,
+            date_to=date_to,
+        )
+    except Exception as e:
+        logger.error(f"Error loading admin applications: {e}")
+        raise HTTPException(status_code=500, detail="Error loading applications")
+
+
+@router.get("/api/admin/applications/{application_id}")
+async def get_info_product_application(application_id: str, request: Request):
+    _require_admin_portal_auth(request)
+    try:
+        row = funnel.db.get_info_product_application(application_id)
+        if not row:
+            raise HTTPException(status_code=404, detail="Application not found")
+        return row
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error loading application {application_id}: {e}")
+        raise HTTPException(status_code=500, detail="Error loading application")
+
+
+@router.post("/api/admin/applications/{application_id}/status")
+async def update_info_product_application_status(application_id: str, request: Request):
+    _require_admin_portal_auth(request)
+    try:
+        body = await request.json()
+        updates = {
+            "status": body.get("status"),
+            "notes": body.get("notes"),
+        }
+        updated = funnel.db.update_info_product_application(application_id, updates)
+        if not updated:
+            raise HTTPException(status_code=404, detail="Application not found")
+        return updated
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error updating application {application_id}: {e}")
+        raise HTTPException(status_code=500, detail="Error updating application")
+
+
+@router.get("/api/admin/applications/export")
+async def export_info_product_applications(
+    request: Request,
+    format: str = "csv",
+    limit: int = 500,
+    search: Optional[str] = None,
+    status: Optional[str] = None,
+    date_from: Optional[str] = None,
+    date_to: Optional[str] = None,
+):
+    _require_admin_portal_auth(request)
+    try:
+        rows = _fetch_info_product_applications(
+            limit=limit,
+            search=search,
+            status=status,
+            date_from=date_from,
+            date_to=date_to,
+        )
+
+        if format.lower() == "json":
+            return rows
+
+        return _applications_csv_response(rows)
+    except Exception as e:
+        logger.error(f"Error exporting applications: {e}")
+        raise HTTPException(status_code=500, detail="Error exporting applications")
 
 
 # ===================== Chat Endpoints =====================

@@ -518,6 +518,10 @@
 
       try {
         const response = await fetch(`/api/admin/applications?${params}`);
+        if (response.status === 401) {
+          window.location.href = '/mt360-admin/login';
+          return;
+        }
         if (!response.ok) throw new Error('Failed to load applications');
 
         mtApplications = await response.json();
@@ -545,7 +549,7 @@
               type="checkbox"
               class="mt-row-select"
               ${mtSelectedApplicationIds.has(row.id) ? 'checked' : ''}
-              onchange="toggleApplicationSelection(${row.id}, this.checked)"
+              onchange="toggleApplicationSelection('${row.id}', this.checked)"
             />
           </td>
           <td>${row.name || '-'}</td>
@@ -553,7 +557,7 @@
           <td>${row.phone || '-'}</td>
           <td><span class="status-badge status-${row.status || 'new'}">${row.status || 'new'}</span></td>
           <td>${new Date(row.created_at).toLocaleDateString()}</td>
-          <td><button class="btn btn-secondary" onclick="openApplicationDetails(${row.id})">View</button></td>
+          <td><button class="btn btn-secondary" onclick="openApplicationDetails('${row.id}')">View</button></td>
         </tr>
       `
         )

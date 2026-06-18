@@ -324,48 +324,56 @@ class DatabaseManager:
         return [dict(zip(columns, row)) for row in rows]
 
     def count_info_product_applications(self) -> int:
-        """Return the total number of info product applications."""
+        """Return total number of info product applications."""
         conn = self.get_connection()
         cursor = conn.cursor()
         cursor.execute("SELECT COUNT(*) FROM info_product_applications")
-        count = int(cursor.fetchone()[0] or 0)
+        count = cursor.fetchone()[0]
         conn.close()
-        return count
+        return int(count)
 
     def get_info_product_application(self, application_id: str) -> Optional[dict]:
-        """Return a single info product application by ID."""
+        """Return one info product application by ID."""
         conn = self.get_connection()
         cursor = conn.cursor()
-
         cursor.execute(
             "SELECT * FROM info_product_applications WHERE id = ?",
             (application_id,),
         )
         row = cursor.fetchone()
-        columns = [description[0] for description in cursor.description] if row else []
+        columns = [description[0] for description in cursor.description] if cursor.description else []
         conn.close()
 
-        if row:
-            return dict(zip(columns, row))
-        return None
+        if not row:
+            return None
 
-    def update_info_product_application(self, application_id: str, updates: dict) -> bool:
-        """Update fields on an info product application."""
+        return dict(zip(columns, row))
+
+    def update_info_product_application(self, application_id: str, updates: dict) -> Optional[dict]:
+        """Update one info product application and return the updated row."""
         if not updates:
-            return True
+            return self.get_info_product_application(application_id)
 
-        updates = dict(updates)
-        updates["updated_at"] = datetime.utcnow().isoformat()
+        allowed_fields = {"status", "notes", "recommended_offer", "overall_score"}
+        filtered_updates = {k: v for k, v in updates.items() if k in allowed_fields}
+        if not filtered_updates:
+            return self.get_info_product_application(application_id)
+
+        filtered_updates["updated_at"] = datetime.utcnow().isoformat()
+        set_clause = ", ".join(f"{key} = ?" for key in filtered_updates.keys())
+        values = list(filtered_updates.values()) + [application_id]
 
         conn = self.get_connection()
         cursor = conn.cursor()
-        set_clause = ", ".join([f"{key} = ?" for key in updates.keys()])
-        values = list(updates.values()) + [application_id]
-
         cursor.execute(
             f"UPDATE info_product_applications SET {set_clause} WHERE id = ?",
             values,
         )
+        updated_rows = cursor.rowcount
         conn.commit()
         conn.close()
-        return cursor.rowcount > 0
+
+        if updated_rows == 0:
+            return None
+
+        return self.get_info_product_application(application_id)
