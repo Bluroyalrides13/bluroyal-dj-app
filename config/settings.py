@@ -63,9 +63,11 @@ class Settings(BaseSettings):
         "http://localhost",
         "http://localhost:3000",
         "http://localhost:8000",
+        "http://127.0.0.1:8000",
         "https://bluroyaladventures.com",
         "https://www.bluroyaladventures.com",
         "https://app.bluroyaladventures.com",
+        "https://multitasking360.onrender.com",
         "https://*.wix.com",
         "https://*.wixpress.com",
     ]

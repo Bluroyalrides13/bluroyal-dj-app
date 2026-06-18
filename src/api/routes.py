@@ -493,6 +493,42 @@ async def submit_application(application: InfoProductApplicationRequest):
         raise HTTPException(status_code=500, detail="Error capturing application")
 
 
+@router.post("/api/multitasking360/applications")
+async def submit_multitasking360_application(request: Request):
+    """Capture public MultiTasking360 applications from the standalone site."""
+    try:
+        body = await request.json()
+        full_name = f"{(body.get('first_name') or '').strip()} {(body.get('last_name') or '').strip()}".strip()
+        if not full_name:
+            full_name = (body.get("name") or "").strip()
+
+        email = (body.get("email") or "").strip()
+        if not full_name or not email:
+            raise HTTPException(status_code=400, detail="Name and email are required")
+
+        lead_payload = {
+            "source": "multitasking360_site",
+            "name": full_name,
+            "email": email,
+            "phone": (body.get("phone") or "").strip(),
+            "industry": (body.get("industry") or "").strip(),
+            "program": (body.get("program") or "").strip(),
+            "goal": (body.get("goal") or "").strip(),
+        }
+
+        result = save_lead_crm_record(
+            lead_id=body.get("lead_id", str(uuid.uuid4())),
+            lead=lead_payload,
+        )
+
+        return ApiResponse(success=True, message="Application captured", data=result)
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error capturing MultiTasking360 application: {e}")
+        raise HTTPException(status_code=500, detail="Error capturing application")
+
+
 # ===================== Chat Endpoints =====================
 
 @router.post("/chat", response_model=ChatResponse)
