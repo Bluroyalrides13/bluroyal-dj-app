@@ -35,7 +35,7 @@ class Settings(BaseSettings):
         "POST_PURCHASE_LOGIN_URL",
         "https://app.bluroyaladventures.com/academy/login",
     )
-    SUPPORT_EMAIL: str = os.getenv("SUPPORT_EMAIL", "")
+    SUPPORT_EMAIL: str = os.getenv("SUPPORT_EMAIL", "multitask360official@gmail.com")
 
     # Email Notification Configuration
     SMTP_HOST: str = os.getenv("SMTP_HOST", "")
