@@ -5,6 +5,8 @@ Main endpoints for chat, bookings, quotes, and webhooks
 
 import logging
 import uuid
+import smtplib
+from email.message import EmailMessage
 from pathlib import Path
 from fastapi import APIRouter, HTTPException, Header, Request, Form
 from fastapi.responses import FileResponse, RedirectResponse
@@ -51,6 +53,40 @@ wix_handler = WixWebhookHandler(wix)
 settings = Settings()
 funnel = InfoProductFunnel()
 STATIC_DIR = Path(__file__).resolve().parents[2] / "static"
+
+
+def _send_multitasking360_notification(lead_payload: dict, record_id: str) -> bool:
+    """Send email notification for a new MultiTasking360 application."""
+    recipient = settings.SMTP_TO_EMAIL or settings.SUPPORT_EMAIL
+    sender = settings.SMTP_FROM_EMAIL or settings.SMTP_USERNAME
+    if not (settings.SMTP_HOST and settings.SMTP_USERNAME and settings.SMTP_PASSWORD and recipient and sender):
+        logger.info("SMTP not configured; skipping application email notification")
+        return False
+
+    subject = f"New MultiTasking360 Application: {lead_payload.get('name', 'Unknown')}"
+    body = (
+        "A new MultiTasking360 application was submitted.\n\n"
+        f"Record ID: {record_id}\n"
+        f"Name: {lead_payload.get('name', '')}\n"
+        f"Email: {lead_payload.get('email', '')}\n"
+        f"Phone: {lead_payload.get('phone', '')}\n"
+        f"Industry: {lead_payload.get('industry', '')}\n"
+        f"Program: {lead_payload.get('program', '')}\n"
+        f"Goal: {lead_payload.get('goal', '')}\n"
+    )
+
+    msg = EmailMessage()
+    msg["Subject"] = subject
+    msg["From"] = sender
+    msg["To"] = recipient
+    msg.set_content(body)
+
+    with smtplib.SMTP(settings.SMTP_HOST, settings.SMTP_PORT, timeout=15) as smtp:
+        if settings.SMTP_USE_TLS:
+            smtp.starttls()
+        smtp.login(settings.SMTP_USERNAME, settings.SMTP_PASSWORD)
+        smtp.send_message(msg)
+    return True
 
 
 def _is_dashboard_authenticated(request: Request) -> bool:
@@ -521,7 +557,23 @@ async def submit_multitasking360_application(request: Request):
             lead=lead_payload,
         )
 
-        return ApiResponse(success=True, message="Application captured", data=result)
+        notification_sent = False
+        try:
+            notification_sent = _send_multitasking360_notification(
+                lead_payload=lead_payload,
+                record_id=result.get("record_id", ""),
+            )
+        except Exception as notify_err:
+            logger.error(f"Application saved but email notification failed: {notify_err}")
+
+        return ApiResponse(
+            success=True,
+            message="Application captured",
+            data={
+                **result,
+                "notification_sent": notification_sent,
+            },
+        )
     except HTTPException:
         raise
     except Exception as e:
