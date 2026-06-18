@@ -532,6 +532,7 @@ async def submit_application(application: InfoProductApplicationRequest):
 @router.post("/api/multitasking360/applications")
 async def submit_multitasking360_application(request: Request):
     """Capture public MultiTasking360 applications from the standalone site."""
+    # deploy-marker: multitasking360-email-endpoint
     try:
         body = await request.json()
         full_name = f"{(body.get('first_name') or '').strip()} {(body.get('last_name') or '').strip()}".strip()
