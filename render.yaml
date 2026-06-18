@@ -21,6 +21,10 @@ services:
         sync: false
       - key: ACADEMY_APP_PASSWORD
         sync: false
+      - key: MT360_ADMIN_USERNAME
+        sync: false
+      - key: MT360_ADMIN_PASSWORD
+        sync: false
       - key: POST_PURCHASE_LOGIN_URL
         value: https://app.bluroyaladventures.com/academy/login
       - key: ANTHROPIC_API_KEY
