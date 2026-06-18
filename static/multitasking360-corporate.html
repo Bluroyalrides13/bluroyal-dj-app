@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MultiTasking360 Corporate — Tu Negocio. Tu Impacto. Tu Legado.</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #f2f6fb;
+      --ink: #0f1e39;
+      --blue: #1c4fd7;
+      --blue-soft: #3169f0;
+      --teal: #0ea5a4;
+      --line: #d4dfef;
+      --muted: #4f617f;
+      --card: #ffffff;
+      --display: "Plus Jakarta Sans", sans-serif;
+      --body: "IBM Plex Sans", sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--body);
+      color: var(--ink);
+      background:
+        radial-gradient(900px 450px at 80% -5%, rgba(28, 79, 215, 0.16), transparent 55%),
+        var(--bg);
+      line-height: 1.6;
+    }
+
+    .container { max-width: 1240px; margin: 0 auto; padding: 0 26px; }
+
+    .top {
+      background: linear-gradient(90deg, var(--blue), var(--blue-soft));
+      color: #fff;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.11em;
+      padding: 10px 0;
+      font-weight: 600;
+    }
+
+    .top .container { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 22px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .logo {
+      font-family: var(--display);
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .logo span { color: var(--blue); }
+
+    .nav-links { display: flex; gap: 20px; align-items: center; }
+    .nav-links a {
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 0.11em;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--muted);
+    }
+
+    .btn {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      border-radius: 10px;
+      padding: 11px 18px;
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-weight: 700;
+      border: 1px solid transparent;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .btn.primary { background: var(--blue); color: #fff; box-shadow: 0 12px 26px rgba(28,79,215,0.25); }
+    .btn.primary:hover { transform: translateY(-1px); }
+    .btn.secondary { border-color: var(--line); color: var(--ink); background: #fff; }
+
+    .hero {
+      padding: 48px 0;
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .hero h1 {
+      font-family: var(--display);
+      font-size: clamp(2.2rem, 5vw, 4.5rem);
+      line-height: 1.02;
+      letter-spacing: -0.03em;
+      margin-bottom: 16px;
+    }
+
+    .hero h1 strong { color: var(--blue); }
+
+    .lead { color: var(--muted); max-width: 620px; margin-bottom: 20px; }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .kpi {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 14px;
+    }
+
+    .kpi strong { display: block; font-family: var(--display); font-size: 1.4rem; margin-bottom: 4px; }
+    .kpi span { color: var(--muted); font-size: 0.76rem; text-transform: uppercase; letter-spacing: 0.1em; }
+
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 18px;
+      box-shadow: 0 12px 30px rgba(16,30,57,0.06);
+    }
+
+    .panel h3 { font-family: var(--display); margin-bottom: 12px; }
+
+    .metric { display: flex; gap: 10px; border-top: 1px solid var(--line); padding-top: 10px; margin-top: 10px; }
+    .metric b { min-width: 34px; height: 34px; border-radius: 8px; background: rgba(28,79,215,0.1); color: var(--blue); display: grid; place-items: center; font-family: var(--display); }
+    .metric p { color: var(--muted); font-size: 0.86rem; }
+
+    section { padding: 56px 0; border-top: 1px solid var(--line); }
+
+    .section-label { text-transform: uppercase; letter-spacing: 0.12em; font-size: 0.66rem; color: var(--blue); font-weight: 700; margin-bottom: 10px; }
+    .section-title { font-family: var(--display); font-size: clamp(1.8rem, 3.4vw, 3rem); margin-bottom: 10px; }
+    .section-text { color: var(--muted); max-width: 760px; }
+
+    .timeline {
+      margin-top: 24px;
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .phase {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 14px;
+      min-height: 170px;
+    }
+
+    .phase strong { color: var(--blue); font-family: var(--display); display: block; margin-bottom: 7px; }
+    .phase h4 { text-transform: uppercase; font-size: 0.74rem; letter-spacing: 0.1em; margin-bottom: 6px; }
+    .phase p { color: var(--muted); font-size: 0.84rem; }
+
+    .programs {
+      margin-top: 20px;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .program {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .program.featured {
+      border-color: rgba(28,79,215,0.45);
+      box-shadow: 0 14px 34px rgba(28,79,215,0.16);
+    }
+
+    .tier { text-transform: uppercase; letter-spacing: 0.13em; font-size: 0.65rem; color: var(--blue); font-weight: 700; }
+    .name { font-family: var(--display); font-size: 1.4rem; }
+    .price { font-family: var(--display); font-size: 2.3rem; line-height: 1; }
+    .program p { color: var(--muted); font-size: 0.86rem; }
+
+    .program ul { list-style: none; margin-top: 6px; display: grid; gap: 8px; }
+    .program li { border-top: 1px solid var(--line); padding-top: 8px; color: var(--muted); font-size: 0.82rem; }
+
+    .apply {
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: 0.95fr 1.05fr;
+      gap: 12px;
+    }
+
+    .info, .form {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 16px;
+    }
+
+    .info ul { list-style: none; margin-top: 10px; display: grid; gap: 8px; }
+    .info li { color: var(--muted); }
+
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .field { margin-bottom: 10px; }
+    label {
+      display: block;
+      font-size: 0.63rem;
+      text-transform: uppercase;
+      letter-spacing: 0.13em;
+      color: var(--muted);
+      margin-bottom: 6px;
+      font-weight: 700;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      padding: 10px;
+      font-family: var(--body);
+      color: var(--ink);
+      background: #fff;
+    }
+
+    textarea { min-height: 95px; resize: vertical; }
+
+    .success-message {
+      display: none;
+      margin-top: 10px;
+      padding: 10px;
+      border-radius: 9px;
+      border: 1px solid rgba(14,165,164,0.35);
+      background: rgba(14,165,164,0.1);
+      color: #0b5d5d;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    footer {
+      border-top: 1px solid var(--line);
+      padding: 24px 0 30px;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      color: var(--muted);
+      font-size: 0.77rem;
+    }
+
+    @media (max-width: 1080px) {
+      .hero, .programs, .apply, .timeline, .kpi-grid { grid-template-columns: 1fr; }
+      .row { grid-template-columns: 1fr; }
+      nav { flex-direction: column; align-items: flex-start; gap: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="top">
+    <div class="container">
+      <span>Executive Framework</span>
+      <span>Consulting-grade business architecture</span>
+      <span><a href="/multitasking360/editorial" style="color:#fff; text-decoration:none;">Ver Editorial Version</a></span>
+    </div>
+  </div>
+
+  <div class="container">
+    <nav>
+      <div class="logo">MultiTasking<span>360™</span></div>
+      <div class="nav-links">
+        <a href="#process">Proceso</a>
+        <a href="#programs">Programas</a>
+        <a href="#apply">Aplicar</a>
+      </div>
+    </nav>
+
+    <header class="hero">
+      <div>
+        <div class="section-label">Tu Negocio. Tu Impacto. Tu Legado.</div>
+        <h1>Diseñamos tu crecimiento con <strong>estructura, claridad y ejecución.</strong></h1>
+        <p class="lead">MultiTasking360 convierte experiencia profesional en una oferta rentable y escalable mediante estrategia de posicionamiento, narrativa comercial y sistema de adquisición.</p>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <a href="#apply" class="btn primary">Aplicar Ahora</a>
+          <a href="#programs" class="btn secondary">Ver Programas</a>
+        </div>
+        <div class="kpi-grid">
+          <article class="kpi"><strong>90D</strong><span>Plan de acción</span></article>
+          <article class="kpi"><strong>4</strong><span>Niveles de programa</span></article>
+          <article class="kpi"><strong>360°</strong><span>Sistema integral</span></article>
+        </div>
+      </div>
+
+      <aside class="panel">
+        <h3>Resultados del Método</h3>
+        <article class="metric"><b>01</b><p>Claridad de negocio y propuesta de valor premium.</p></article>
+        <article class="metric"><b>02</b><p>Oferta comercial validada para compradores reales.</p></article>
+        <article class="metric"><b>03</b><p>Activación de pipeline con conversaciones calificadas.</p></article>
+        <article class="metric"><b>04</b><p>Ruta ejecutable para crecimiento sostenible.</p></article>
+      </aside>
+    </header>
+
+    <section id="process">
+      <div class="section-label">Framework</div>
+      <h2 class="section-title">Cinco fases para convertir experiencia en ingresos.</h2>
+      <p class="section-text">Una estructura consultiva pensada para dueños de negocio que buscan crecimiento con procesos claros.</p>
+      <div class="timeline">
+        <article class="phase"><strong>Fase 01</strong><h4>Descubre</h4><p>Identificación de activos de experiencia con valor comercial.</p></article>
+        <article class="phase"><strong>Fase 02</strong><h4>Planifica</h4><p>Definición de nicho, cliente ideal y oportunidad rentable.</p></article>
+        <article class="phase"><strong>Fase 03</strong><h4>Construye</h4><p>Diseño de oferta, pricing y posicionamiento.</p></article>
+        <article class="phase"><strong>Fase 04</strong><h4>Lanza</h4><p>Implementación de visibilidad y generación de demanda.</p></article>
+        <article class="phase"><strong>Fase 05</strong><h4>Crece</h4><p>Optimización de sistemas y expansión de ingresos.</p></article>
+      </div>
+    </section>
+
+    <section id="programs">
+      <div class="section-label">Programas</div>
+      <h2 class="section-title">Selecciona el nivel de acompañamiento.</h2>
+      <p class="section-text">Cuatro programas responden a distintos niveles de madurez y objetivo comercial.</p>
+      <div class="programs">
+        <article class="program">
+          <div class="tier">Low Ticket</div>
+          <h3 class="name">QuickStart</h3>
+          <div class="price">$47</div>
+          <p>Entrada táctica para validar propuesta y ejecutar acciones comerciales iniciales.</p>
+          <ul>
+            <li>Mini training de arranque</li>
+            <li>Checklist de acciones de 7 días</li>
+            <li>Guion de primer contacto comercial</li>
+          </ul>
+          <a href="#apply" class="btn secondary">Comenzar Rápido</a>
+        </article>
+
+        <article class="program">
+          <div class="tier">Nivel 1</div>
+          <h3 class="name">Starter</h3>
+          <div class="price">$497</div>
+          <p>Base estructural para diseñar tu oferta rentable.</p>
+          <ul>
+            <li>Curso completo MultiTasking360</li>
+            <li>Manual de habilidades a oferta</li>
+            <li>Plantillas de atracción de clientes</li>
+          </ul>
+          <a href="#apply" class="btn secondary">Comenzar</a>
+        </article>
+
+        <article class="program featured">
+          <div class="tier">Nivel 2</div>
+          <h3 class="name">Accelerator</h3>
+          <div class="price">$1,497</div>
+          <p>Ejecución guiada con coaching grupal y ajustes estratégicos.</p>
+          <ul>
+            <li>Todo lo del Starter</li>
+            <li>Coaching grupal por 8 semanas</li>
+            <li>Sesiones Q&A en vivo</li>
+            <li>Ruta de ingresos de 90 días</li>
+          </ul>
+          <a href="#apply" class="btn primary">Aplicar Ahora</a>
+        </article>
+
+        <article class="program">
+          <div class="tier">Nivel 3</div>
+          <h3 class="name">VIP 1:1</h3>
+          <div class="price">$3,497</div>
+          <p>Consultoría privada para construir y escalar tu sistema comercial.</p>
+          <ul>
+            <li>Todo lo del Accelerator</li>
+            <li>Sesiones privadas quincenales</li>
+            <li>Estrategia individual de negocio</li>
+          </ul>
+          <a href="#apply" class="btn secondary">Aplicar al VIP</a>
+        </article>
+      </div>
+    </section>
+
+    <section id="apply">
+      <div class="section-label">Aplicación</div>
+      <h2 class="section-title">Solicita tu recomendación estratégica.</h2>
+      <p class="section-text">Completa este formulario para evaluar cuál programa genera más impacto para tu contexto actual.</p>
+      <div class="apply">
+        <article class="info">
+          <h3 style="font-family:var(--display); margin-bottom:6px;">Qué incluye la evaluación</h3>
+          <ul>
+            <li>Consulta inicial sin compromiso</li>
+            <li>Diagnóstico de situación actual</li>
+            <li>Recomendación de programa adecuado</li>
+          </ul>
+        </article>
+
+        <article class="form">
+          <form id="intakeForm">
+            <div class="row">
+              <div class="field"><label>Nombre</label><input type="text" placeholder="Tu nombre" required /></div>
+              <div class="field"><label>Apellido</label><input type="text" placeholder="Tu apellido" /></div>
+            </div>
+            <div class="field"><label>Correo Electrónico</label><input type="email" placeholder="tu@correo.com" required /></div>
+            <div class="field"><label>Industria / Experiencia</label>
+              <select>
+                <option value="">Selecciona tu área...</option>
+                <option>Negocios / Gestión</option>
+                <option>Educación / Enseñanza</option>
+                <option>Ventas / Marketing</option>
+                <option>Ingeniería / Tecnología</option>
+                <option>Otro</option>
+              </select>
+            </div>
+            <div class="field"><label>Meta principal</label><textarea placeholder="¿Qué resultado deseas lograr en los próximos 90 días?"></textarea></div>
+            <button class="btn primary" style="width:100%;">Enviar Solicitud</button>
+          </form>
+          <div class="success-message" id="formSuccess">Solicitud recibida. Te contactaremos pronto.</div>
+        </article>
+      </div>
+    </section>
+
+    <footer>
+      <span>© 2026 MultiTasking360 Corporate</span>
+      <span>Strategic Growth Framework</span>
+    </footer>
+  </div>
+
+  <script>
+    document.getElementById("intakeForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      this.style.display = "none";
+      document.getElementById("formSuccess").style.display = "block";
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,1409 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MultiTasking360™ — Tu Negocio. Tu Impacto. Tu Legado.</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #070b16;
+      --bg-soft: #0d1530;
+      --surface: rgba(16, 26, 58, 0.74);
+      --surface-solid: #101a3a;
+      --line: rgba(255, 255, 255, 0.14);
+      --text: #f8fbff;
+      --muted: #afbad5;
+      --gold: #f5bf63;
+      --cyan: #4ad9d9;
+      --blue: #4a79ff;
+      --rose: #f66f9e;
+      --display: "Sora", sans-serif;
+      --body: "Plus Jakarta Sans", sans-serif;
+      --radius: 22px;
+      --shadow: 0 28px 80px rgba(0, 0, 0, 0.4);
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--body);
+      color: var(--text);
+      background:
+        radial-gradient(980px 540px at 85% -10%, rgba(74, 121, 255, 0.32), transparent 55%),
+        radial-gradient(700px 430px at -5% 18%, rgba(74, 217, 217, 0.25), transparent 55%),
+        linear-gradient(165deg, #060a15 0%, #090f20 45%, #090f1f 100%);
+      min-height: 100vh;
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .announcement {
+      text-align: center;
+      font-size: 0.78rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #d8e8ff;
+      background: linear-gradient(90deg, rgba(74, 217, 217, 0.25), rgba(246, 111, 158, 0.25));
+      border-bottom: 1px solid var(--line);
+      padding: 11px 18px;
+    }
+
+    .announcement strong {
+      color: var(--gold);
+    }
+
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 120;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 24px;
+      padding: 16px 52px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(7, 11, 22, 0.72);
+      backdrop-filter: blur(16px);
+    }
+
+    .logo {
+      font-family: var(--display);
+      font-weight: 800;
+      font-size: 1.05rem;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-dot {
+      width: 11px;
+      height: 11px;
+      border-radius: 999px;
+      background: linear-gradient(120deg, var(--cyan), var(--rose));
+      box-shadow: 0 0 20px rgba(74, 217, 217, 0.9);
+    }
+
+    .logo .num {
+      color: var(--gold);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 26px;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      transition: color 0.2s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--text);
+    }
+
+    .nav-cta {
+      border: 1px solid rgba(245, 191, 99, 0.45);
+      border-radius: 999px;
+      color: #241703;
+      background: linear-gradient(120deg, #f7d086, #f4b64d);
+      font-weight: 700;
+      padding: 11px 18px;
+      letter-spacing: 0.04em;
+      box-shadow: 0 14px 35px rgba(244, 182, 77, 0.3);
+    }
+
+    .hero {
+      position: relative;
+      padding: 88px 52px 40px;
+    }
+
+    .hero::before,
+    .hero::after {
+      content: "";
+      position: absolute;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .hero::before {
+      width: 420px;
+      height: 420px;
+      right: -140px;
+      top: -30px;
+      border-radius: 46% 54% 63% 37% / 42% 44% 56% 58%;
+      background: linear-gradient(135deg, rgba(74, 121, 255, 0.45), rgba(246, 111, 158, 0.2));
+      filter: blur(12px);
+      animation: floatShape 9s ease-in-out infinite;
+    }
+
+    .hero::after {
+      width: 350px;
+      height: 350px;
+      left: -110px;
+      bottom: -50px;
+      border-radius: 55% 45% 35% 65% / 46% 62% 38% 54%;
+      background: linear-gradient(135deg, rgba(74, 217, 217, 0.2), rgba(74, 121, 255, 0.15));
+      animation: floatShape 11s ease-in-out infinite reverse;
+    }
+
+    .hero-grid {
+      position: relative;
+      z-index: 1;
+      max-width: 1240px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.03fr 0.97fr;
+      gap: 36px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin-bottom: 22px;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 34px;
+      height: 1px;
+      background: linear-gradient(90deg, var(--cyan), transparent);
+    }
+
+    .hero h1 {
+      font-family: var(--display);
+      font-size: clamp(2.6rem, 6vw, 5.2rem);
+      line-height: 0.95;
+      letter-spacing: -0.05em;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 span {
+      display: block;
+    }
+
+    .hero h1 .shine {
+      background: linear-gradient(90deg, #f5bf63, #f7f2cf 36%, #f66f9e 68%, #4ad9d9);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-sub {
+      color: #d5e0f8;
+      max-width: 620px;
+      font-size: 1.02rem;
+      line-height: 1.85;
+      margin-bottom: 28px;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .btn-primary,
+    .btn-secondary {
+      border-radius: 999px;
+      padding: 13px 22px;
+      font-family: var(--display);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    }
+
+    .btn-primary {
+      color: #1b1507;
+      background: linear-gradient(120deg, #f7d086, #f4b64d);
+      box-shadow: 0 18px 40px rgba(244, 182, 77, 0.28);
+      border: 1px solid rgba(245, 191, 99, 0.5);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px) scale(1.01);
+    }
+
+    .btn-secondary {
+      color: var(--text);
+      border: 1px solid rgba(171, 196, 255, 0.34);
+      background: rgba(17, 27, 57, 0.56);
+    }
+
+    .btn-secondary:hover {
+      transform: translateY(-2px);
+      border-color: rgba(74, 217, 217, 0.72);
+    }
+
+    .trust-line {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      color: var(--muted);
+      font-size: 0.84rem;
+    }
+
+    .trust-line span::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      display: inline-block;
+      border-radius: 999px;
+      margin-right: 8px;
+      transform: translateY(-1px);
+      background: linear-gradient(120deg, var(--cyan), var(--rose));
+      box-shadow: 0 0 14px rgba(74, 217, 217, 0.9);
+    }
+
+    .hero-stage {
+      display: grid;
+      gap: 16px;
+    }
+
+    .hero-card,
+    .hero-mini {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(23, 35, 76, 0.78), rgba(15, 25, 53, 0.66));
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+
+    .hero-card {
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-card::after {
+      content: "";
+      position: absolute;
+      inset: -30% -40% auto auto;
+      width: 240px;
+      height: 240px;
+      border-radius: 999px;
+      background: radial-gradient(circle, rgba(246, 111, 158, 0.25), transparent 70%);
+      pointer-events: none;
+    }
+
+    .card-label {
+      font-family: var(--display);
+      font-size: 0.68rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #b9d8ff;
+      margin-bottom: 16px;
+    }
+
+    .metric {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 14px;
+      align-items: start;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.11);
+      position: relative;
+      z-index: 1;
+    }
+
+    .metric:last-child {
+      border-bottom: 0;
+    }
+
+    .metric-num {
+      width: 38px;
+      height: 38px;
+      border-radius: 11px;
+      display: grid;
+      place-items: center;
+      color: #120e03;
+      font-family: var(--display);
+      font-size: 0.8rem;
+      font-weight: 800;
+      background: linear-gradient(120deg, #f8d48f, #f5bf63);
+    }
+
+    .metric h3 {
+      font-family: var(--display);
+      font-size: 0.98rem;
+      margin-bottom: 4px;
+    }
+
+    .metric p {
+      font-size: 0.84rem;
+      color: var(--muted);
+    }
+
+    .hero-mini {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      padding: 12px;
+    }
+
+    .mini-item {
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 14px;
+      padding: 12px;
+      background: rgba(8, 14, 31, 0.45);
+      text-align: center;
+    }
+
+    .mini-item strong {
+      display: block;
+      font-family: var(--display);
+      font-size: 1.14rem;
+      margin-bottom: 4px;
+      color: var(--gold);
+    }
+
+    .mini-item span {
+      display: block;
+      font-size: 0.72rem;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    section {
+      padding: 84px 52px;
+    }
+
+    .dark-section {
+      background: linear-gradient(180deg, rgba(8, 13, 30, 0.78), rgba(8, 14, 32, 0.9));
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .container {
+      max-width: 1240px;
+      margin: 0 auto;
+    }
+
+    .section-head {
+      max-width: 800px;
+      margin-bottom: 40px;
+    }
+
+    .section-label {
+      font-family: var(--display);
+      font-size: 0.68rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin-bottom: 10px;
+    }
+
+    .section-title {
+      font-family: var(--display);
+      font-size: clamp(1.85rem, 4vw, 3.05rem);
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      margin-bottom: 12px;
+    }
+
+    .section-text {
+      color: var(--muted);
+      font-size: 0.99rem;
+      line-height: 1.8;
+    }
+
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 12px;
+      position: relative;
+    }
+
+    .steps-grid::before {
+      content: "";
+      position: absolute;
+      left: 2%;
+      right: 2%;
+      top: 28px;
+      height: 1px;
+      background: linear-gradient(90deg, rgba(74, 217, 217, 0.08), rgba(245, 191, 99, 0.55), rgba(246, 111, 158, 0.2));
+      z-index: 0;
+    }
+
+    .step-card {
+      position: relative;
+      z-index: 1;
+      background: linear-gradient(180deg, rgba(16, 26, 58, 0.82), rgba(11, 18, 38, 0.78));
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 20px;
+      min-height: 188px;
+      transition: transform 0.25s ease, border-color 0.25s ease;
+    }
+
+    .step-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(74, 217, 217, 0.6);
+    }
+
+    .step-number {
+      width: 36px;
+      height: 36px;
+      border-radius: 999px;
+      border: 1px solid rgba(245, 191, 99, 0.55);
+      display: grid;
+      place-items: center;
+      color: var(--gold);
+      font-family: var(--display);
+      margin-bottom: 14px;
+      background: rgba(14, 22, 45, 0.7);
+    }
+
+    .step-card h3 {
+      font-family: var(--display);
+      font-size: 0.95rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .step-card p {
+      color: var(--muted);
+      font-size: 0.84rem;
+      line-height: 1.7;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .feature-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 26px;
+      background:
+        radial-gradient(circle at 80% 0, rgba(74, 121, 255, 0.22), transparent 45%),
+        linear-gradient(180deg, rgba(14, 23, 50, 0.9), rgba(10, 16, 34, 0.9));
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      font-family: var(--display);
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #111;
+      background: linear-gradient(120deg, #79e3e3, #4ad9d9);
+      margin-bottom: 16px;
+    }
+
+    .feature-card h3 {
+      font-family: var(--display);
+      font-size: 1rem;
+      margin-bottom: 8px;
+    }
+
+    .feature-card p {
+      color: var(--muted);
+      font-size: 0.88rem;
+      line-height: 1.75;
+    }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
+      align-items: stretch;
+    }
+
+    .price-card {
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 28px 24px;
+      background: linear-gradient(180deg, rgba(13, 21, 44, 0.88), rgba(9, 15, 30, 0.95));
+      display: grid;
+      grid-template-rows: auto auto auto auto 1fr auto;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.25s ease, border-color 0.25s ease;
+    }
+
+    .price-card::before {
+      content: "";
+      position: absolute;
+      width: 140px;
+      height: 140px;
+      right: -30px;
+      top: -30px;
+      border-radius: 999px;
+      background: radial-gradient(circle, rgba(74, 121, 255, 0.38), transparent 65%);
+      pointer-events: none;
+    }
+
+    .price-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(74, 217, 217, 0.6);
+    }
+
+    .price-card.featured {
+      border-color: rgba(245, 191, 99, 0.66);
+      background:
+        radial-gradient(circle at 80% -20%, rgba(245, 191, 99, 0.25), transparent 40%),
+        linear-gradient(180deg, rgba(21, 28, 56, 0.95), rgba(11, 17, 35, 0.95));
+      transform: translateY(-9px);
+    }
+
+    .popular {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      border-radius: 999px;
+      padding: 6px 11px;
+      font-family: var(--display);
+      font-size: 0.58rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      background: rgba(245, 191, 99, 0.2);
+      border: 1px solid rgba(245, 191, 99, 0.42);
+      color: var(--gold);
+    }
+
+    .price-tier {
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: #98c7ff;
+      margin-bottom: 8px;
+    }
+
+    .price-name {
+      font-family: var(--display);
+      font-size: 1.4rem;
+      margin-bottom: 8px;
+    }
+
+    .price {
+      font-family: var(--display);
+      font-size: 2.5rem;
+      line-height: 1;
+      letter-spacing: -0.04em;
+      margin-bottom: 8px;
+      color: var(--gold);
+    }
+
+    .price-note {
+      color: var(--muted);
+      font-size: 0.8rem;
+      margin-bottom: 16px;
+    }
+
+    .price-desc {
+      color: var(--muted);
+      font-size: 0.88rem;
+      line-height: 1.7;
+      margin-bottom: 16px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.11);
+    }
+
+    ul {
+      list-style: none;
+    }
+
+    .price-features li {
+      color: #dce6fb;
+      font-size: 0.84rem;
+      line-height: 1.65;
+      display: flex;
+      gap: 9px;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    }
+
+    .price-features li::before {
+      content: "•";
+      color: var(--cyan);
+      font-size: 1.1em;
+      transform: translateY(-1px);
+    }
+
+    .price-card .btn-primary,
+    .price-card .btn-secondary {
+      margin-top: 16px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .testimonial-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .testimonial-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(14, 22, 48, 0.88), rgba(9, 14, 30, 0.9));
+      padding: 24px;
+    }
+
+    .stars {
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      color: var(--gold);
+      margin-bottom: 12px;
+    }
+
+    .testimonial-text {
+      color: #d8e3f8;
+      font-size: 0.9rem;
+      line-height: 1.75;
+      margin-bottom: 16px;
+    }
+
+    .testimonial-author {
+      font-family: var(--display);
+      font-size: 0.94rem;
+    }
+
+    .testimonial-role {
+      font-size: 0.77rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .apply-grid {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .promise-list {
+      display: grid;
+      gap: 12px;
+      margin-top: 22px;
+    }
+
+    .promise-list li {
+      padding: 12px 14px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 14px;
+      background: rgba(14, 22, 46, 0.65);
+      color: #d8e3fa;
+      font-size: 0.88rem;
+    }
+
+    .form-card {
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background: linear-gradient(180deg, rgba(19, 31, 66, 0.86), rgba(13, 22, 48, 0.9));
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .form-group {
+      margin-bottom: 12px;
+    }
+
+    label {
+      display: block;
+      font-size: 0.66rem;
+      color: #afc2ea;
+      text-transform: uppercase;
+      letter-spacing: 0.13em;
+      margin-bottom: 7px;
+      font-weight: 700;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      border: 1px solid rgba(171, 196, 255, 0.3);
+      border-radius: 13px;
+      padding: 12px;
+      font-family: var(--body);
+      font-size: 0.9rem;
+      color: var(--text);
+      background: rgba(8, 13, 28, 0.78);
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: rgba(74, 217, 217, 0.82);
+      box-shadow: 0 0 0 4px rgba(74, 217, 217, 0.1);
+    }
+
+    option {
+      background: #0e1833;
+    }
+
+    textarea {
+      min-height: 104px;
+      resize: vertical;
+    }
+
+    .submit {
+      width: 100%;
+      border: 0;
+      cursor: pointer;
+    }
+
+    .success-message {
+      display: none;
+      margin-top: 14px;
+      border-radius: 14px;
+      padding: 14px;
+      border: 1px solid rgba(74, 217, 156, 0.42);
+      background: rgba(74, 217, 156, 0.12);
+      color: #90f2c2;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .final-cta {
+      text-align: center;
+      background:
+        radial-gradient(580px 280px at 50% 0%, rgba(74, 217, 217, 0.16), transparent 75%),
+        linear-gradient(180deg, rgba(8, 13, 29, 0.7), rgba(9, 14, 30, 0.95));
+    }
+
+    footer {
+      padding: 32px 52px;
+      border-top: 1px solid var(--line);
+      background: rgba(4, 8, 18, 0.9);
+    }
+
+    .footer-inner {
+      max-width: 1240px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .footer-copy {
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 0.76rem;
+    }
+
+    .footer-tagline {
+      color: #b9caee;
+      font-size: 0.72rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .reveal.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @keyframes floatShape {
+      0%, 100% {
+        transform: translateY(0) rotate(0deg);
+      }
+
+      50% {
+        transform: translateY(-14px) rotate(5deg);
+      }
+    }
+
+    @media (max-width: 1120px) {
+      nav,
+      .hero,
+      section,
+      footer {
+        padding-left: 24px;
+        padding-right: 24px;
+      }
+
+      .hero-grid,
+      .apply-grid,
+      .features-grid,
+      .pricing-grid,
+      .testimonial-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .steps-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .steps-grid::before {
+        display: none;
+      }
+
+      .price-card.featured {
+        transform: none;
+      }
+    }
+
+    @media (max-width: 860px) {
+      .announcement {
+        font-size: 0.67rem;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .hero {
+        padding-top: 62px;
+      }
+
+      .hero h1 {
+        font-size: clamp(2.2rem, 12vw, 3.2rem);
+      }
+
+      .hero-mini {
+        grid-template-columns: 1fr;
+      }
+
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="announcement">Nueva cohorte disponible. <strong>Plan de 90 días</strong> para convertir experiencia en ingresos.</div>
+
+  <nav>
+    <div class="logo">
+      <span class="logo-dot"></span>
+      <span>MultiTasking<span class="num">360™</span></span>
+    </div>
+
+    <div class="nav-links">
+      <a href="#process">Proceso</a>
+      <a href="#programs">Programas</a>
+      <a href="#apply" class="nav-cta">Aplica Ahora</a>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="hero-grid">
+      <div class="reveal">
+        <div class="eyebrow">De la Idea al Impacto</div>
+        <h1>
+          <span>Tu Negocio.</span>
+          <span>Tu Impacto.</span>
+          <span class="shine">Tu Legado.</span>
+        </h1>
+
+        <p class="hero-sub">
+          Te ayudamos a transformar tu experiencia, conocimiento y habilidades en un negocio rentable y sostenible con mentoría estratégica, sistemas claros y apoyo 360.
+        </p>
+
+        <div class="hero-actions">
+          <a href="#apply" class="btn-primary">Aplicar Ahora</a>
+          <a href="#process" class="btn-secondary">Ver el Proceso</a>
+        </div>
+
+        <div class="trust-line">
+          <span>Mentoría de negocio</span>
+          <span>Enfoque profesional</span>
+          <span>Plan de 90 dias</span>
+        </div>
+      </div>
+
+      <div class="hero-stage reveal">
+        <div class="hero-card">
+          <div class="card-label">Resultados del Metodo</div>
+
+          <div class="metric">
+            <div class="metric-num">01</div>
+            <div>
+              <h3>Claridad de Negocio</h3>
+              <p>Descubre que experiencia puedes convertir en ingresos.</p>
+            </div>
+          </div>
+
+          <div class="metric">
+            <div class="metric-num">02</div>
+            <div>
+              <h3>Oferta Rentable</h3>
+              <p>Construye una oferta clara que tu cliente ideal pueda comprar.</p>
+            </div>
+          </div>
+
+          <div class="metric">
+            <div class="metric-num">03</div>
+            <div>
+              <h3>Primeros Clientes</h3>
+              <p>Activa conversaciones, visibilidad y oportunidades reales.</p>
+            </div>
+          </div>
+
+          <div class="metric">
+            <div class="metric-num">04</div>
+            <div>
+              <h3>Ingresos Adicionales</h3>
+              <p>Crea una ruta para construir nuevas fuentes de ingresos.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-mini">
+          <div class="mini-item">
+            <strong>90D</strong>
+            <span>Ruta Base</span>
+          </div>
+          <div class="mini-item">
+            <strong>1:1</strong>
+            <span>Mentoría</span>
+          </div>
+          <div class="mini-item">
+            <strong>360</strong>
+            <span>Sistema</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section class="dark-section" id="process">
+    <div class="container">
+      <div class="section-head reveal">
+        <div class="section-label">El Proceso</div>
+        <h2 class="section-title">Cinco pasos para convertir tu experiencia en un negocio.</h2>
+        <p class="section-text">
+          Un camino claro para pasar de la confusión a una oferta lista, una estrategia de clientes y una visión de crecimiento.
+        </p>
+      </div>
+
+      <div class="steps-grid">
+        <div class="step-card reveal">
+          <div class="step-number">01</div>
+          <h3>Descubre</h3>
+          <p>Identifica tus habilidades, conocimientos y experiencias con potencial de ingresos.</p>
+        </div>
+
+        <div class="step-card reveal">
+          <div class="step-number">02</div>
+          <h3>Planifica</h3>
+          <p>Define tu cliente ideal, el problema que resuelves y la oportunidad mas rentable.</p>
+        </div>
+
+        <div class="step-card reveal">
+          <div class="step-number">03</div>
+          <h3>Construye</h3>
+          <p>Crea una oferta, precio y mensaje profesional que conecte con compradores reales.</p>
+        </div>
+
+        <div class="step-card reveal">
+          <div class="step-number">04</div>
+          <h3>Lanza</h3>
+          <p>Activa tu presencia, tus conversaciones y tu ruta para conseguir clientes.</p>
+        </div>
+
+        <div class="step-card reveal">
+          <div class="step-number">05</div>
+          <h3>Crece</h3>
+          <p>Organiza tus sistemas y construye nuevas fuentes de ingresos desde tu experiencia.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <div class="section-head reveal">
+        <div class="section-label">Por Qué MultiTasking360</div>
+        <h2 class="section-title">Diseñado para personas que quieren construir con claridad.</h2>
+        <p class="section-text">
+          No se trata de perseguir ideas al azar. Se trata de convertir lo que ya sabes en una estructura de negocio real.
+        </p>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-card reveal">
+          <div class="feature-icon">01</div>
+          <h3>Mentoría Estratégica</h3>
+          <p>Dirección clara para elegir el negocio correcto y avanzar sin sentirte perdido.</p>
+        </div>
+
+        <div class="feature-card reveal">
+          <div class="feature-icon">02</div>
+          <h3>Sistemas Prácticos</h3>
+          <p>Herramientas, plantillas y ejercicios para construir sin depender de la teoría.</p>
+        </div>
+
+        <div class="feature-card reveal">
+          <div class="feature-icon">03</div>
+          <h3>Oferta y Clientes</h3>
+          <p>Enfoque en crear algo vendible y abrir conversaciones con personas que necesitan tu solucion.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="dark-section" id="programs">
+    <div class="container">
+      <div class="section-head reveal">
+        <div class="section-label">Programas</div>
+        <h2 class="section-title">Elige el nivel de acompañamiento que necesitas.</h2>
+        <p class="section-text">
+          Cada programa está diseñado para ayudarte a pasar de idea y experiencia a una oferta lista para generar ingresos.
+        </p>
+      </div>
+
+      <div class="pricing-grid">
+        <div class="price-card reveal">
+          <div class="price-tier">Entrada</div>
+          <div class="price-name">Free Starter Session</div>
+          <div class="price">$0</div>
+          <div class="price-note">Gratis</div>
+          <p class="price-desc">Sesión inicial para claridad de oferta y próximos pasos recomendados.</p>
+
+          <ul class="price-features">
+            <li>Diagnóstico rápido de tu situación actual</li>
+            <li>Recomendación de camino ideal</li>
+            <li>Plan de primeros pasos</li>
+          </ul>
+
+          <a href="#apply" class="btn-secondary">Reservar Gratis</a>
+        </div>
+
+        <div class="price-card reveal">
+          <div class="price-tier">Low Ticket 1</div>
+          <div class="price-name">QuickStart Sprint</div>
+          <div class="price">$47</div>
+          <div class="price-note">Inicio rápido</div>
+          <p class="price-desc">Oferta de arranque para pasar de idea a plan con estructura simple y accionable.</p>
+
+          <ul class="price-features">
+            <li>Framework base de validación</li>
+            <li>Plantilla de oferta inicial</li>
+            <li>Checklist de ejecución de 7 días</li>
+          </ul>
+
+          <a href="#apply" class="btn-secondary">Empezar</a>
+        </div>
+
+        <div class="price-card reveal">
+          <div class="price-tier">Low Ticket 2</div>
+          <div class="price-name">Mini Launch Kit</div>
+          <div class="price">$97</div>
+          <div class="price-note">Implementación básica</div>
+          <p class="price-desc">Kit práctico para definir mensaje, oferta y acciones iniciales de lanzamiento.</p>
+
+          <ul class="price-features">
+            <li>Todo lo del QuickStart Sprint</li>
+            <li>Guía de posicionamiento y mensaje</li>
+            <li>Mini plan de lanzamiento</li>
+          </ul>
+
+          <a href="#apply" class="btn-secondary">Comenzar</a>
+        </div>
+
+        <div class="price-card reveal">
+          <div class="price-tier">Oferta 1</div>
+          <div class="price-name">DIY Course</div>
+          <div class="price">$197</div>
+          <div class="price-note">Autoguiado</div>
+          <p class="price-desc">Curso de implementación propia para avanzar con estructura, claridad y acciones concretas.</p>
+
+          <ul class="price-features">
+            <li>Lecciones paso a paso</li>
+            <li>Plantillas y guías de ejecución</li>
+            <li>Checklist de implementación</li>
+            <li>Acceso al contenido base</li>
+          </ul>
+
+          <a href="#apply" class="btn-secondary">Comenzar</a>
+        </div>
+
+        <div class="price-card reveal">
+          <div class="price-tier">Oferta 2</div>
+          <div class="price-name">Group Mentorship</div>
+          <div class="price">$797</div>
+          <div class="price-note">Mentoría grupal</div>
+          <p class="price-desc">Acompañamiento en grupo para acelerar decisiones, ejecución y resultados con soporte directo.</p>
+
+          <ul class="price-features">
+            <li>Todo lo del DIY Course</li>
+            <li>Sesiones grupales en vivo</li>
+            <li>Revisión estratégica de avances</li>
+            <li>Comunidad y accountability</li>
+          </ul>
+
+          <a href="#apply" class="btn-secondary">Comenzar</a>
+        </div>
+
+        <div class="price-card featured reveal">
+          <div class="popular">Más Popular</div>
+          <div class="price-tier">Oferta 3</div>
+          <div class="price-name">VIP Coaching</div>
+          <div class="price">$3,497</div>
+          <div class="price-note">Coaching privado</div>
+          <p class="price-desc">Trabajo 1:1 para construir una oferta premium, mejorar posicionamiento y escalar ingresos.</p>
+
+          <ul class="price-features">
+            <li>Todo lo de Group Mentorship</li>
+            <li>Sesiones privadas 1:1</li>
+            <li>Estrategia personalizada</li>
+            <li>Optimización de pricing y mensaje</li>
+            <li>Plan de crecimiento premium</li>
+          </ul>
+
+          <a href="#apply" class="btn-primary">Aplicar Ahora</a>
+        </div>
+
+        <div class="price-card reveal">
+          <div class="price-tier">Oferta 4</div>
+          <div class="price-name">Done-With-You Business Launch</div>
+          <div class="price">$7,497</div>
+          <div class="price-note">Implementación colaborativa</div>
+          <p class="price-desc">Lanzamiento de negocio contigo, con estrategia, sistemas y ejecución guiada de alto nivel.</p>
+
+          <ul class="price-features">
+            <li>Todo lo del VIP Coaching</li>
+            <li>Arquitectura de oferta y lanzamiento</li>
+            <li>Soporte intensivo de implementación</li>
+            <li>Sistemas de ventas y seguimiento</li>
+            <li>Acompañamiento estratégico continuo</li>
+          </ul>
+
+          <a href="#apply" class="btn-secondary">Aplicar al Launch</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <div class="section-head reveal">
+        <div class="section-label">Resultados</div>
+        <h2 class="section-title">Experiencia convertida en ingresos.</h2>
+        <p class="section-text">
+          Ejemplos del tipo de transformación que MultiTasking360 ayuda a construir.
+        </p>
+      </div>
+
+      <div class="testimonial-grid">
+        <div class="testimonial-card reveal">
+          <div class="stars">★★★★★</div>
+          <p class="testimonial-text">
+            "Después de años en recursos humanos, finalmente entendí cómo convertir mi experiencia en una oferta de consultoría clara."
+          </p>
+          <div class="testimonial-author">Maria T.</div>
+          <div class="testimonial-role">RRHH -> Consultoría independiente</div>
+        </div>
+
+        <div class="testimonial-card reveal">
+          <div class="stars">★★★★★</div>
+          <p class="testimonial-text">
+            "Antes solo pensaba en jubilarme. Ahora tengo una dirección y una forma de usar mi conocimiento para generar ingresos."
+          </p>
+          <div class="testimonial-author">Roberto M.</div>
+          <div class="testimonial-role">Profesional retirado -> Negocio propio</div>
+        </div>
+
+        <div class="testimonial-card reveal">
+          <div class="stars">★★★★★</div>
+          <p class="testimonial-text">
+            "No se trata de hacerte influencer. Se trata de empaquetar lo que ya sabes y presentarlo con valor."
+          </p>
+          <div class="testimonial-author">Sandra K.</div>
+          <div class="testimonial-role">Educadora -> Talleres y recursos</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="dark-section" id="apply">
+    <div class="container apply-grid">
+      <div class="reveal">
+        <div class="section-label">Aplica Ahora</div>
+        <h2 class="section-title">¿Listo para construir tu próximo capítulo?</h2>
+        <p class="section-text">
+          Cuéntanos sobre tu experiencia y tus metas. Revisaremos tu situación para recomendarte el mejor camino dentro de MultiTasking360.
+        </p>
+
+        <ul class="promise-list">
+          <li>Consulta inicial sin costo ni compromiso</li>
+          <li>Revisión de tu situación actual</li>
+          <li>Recomendación del programa adecuado</li>
+        </ul>
+      </div>
+
+      <div class="form-card reveal">
+        <form id="intakeForm">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Nombre</label>
+              <input type="text" placeholder="Tu nombre" required />
+            </div>
+
+            <div class="form-group">
+              <label>Apellido</label>
+              <input type="text" placeholder="Tu apellido" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Correo Electrónico</label>
+            <input type="email" placeholder="tu@correo.com" required />
+          </div>
+
+          <div class="form-group">
+            <label>Telefono / WhatsApp</label>
+            <input type="tel" placeholder="+1 (555) 000-0000" />
+          </div>
+
+          <div class="form-group">
+            <label>Tu Industria / Experiencia</label>
+            <select>
+              <option value="">Selecciona tu área...</option>
+              <option>Salud / Medicina</option>
+              <option>Educación / Enseñanza</option>
+              <option>Negocios / Gestión</option>
+              <option>Finanzas / Contabilidad</option>
+              <option>Ingeniería / Tecnología</option>
+              <option>Ventas / Marketing</option>
+              <option>Legal / Derecho</option>
+              <option>Artes / Creatividad</option>
+              <option>Gobierno / Militar</option>
+              <option>Otro</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Programa de Interés</label>
+            <select>
+              <option value="">Selecciona un programa...</option>
+              <option>Free Starter Session ($0)</option>
+              <option>QuickStart Sprint ($47)</option>
+              <option>Mini Launch Kit ($97)</option>
+              <option>DIY Course ($197)</option>
+              <option>Group Mentorship ($797)</option>
+              <option>VIP Coaching ($3,497)</option>
+              <option>Done-With-You Business Launch ($7,497)</option>
+              <option>No estoy seguro - necesito orientación</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>¿Cuál es tu mayor meta ahora mismo?</label>
+            <textarea placeholder="Cuéntanos qué esperas lograr..."></textarea>
+          </div>
+
+          <button type="submit" class="btn-primary submit">Enviar Mi Solicitud</button>
+        </form>
+
+        <div class="success-message" id="formSuccess">
+          Solicitud recibida. Te contactaremos pronto.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="final-cta">
+    <div class="container">
+      <div class="section-head reveal" style="margin: 0 auto; text-align: center;">
+        <div class="section-label">Una Visión. Apoyo 360.</div>
+        <h2 class="section-title">Tu experiencia puede convertirse en tu próximo negocio.</h2>
+        <p class="section-text">
+          Cada día que esperas es un día que alguien más está siendo pagado por lo que tú sabes. Tu próximo capítulo empieza hoy.
+        </p>
+      </div>
+
+      <a href="#apply" class="btn-primary">Aplicar Hoy</a>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-inner">
+      <div>
+        <div class="logo">
+          <span class="logo-dot"></span>
+          <span>MultiTasking<span class="num">360™</span></span>
+        </div>
+        <div class="footer-copy">© 2026 MultiTasking360. Todos los derechos reservados.</div>
+      </div>
+
+      <div class="footer-tagline">Organiza · Planifica · Construye · Lanza · Crece</div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById("intakeForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      this.style.display = "none";
+      document.getElementById("formSuccess").style.display = "block";
+    });
+
+    const revealItems = document.querySelectorAll(".reveal");
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.14 }
+    );
+
+    revealItems.forEach((item) => observer.observe(item));
+  </script>
+
+</body>
+</html>

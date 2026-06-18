@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MultiTasking360 Editorial — Tu Negocio. Tu Impacto. Tu Legado.</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --paper: #07070d;
+      --ink: #f4f2ff;
+      --charcoal: #11121a;
+      --gold: #d8b36a;
+      --royal-blue: #4c73ff;
+      --royal-purple: #7a4dff;
+      --line: rgba(244, 242, 255, 0.15);
+      --soft: rgba(214, 211, 238, 0.8);
+      --display: "Cormorant Garamond", serif;
+      --body: "Sora", sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--body);
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 85% 8%, rgba(122, 77, 255, 0.28), transparent 36%),
+        radial-gradient(circle at 12% 12%, rgba(76, 115, 255, 0.24), transparent 40%),
+        radial-gradient(circle at 50% 110%, rgba(216, 179, 106, 0.16), transparent 40%),
+        linear-gradient(180deg, #05050b 0%, var(--paper) 100%);
+      line-height: 1.6;
+    }
+
+    .grain::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.14;
+      background-image: radial-gradient(rgba(255,255,255,0.12) 0.6px, transparent 0.6px);
+      background-size: 3px 3px;
+      z-index: 0;
+    }
+
+    .wrap { max-width: 1220px; margin: 0 auto; padding: 0 28px; position: relative; z-index: 1; }
+
+    .topbar {
+      border-bottom: 1px solid var(--line);
+      padding: 16px 0;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-size: 0.72rem;
+      color: rgba(203, 199, 238, 0.9);
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .topbar a {
+      color: #b9c7ff;
+      text-decoration: none;
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 28px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .logo {
+      font-family: var(--display);
+      font-size: 1.5rem;
+      letter-spacing: 0.05em;
+      font-weight: 700;
+    }
+
+    .logo span {
+      color: var(--gold);
+      text-shadow: 0 0 18px rgba(216, 179, 106, 0.36);
+    }
+
+    .nav-links { display: flex; gap: 20px; align-items: center; }
+    .nav-links a {
+      text-decoration: none;
+      color: #d9d6fb;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-weight: 700;
+    }
+
+    .nav-links a:hover {
+      color: #ffffff;
+    }
+
+    .hero {
+      padding: 72px 0 40px;
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 30px;
+      align-items: end;
+    }
+
+    .hero h1 {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: clamp(2.8rem, 7vw, 6.4rem);
+      line-height: 0.92;
+      letter-spacing: -0.03em;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+    }
+
+    .hero h1 em {
+      display: block;
+      color: transparent;
+      background: linear-gradient(90deg, var(--royal-blue), var(--royal-purple), var(--gold));
+      -webkit-background-clip: text;
+      background-clip: text;
+      font-style: normal;
+    }
+
+    .lede {
+      max-width: 600px;
+      color: var(--soft);
+      font-size: 1rem;
+      margin-bottom: 28px;
+    }
+
+    .actions { display: flex; gap: 12px; flex-wrap: wrap; }
+
+    .btn {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 12px 20px;
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 700;
+      font-size: 0.74rem;
+      transition: transform 0.2s ease;
+    }
+
+    .btn:hover { transform: translateY(-2px); }
+    .btn.primary {
+      background: linear-gradient(120deg, var(--gold), #f0c879);
+      color: #19140a;
+      border-color: rgba(216, 179, 106, 0.6);
+      box-shadow: 0 12px 30px rgba(216, 179, 106, 0.26);
+    }
+
+    .btn.secondary {
+      background: rgba(76, 115, 255, 0.12);
+      color: #e9e7ff;
+      border-color: rgba(122, 77, 255, 0.5);
+    }
+
+    .editorial-card {
+      border: 1px solid var(--line);
+      background: linear-gradient(160deg, rgba(24, 26, 40, 0.9), rgba(11, 12, 21, 0.95));
+      padding: 26px;
+      border-radius: 20px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+    }
+
+    .editorial-card h3 {
+      font-family: var(--display);
+      font-size: 1.4rem;
+      margin-bottom: 12px;
+    }
+
+    .editorial-card ul { list-style: none; display: grid; gap: 10px; }
+    .editorial-card li { border-top: 1px solid var(--line); padding-top: 10px; color: var(--soft); }
+
+    section { padding: 68px 0; border-top: 1px solid var(--line); }
+    .section-label {
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-size: 0.68rem;
+      color: var(--gold);
+      margin-bottom: 12px;
+      font-weight: 700;
+    }
+
+    .section-title {
+      font-family: var(--display);
+      font-size: clamp(1.9rem, 4vw, 3.4rem);
+      line-height: 1.06;
+      margin-bottom: 14px;
+    }
+
+    .section-text { max-width: 740px; color: var(--soft); }
+
+    .steps {
+      margin-top: 28px;
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .step {
+      background: linear-gradient(180deg, rgba(19, 20, 34, 0.9), rgba(9, 10, 18, 0.96));
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 18px;
+      min-height: 170px;
+    }
+
+    .step strong { font-family: var(--display); font-size: 1.2rem; color: var(--gold); display: block; margin-bottom: 8px; }
+    .step h4 { text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.1em; margin-bottom: 6px; }
+    .step p { color: var(--soft); font-size: 0.84rem; }
+
+    .programs {
+      margin-top: 24px;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .program {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 22px;
+      background: linear-gradient(180deg, rgba(20, 22, 36, 0.92), rgba(10, 11, 20, 0.96));
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .program.featured {
+      background:
+        radial-gradient(circle at 80% -20%, rgba(122, 77, 255, 0.35), transparent 48%),
+        linear-gradient(170deg, rgba(27, 30, 52, 0.94), rgba(10, 11, 20, 0.98));
+      border-color: rgba(216, 179, 106, 0.6);
+      transform: translateY(-4px);
+    }
+
+    .program .tier { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.14em; color: var(--gold); font-weight: 700; }
+    .program .name { font-family: var(--display); font-size: 1.55rem; }
+    .program .price { font-family: var(--display); font-size: 2.5rem; line-height: 1; }
+    .program p { color: var(--soft); font-size: 0.88rem; }
+
+    .program ul { list-style: none; display: grid; gap: 8px; margin-top: 8px; }
+    .program li { color: var(--soft); font-size: 0.84rem; border-top: 1px solid var(--line); padding-top: 8px; }
+
+    .apply {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 16px;
+      margin-top: 24px;
+    }
+
+    .promise {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 20px;
+      background: linear-gradient(180deg, rgba(18, 20, 33, 0.9), rgba(10, 11, 19, 0.96));
+    }
+
+    .promise ul { list-style: none; display: grid; gap: 8px; margin-top: 10px; }
+    .promise li { color: var(--soft); }
+
+    .form {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 20px;
+      background: linear-gradient(180deg, rgba(21, 23, 38, 0.92), rgba(11, 12, 22, 0.97));
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.42);
+    }
+
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .field { margin-bottom: 10px; }
+    label {
+      display: block;
+      font-size: 0.64rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-weight: 700;
+      color: var(--soft);
+      margin-bottom: 6px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 11px;
+      font-family: var(--body);
+      background: rgba(6, 7, 14, 0.92);
+      color: var(--ink);
+    }
+
+    textarea { min-height: 100px; resize: vertical; }
+
+    .success-message {
+      display: none;
+      margin-top: 12px;
+      border-radius: 12px;
+      padding: 12px;
+      background: rgba(185,144,90,0.18);
+      border: 1px solid rgba(185,144,90,0.35);
+      color: #f2d59b;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    footer {
+      border-top: 1px solid var(--line);
+      padding: 26px 0 34px;
+      color: var(--soft);
+      font-size: 0.78rem;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .reveal { opacity: 0; transform: translateY(18px); transition: all 0.6s ease; }
+    .reveal.on { opacity: 1; transform: translateY(0); }
+
+    .section-title, .name, .price {
+      letter-spacing: 0.01em;
+    }
+
+    @media (max-width: 1080px) {
+      .hero, .programs, .apply, .steps { grid-template-columns: 1fr; }
+      .program.featured { transform: none; }
+      .row { grid-template-columns: 1fr; }
+      nav { flex-direction: column; align-items: flex-start; gap: 14px; }
+    }
+  </style>
+</head>
+<body class="grain">
+  <div class="wrap">
+    <div class="topbar">
+      <span>Edition 2026</span>
+      <span>Mentoria de Alto Nivel</span>
+      <span><a href="/multitasking360/corporate">Ver Corporate Version</a></span>
+    </div>
+
+    <nav>
+      <div class="logo">MultiTasking<span>360™</span></div>
+      <div class="nav-links">
+        <a href="#process">Proceso</a>
+        <a href="#programs">Programas</a>
+        <a href="#apply">Aplicar</a>
+      </div>
+    </nav>
+
+    <header class="hero">
+      <div class="reveal">
+        <div class="section-label">De la Idea al Impacto</div>
+        <h1>Tu Negocio.<em>Tu Impacto.</em>Tu Legado.</h1>
+        <p class="lede">Convertimos experiencia profesional en una oferta rentable con dirección estratégica, estructura y posicionamiento de alto valor.</p>
+        <div class="actions">
+          <a href="#apply" class="btn primary">Aplicar Ahora</a>
+          <a href="#programs" class="btn secondary">Ver Programas</a>
+        </div>
+      </div>
+
+      <aside class="editorial-card reveal">
+        <h3>Resultados del Metodo</h3>
+        <ul>
+          <li><strong>01</strong> Claridad de negocio y propuesta premium.</li>
+          <li><strong>02</strong> Oferta rentable con mensaje claro.</li>
+          <li><strong>03</strong> Sistema para activar primeros clientes.</li>
+          <li><strong>04</strong> Ruta de ingresos de 90 dias.</li>
+        </ul>
+      </aside>
+    </header>
+
+    <section id="process">
+      <div class="section-label">El Proceso</div>
+      <h2 class="section-title">Cinco movimientos para construir un negocio con presencia premium.</h2>
+      <p class="section-text">Una metodología estructurada para pasar de experiencia dispersa a una propuesta posicionada y lista para vender.</p>
+      <div class="steps">
+        <article class="step reveal"><strong>01</strong><h4>Descubre</h4><p>Mapea tu experiencia con potencial comercial.</p></article>
+        <article class="step reveal"><strong>02</strong><h4>Planifica</h4><p>Define cliente ideal, dolor y oportunidad.</p></article>
+        <article class="step reveal"><strong>03</strong><h4>Construye</h4><p>Diseña oferta, precio y narrativa.</p></article>
+        <article class="step reveal"><strong>04</strong><h4>Lanza</h4><p>Activa visibilidad y conversaciones de venta.</p></article>
+        <article class="step reveal"><strong>05</strong><h4>Crece</h4><p>Escala sistemas y nuevas lineas de ingreso.</p></article>
+      </div>
+    </section>
+
+    <section id="programs">
+      <div class="section-label">Programas</div>
+      <h2 class="section-title">Selecciona tu nivel de acompañamiento.</h2>
+      <p class="section-text">Cuatro programas diseñados para velocidad, claridad y resultados medibles.</p>
+      <div class="programs">
+        <article class="program reveal">
+          <div class="tier">Low Ticket</div>
+          <h3 class="name">QuickStart</h3>
+          <div class="price">$47</div>
+          <p>Punto de entrada para validar tu enfoque y activar tu primera acción comercial.</p>
+          <ul>
+            <li>Mini training de oferta inicial</li>
+            <li>Checklist de implementación rápida</li>
+            <li>Plantilla de mensaje inicial</li>
+          </ul>
+          <a href="#apply" class="btn secondary">Comenzar Rápido</a>
+        </article>
+
+        <article class="program reveal">
+          <div class="tier">Nivel 1</div>
+          <h3 class="name">Starter</h3>
+          <div class="price">$497</div>
+          <p>Autoguiado para estructurar tu base comercial.</p>
+          <ul>
+            <li>Curso completo MultiTasking360</li>
+            <li>Manual de habilidades a oferta</li>
+            <li>Plantillas de atraccion de clientes</li>
+          </ul>
+          <a href="#apply" class="btn secondary">Comenzar</a>
+        </article>
+
+        <article class="program featured reveal">
+          <div class="tier">Nivel 2</div>
+          <h3 class="name">Accelerator</h3>
+          <div class="price">$1,497</div>
+          <p>Programa híbrido con coaching grupal y revisión estratégica.</p>
+          <ul>
+            <li>Todo lo del Starter</li>
+            <li>Coaching grupal 8 semanas</li>
+            <li>Sesiones Q&A en vivo</li>
+            <li>Ruta de ingresos 90 dias</li>
+          </ul>
+          <a href="#apply" class="btn primary">Aplicar Ahora</a>
+        </article>
+
+        <article class="program reveal">
+          <div class="tier">Nivel 3</div>
+          <h3 class="name">VIP 1:1</h3>
+          <div class="price">$3,497</div>
+          <p>Mentoria privada para construir oferta y estrategia completa.</p>
+          <ul>
+            <li>Todo lo del Accelerator</li>
+            <li>Sesiones privadas quincenales</li>
+            <li>Estrategia individual de negocio</li>
+          </ul>
+          <a href="#apply" class="btn secondary">Aplicar al VIP</a>
+        </article>
+      </div>
+    </section>
+
+    <section id="apply">
+      <div class="section-label">Aplica Ahora</div>
+      <h2 class="section-title">Construyamos tu proximo capítulo profesional.</h2>
+      <p class="section-text">Comparte tu experiencia y metas. Te recomendaremos el programa ideal para tu contexto.</p>
+
+      <div class="apply">
+        <article class="promise reveal">
+          <h3 class="section-title" style="font-size:2rem; margin-bottom:8px;">Que recibes</h3>
+          <ul>
+            <li>Consulta inicial sin compromiso</li>
+            <li>Diagnostico de tu situación actual</li>
+            <li>Recomendación de programa ideal</li>
+          </ul>
+        </article>
+
+        <article class="form reveal">
+          <form id="intakeForm">
+            <div class="row">
+              <div class="field"><label>Nombre</label><input type="text" required placeholder="Tu nombre" /></div>
+              <div class="field"><label>Apellido</label><input type="text" placeholder="Tu apellido" /></div>
+            </div>
+            <div class="field"><label>Correo Electrónico</label><input type="email" required placeholder="tu@correo.com" /></div>
+            <div class="field"><label>Industria / Experiencia</label>
+              <select>
+                <option value="">Selecciona tu área...</option>
+                <option>Educación / Enseñanza</option>
+                <option>Negocios / Gestión</option>
+                <option>Ventas / Marketing</option>
+                <option>Legal / Derecho</option>
+                <option>Otro</option>
+              </select>
+            </div>
+            <div class="field"><label>Mayor meta actual</label><textarea placeholder="¿Qué deseas construir en los próximos 90 días?"></textarea></div>
+            <button class="btn primary" style="width:100%;">Enviar Solicitud</button>
+          </form>
+          <div class="success-message" id="formSuccess">Solicitud recibida. Te contactaremos pronto.</div>
+        </article>
+      </div>
+    </section>
+
+    <footer>
+      <span>© 2026 MultiTasking360 Editorial</span>
+      <span>Tu Negocio · Tu Impacto · Tu Legado</span>
+    </footer>
+  </div>
+
+  <script>
+    document.getElementById("intakeForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      this.style.display = "none";
+      document.getElementById("formSuccess").style.display = "block";
+    });
+
+    const items = document.querySelectorAll(".reveal");
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("on");
+          obs.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.2 });
+
+    items.forEach((el) => obs.observe(el));
+  </script>
+</body>
+</html>
