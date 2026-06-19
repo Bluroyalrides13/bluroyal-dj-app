@@ -456,6 +456,24 @@ async def apply_page():
     return FileResponse(STATIC_DIR / "index.html")
 
 
+@router.get("/multitasking360", include_in_schema=False)
+async def multitasking360_page():
+    """Serve the primary MultiTasking360 sales page."""
+    return FileResponse(STATIC_DIR / "multitasking360.html")
+
+
+@router.get("/multitasking360/editorial", include_in_schema=False)
+async def multitasking360_editorial_page():
+    """Serve the editorial variant of MultiTasking360."""
+    return FileResponse(STATIC_DIR / "multitasking360-editorial.html")
+
+
+@router.get("/multitasking360/corporate", include_in_schema=False)
+async def multitasking360_corporate_page():
+    """Serve the corporate variant of MultiTasking360."""
+    return FileResponse(STATIC_DIR / "multitasking360-corporate.html")
+
+
 @router.get("/api/offers")
 async def get_offer_catalog():
     """Return the offer stack for the info product funnel"""
