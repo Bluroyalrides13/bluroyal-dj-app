@@ -474,6 +474,12 @@ async def multitasking360_corporate_page():
     return FileResponse(STATIC_DIR / "multitasking360-corporate.html")
 
 
+@router.get("/hidden-income-finder", include_in_schema=False)
+async def hidden_income_finder_page():
+    """Serve the Hidden Income Finder standalone lead page."""
+    return FileResponse(STATIC_DIR / "hidden-income-finder.html")
+
+
 @router.get("/api/offers")
 async def get_offer_catalog():
     """Return the offer stack for the info product funnel"""

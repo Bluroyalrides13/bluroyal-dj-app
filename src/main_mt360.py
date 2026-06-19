@@ -69,6 +69,12 @@ async def multitasking360_corporate_page():
     return FileResponse(STATIC_DIR / "multitasking360-corporate.html")
 
 
+@app.get("/hidden-income-finder", include_in_schema=False)
+async def hidden_income_finder_page():
+    """Serve Hidden Income Finder page."""
+    return FileResponse(STATIC_DIR / "hidden-income-finder.html")
+
+
 @app.post("/api/applications")
 async def submit_application(request: Request):
     """Capture MT360 applications from the standalone page form."""
