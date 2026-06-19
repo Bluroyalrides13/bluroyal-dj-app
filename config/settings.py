@@ -66,6 +66,8 @@ class Settings(BaseSettings):
         "https://bluroyaladventures.com",
         "https://www.bluroyaladventures.com",
         "https://app.bluroyaladventures.com",
+        "https://multitaskingthreesixtyofficial.com",
+        "https://www.multitaskingthreesixtyofficial.com",
         "https://*.wix.com",
         "https://*.wixpress.com",
     ]
