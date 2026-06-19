@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MultiTasking360™ — Tu Negocio. Tu Impacto. Tu Legado.</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Montserrat:wght@400;500;700;800&display=swap" rel="stylesheet" />
 
   <style>
     *, *::before, *::after {
@@ -15,21 +15,21 @@
     }
 
     :root {
-      --bg: #070b16;
-      --bg-soft: #0d1530;
-      --surface: rgba(16, 26, 58, 0.74);
-      --surface-solid: #101a3a;
-      --line: rgba(255, 255, 255, 0.14);
-      --text: #f8fbff;
-      --muted: #afbad5;
-      --gold: #f5bf63;
-      --cyan: #4ad9d9;
-      --blue: #4a79ff;
-      --rose: #f66f9e;
-      --display: "Sora", sans-serif;
-      --body: "Plus Jakarta Sans", sans-serif;
+      --bg: #070d1c;
+      --bg-soft: #0b142d;
+      --surface: rgba(8, 15, 33, 0.86);
+      --surface-solid: #091326;
+      --line: rgba(214, 180, 93, 0.32);
+      --text: #dfe8f8;
+      --muted: #b9cbe8;
+      --gold: #d6b45d;
+      --cyan: #7e94c5;
+      --blue: #3452aa;
+      --rose: #8fa4d8;
+      --display: "Playfair Display", serif;
+      --body: "Montserrat", sans-serif;
       --radius: 22px;
-      --shadow: 0 28px 80px rgba(0, 0, 0, 0.4);
+      --shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
     }
 
     html {
@@ -40,9 +40,8 @@
       font-family: var(--body);
       color: var(--text);
       background:
-        radial-gradient(980px 540px at 85% -10%, rgba(74, 121, 255, 0.32), transparent 55%),
-        radial-gradient(700px 430px at -5% 18%, rgba(74, 217, 217, 0.25), transparent 55%),
-        linear-gradient(165deg, #060a15 0%, #090f20 45%, #090f1f 100%);
+        radial-gradient(circle at top, rgba(52, 82, 170, 0.35), transparent 35%),
+        linear-gradient(180deg, #070d1c 0%, #050814 100%);
       min-height: 100vh;
       overflow-x: hidden;
       line-height: 1.6;
@@ -58,8 +57,8 @@
       font-size: 0.78rem;
       letter-spacing: 0.1em;
       text-transform: uppercase;
-      color: #d8e8ff;
-      background: linear-gradient(90deg, rgba(74, 217, 217, 0.25), rgba(246, 111, 158, 0.25));
+      color: #d4dff4;
+      background: linear-gradient(90deg, rgba(52, 82, 170, 0.25), rgba(12, 22, 48, 0.25));
       border-bottom: 1px solid var(--line);
       padding: 11px 18px;
     }
@@ -77,16 +76,16 @@
       align-items: center;
       gap: 24px;
       padding: 16px 52px;
-      border-bottom: 1px solid var(--line);
+      border-bottom: 1px solid rgba(214, 180, 93, 0.35);
       background: rgba(7, 11, 22, 0.72);
       backdrop-filter: blur(16px);
     }
 
     .logo {
       font-family: var(--display);
-      font-weight: 800;
-      font-size: 1.05rem;
-      letter-spacing: -0.02em;
+      font-weight: 700;
+      font-size: 1.18rem;
+      letter-spacing: 0.16em;
       display: flex;
       align-items: center;
       gap: 10px;
@@ -96,8 +95,8 @@
       width: 11px;
       height: 11px;
       border-radius: 999px;
-      background: linear-gradient(120deg, var(--cyan), var(--rose));
-      box-shadow: 0 0 20px rgba(74, 217, 217, 0.9);
+      background: linear-gradient(120deg, #d6b45d, #f0ddaa);
+      box-shadow: 0 0 20px rgba(214, 180, 93, 0.7);
     }
 
     .logo .num {
@@ -111,7 +110,7 @@
     }
 
     .nav-links a {
-      color: var(--muted);
+      color: #cad8f1;
       font-size: 0.75rem;
       font-weight: 700;
       letter-spacing: 0.1em;
@@ -124,14 +123,14 @@
     }
 
     .nav-cta {
-      border: 1px solid rgba(245, 191, 99, 0.45);
+      border: 1px solid rgba(214, 180, 93, 0.45);
       border-radius: 999px;
       color: #241703;
-      background: linear-gradient(120deg, #f7d086, #f4b64d);
+      background: #d6b45d;
       font-weight: 700;
       padding: 11px 18px;
       letter-spacing: 0.04em;
-      box-shadow: 0 14px 35px rgba(244, 182, 77, 0.3);
+      box-shadow: 0 14px 35px rgba(214, 180, 93, 0.3);
     }
 
     .hero {
@@ -187,7 +186,7 @@
       font-weight: 700;
       letter-spacing: 0.16em;
       text-transform: uppercase;
-      color: var(--cyan);
+      color: var(--gold);
       margin-bottom: 22px;
     }
 
@@ -195,14 +194,14 @@
       content: "";
       width: 34px;
       height: 1px;
-      background: linear-gradient(90deg, var(--cyan), transparent);
+      background: linear-gradient(90deg, var(--gold), transparent);
     }
 
     .hero h1 {
       font-family: var(--display);
-      font-size: clamp(2.6rem, 6vw, 5.2rem);
-      line-height: 0.95;
-      letter-spacing: -0.05em;
+      font-size: clamp(2.8rem, 8vw, 5.5rem);
+      line-height: 1.05;
+      letter-spacing: -0.02em;
       margin-bottom: 20px;
     }
 
@@ -211,15 +210,15 @@
     }
 
     .hero h1 .shine {
-      background: linear-gradient(90deg, #f5bf63, #f7f2cf 36%, #f66f9e 68%, #4ad9d9);
+      background: linear-gradient(90deg, #d6b45d, #f0dfb0 40%, #d6b45d);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
     .hero-sub {
-      color: #d5e0f8;
+      color: #b9cbe8;
       max-width: 620px;
-      font-size: 1.02rem;
+      font-size: 1.2rem;
       line-height: 1.85;
       margin-bottom: 28px;
     }
@@ -244,10 +243,10 @@
     }
 
     .btn-primary {
-      color: #1b1507;
-      background: linear-gradient(120deg, #f7d086, #f4b64d);
-      box-shadow: 0 18px 40px rgba(244, 182, 77, 0.28);
-      border: 1px solid rgba(245, 191, 99, 0.5);
+      color: #050814;
+      background: #d6b45d;
+      box-shadow: 0 18px 40px rgba(214, 180, 93, 0.28);
+      border: 1px solid rgba(214, 180, 93, 0.5);
     }
 
     .btn-primary:hover {
@@ -256,13 +255,13 @@
 
     .btn-secondary {
       color: var(--text);
-      border: 1px solid rgba(171, 196, 255, 0.34);
-      background: rgba(17, 27, 57, 0.56);
+      border: 1px solid rgba(214, 180, 93, 0.34);
+      background: rgba(7, 17, 34, 0.7);
     }
 
     .btn-secondary:hover {
       transform: translateY(-2px);
-      border-color: rgba(74, 217, 217, 0.72);
+      border-color: rgba(214, 180, 93, 0.72);
     }
 
     .trust-line {
@@ -294,7 +293,7 @@
     .hero-mini {
       border: 1px solid var(--line);
       border-radius: var(--radius);
-      background: linear-gradient(180deg, rgba(23, 35, 76, 0.78), rgba(15, 25, 53, 0.66));
+      background: rgba(8, 15, 33, 0.85);
       box-shadow: var(--shadow);
       backdrop-filter: blur(10px);
     }
@@ -321,7 +320,7 @@
       font-size: 0.68rem;
       letter-spacing: 0.16em;
       text-transform: uppercase;
-      color: #b9d8ff;
+      color: #d6b45d;
       margin-bottom: 16px;
     }
 
@@ -331,7 +330,7 @@
       gap: 14px;
       align-items: start;
       padding: 12px 0;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.11);
+      border-bottom: 1px solid rgba(214, 180, 93, 0.2);
       position: relative;
       z-index: 1;
     }
@@ -426,10 +425,11 @@
 
     .section-title {
       font-family: var(--display);
-      font-size: clamp(1.85rem, 4vw, 3.05rem);
+      font-size: clamp(2.05rem, 4.8vw, 3.25rem);
       line-height: 1.08;
-      letter-spacing: -0.03em;
+      letter-spacing: 0.01em;
       margin-bottom: 12px;
+      text-wrap: balance;
     }
 
     .section-text {
@@ -510,8 +510,8 @@
       border-radius: var(--radius);
       padding: 26px;
       background:
-        radial-gradient(circle at 80% 0, rgba(74, 121, 255, 0.22), transparent 45%),
-        linear-gradient(180deg, rgba(14, 23, 50, 0.9), rgba(10, 16, 34, 0.9));
+        radial-gradient(circle at 80% 0, rgba(214, 180, 93, 0.16), transparent 45%),
+        linear-gradient(180deg, rgba(11, 19, 40, 0.94), rgba(7, 13, 29, 0.94));
       position: relative;
       overflow: hidden;
     }
@@ -526,7 +526,7 @@
       font-size: 0.78rem;
       font-weight: 700;
       color: #111;
-      background: linear-gradient(120deg, #79e3e3, #4ad9d9);
+      background: linear-gradient(120deg, #f0dfb0, #d6b45d);
       margin-bottom: 16px;
     }
 
@@ -553,7 +553,7 @@
       border: 1px solid var(--line);
       border-radius: 24px;
       padding: 28px 24px;
-      background: linear-gradient(180deg, rgba(13, 21, 44, 0.88), rgba(9, 15, 30, 0.95));
+      background: rgba(8, 15, 33, 0.88);
       display: grid;
       grid-template-rows: auto auto auto auto 1fr auto;
       position: relative;
@@ -575,7 +575,7 @@
 
     .price-card:hover {
       transform: translateY(-5px);
-      border-color: rgba(74, 217, 217, 0.6);
+      border-color: rgba(214, 180, 93, 0.6);
     }
 
     .price-card.featured {
@@ -606,7 +606,7 @@
       font-size: 0.68rem;
       text-transform: uppercase;
       letter-spacing: 0.16em;
-      color: #98c7ff;
+      color: #d6b45d;
       margin-bottom: 8px;
     }
 
@@ -625,6 +625,37 @@
       color: var(--gold);
     }
 
+    .price-stack {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+    }
+
+    .old-price {
+      text-decoration: line-through;
+      color: #7d8798;
+      font-family: var(--body);
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+    }
+
+    .save-tag {
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid rgba(214, 180, 93, 0.45);
+      background: rgba(214, 180, 93, 0.14);
+      color: #f0dfb0;
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
     .price-note {
       color: var(--muted);
       font-size: 0.8rem;
@@ -637,7 +668,7 @@
       line-height: 1.7;
       margin-bottom: 16px;
       padding-bottom: 14px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.11);
+      border-bottom: 1px solid rgba(214, 180, 93, 0.2);
     }
 
     ul {
@@ -651,12 +682,12 @@
       display: flex;
       gap: 9px;
       padding: 8px 0;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+      border-bottom: 1px solid rgba(214, 180, 93, 0.14);
     }
 
     .price-features li::before {
       content: "•";
-      color: var(--cyan);
+      color: var(--gold);
       font-size: 1.1em;
       transform: translateY(-1px);
     }
@@ -677,8 +708,27 @@
     .testimonial-card {
       border: 1px solid var(--line);
       border-radius: var(--radius);
-      background: linear-gradient(180deg, rgba(14, 22, 48, 0.88), rgba(9, 14, 30, 0.9));
+      background: rgba(8, 15, 33, 0.85);
       padding: 24px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    }
+
+    .testimonial-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.35);
+      border-color: rgba(214, 180, 93, 0.5);
+    }
+
+    .testimonial-card.reveal.is-visible {
+      animation: testimonialRise 0.8s ease both;
+    }
+
+    .testimonial-grid .testimonial-card:nth-child(2).reveal.is-visible {
+      animation-delay: 0.12s;
+    }
+
+    .testimonial-grid .testimonial-card:nth-child(3).reveal.is-visible {
+      animation-delay: 0.24s;
     }
 
     .stars {
@@ -721,9 +771,9 @@
 
     .promise-list li {
       padding: 12px 14px;
-      border: 1px solid rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(214, 180, 93, 0.22);
       border-radius: 14px;
-      background: rgba(14, 22, 46, 0.65);
+      background: rgba(8, 15, 33, 0.72);
       color: #d8e3fa;
       font-size: 0.88rem;
     }
@@ -731,7 +781,7 @@
     .form-card {
       border: 1px solid var(--line);
       border-radius: 24px;
-      background: linear-gradient(180deg, rgba(19, 31, 66, 0.86), rgba(13, 22, 48, 0.9));
+      background: rgba(8, 15, 33, 0.86);
       padding: 24px;
       box-shadow: var(--shadow);
     }
@@ -798,11 +848,44 @@
       margin-top: 14px;
       border-radius: 14px;
       padding: 14px;
-      border: 1px solid rgba(74, 217, 156, 0.42);
-      background: rgba(74, 217, 156, 0.12);
-      color: #90f2c2;
+      border: 1px solid rgba(214, 180, 93, 0.45);
+      background: rgba(214, 180, 93, 0.12);
+      color: #f2dea6;
       font-weight: 700;
       text-align: center;
+    }
+
+    .purchase-popup {
+      position: fixed;
+      bottom: 25px;
+      left: 25px;
+      background: #071122;
+      border: 1px solid #d6b45d;
+      color: white;
+      padding: 18px 22px;
+      border-radius: 16px;
+      box-shadow: 0 10px 40px rgba(0,0,0,.5);
+      z-index: 999;
+      max-width: 320px;
+      font-size: 0.9rem;
+      animation: popupFloat 2.4s ease-in-out infinite;
+    }
+
+    .purchase-popup strong {
+      color: #39e586;
+    }
+
+    .purchase-popup .verified {
+      display: inline-block;
+      margin-bottom: 8px;
+      color: #d6b45d;
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      font-weight: 700;
+    }
+
+    .purchase-popup-enter {
+      animation: popupEnter 0.45s ease;
     }
 
     .final-cta {
@@ -862,6 +945,37 @@
       }
     }
 
+    @keyframes testimonialRise {
+      from {
+        opacity: 0;
+        transform: translateY(18px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes popupEnter {
+      from {
+        opacity: 0;
+        transform: translateY(14px) scale(0.98);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @keyframes popupFloat {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-4px);
+      }
+    }
+
     @media (max-width: 1120px) {
       nav,
       .hero,
@@ -916,6 +1030,13 @@
       .form-row {
         grid-template-columns: 1fr;
       }
+
+      .purchase-popup {
+        left: 14px;
+        right: 14px;
+        bottom: 14px;
+        max-width: none;
+      }
     }
   </style>
 </head>
@@ -942,8 +1063,8 @@
         <div class="eyebrow">De la Idea al Impacto</div>
         <h1>
           <span>Tu Negocio.</span>
-          <span>Tu Impacto.</span>
-          <span class="shine">Tu Legado.</span>
+          <span>Tu Sistema.</span>
+          <span class="shine">Tu Libertad.</span>
         </h1>
 
         <p class="hero-sub">
@@ -1124,7 +1245,11 @@
         <div class="price-card reveal">
           <div class="price-tier">Low Ticket 1</div>
           <div class="price-name">QuickStart Sprint</div>
-          <div class="price">$47</div>
+          <div class="price-stack">
+            <span class="old-price">$97</span>
+            <span class="price">$47</span>
+            <span class="save-tag">Save 52%</span>
+          </div>
           <div class="price-note">Inicio rápido</div>
           <p class="price-desc">Paquete de arranque con worksheets accionables para convertir tu experiencia en una oferta lista para vender.</p>
 
@@ -1401,6 +1526,11 @@
     </div>
   </footer>
 
+  <div class="purchase-popup purchase-popup-enter" id="purchasePopup">
+    <span class="verified">● VERIFIED PURCHASE</span>
+    <div><strong id="purchaseBuyer">Maria from Tampa</strong> purchased <span id="purchaseItem">QuickStart Sprint</span></div>
+  </div>
+
   <script>
     document.getElementById("intakeForm").addEventListener("submit", async function (e) {
       e.preventDefault();
@@ -1459,6 +1589,26 @@
     );
 
     revealItems.forEach((item) => observer.observe(item));
+
+    const purchaseEvents = [
+      { buyer: "Maria from Tampa", item: "QuickStart Sprint" },
+      { buyer: "Carlos from Miami", item: "Mini Launch Kit" },
+      { buyer: "Elena from Orlando", item: "Group Mentorship" },
+      { buyer: "Jasmine from Atlanta", item: "VIP Coaching" },
+    ];
+    let purchaseIndex = 0;
+    const purchaseBuyerEl = document.getElementById("purchaseBuyer");
+    const purchaseItemEl = document.getElementById("purchaseItem");
+    const purchasePopup = document.getElementById("purchasePopup");
+
+    setInterval(() => {
+      purchaseIndex = (purchaseIndex + 1) % purchaseEvents.length;
+      purchaseBuyerEl.textContent = purchaseEvents[purchaseIndex].buyer;
+      purchaseItemEl.textContent = purchaseEvents[purchaseIndex].item;
+      purchasePopup.classList.remove("purchase-popup-enter");
+      void purchasePopup.offsetWidth;
+      purchasePopup.classList.add("purchase-popup-enter");
+    }, 5000);
   </script>
 
 </body>
