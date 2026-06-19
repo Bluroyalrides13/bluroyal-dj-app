@@ -110,7 +110,7 @@ async def health_check():
     """Health check endpoint."""
     return {
         "status": "healthy",
-        "service": "multitasking360-standalone",
+        "service": "multitasking360official",
         "version": "1.0.0",
     }
 

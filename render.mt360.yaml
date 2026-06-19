@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: multitasking360-standalone
+    name: multitasking360official
     env: python
     plan: starter
     buildCommand: pip install -r requirements.txt
