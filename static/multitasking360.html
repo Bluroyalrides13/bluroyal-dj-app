@@ -756,6 +756,83 @@
       margin-top: 2px;
     }
 
+    .about-grid {
+      display: grid;
+      grid-template-columns: 0.95fr 1.05fr;
+      gap: 24px;
+      align-items: center;
+    }
+
+    .about-photo-shell {
+      position: relative;
+      border: 1px solid var(--line);
+      border-radius: 26px;
+      background: rgba(8, 15, 33, 0.85);
+      padding: 12px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      min-height: 460px;
+    }
+
+    .about-photo-shell::before {
+      content: "";
+      position: absolute;
+      width: 190px;
+      height: 190px;
+      right: -30px;
+      top: -30px;
+      border-radius: 999px;
+      background: radial-gradient(circle, rgba(74, 217, 217, 0.24), transparent 70%);
+      pointer-events: none;
+    }
+
+    .about-photo {
+      height: 100%;
+      min-height: 436px;
+      border-radius: 18px;
+      background-image:
+        linear-gradient(160deg, rgba(7, 17, 38, 0.44), rgba(10, 20, 41, 0.72)),
+        url('/static/samples/about%20me.PNG');
+      background-size: cover;
+      background-position: center;
+      border: 1px solid rgba(214, 180, 93, 0.3);
+    }
+
+    .about-content {
+      border: 1px solid var(--line);
+      border-radius: 26px;
+      background: rgba(8, 15, 33, 0.78);
+      padding: 30px;
+    }
+
+    .about-intro {
+      color: #d8e3f8;
+      font-size: 1rem;
+      line-height: 1.85;
+      margin-bottom: 16px;
+    }
+
+    .about-points {
+      display: grid;
+      gap: 10px;
+      margin: 16px 0 20px;
+    }
+
+    .about-points li {
+      border: 1px solid rgba(214, 180, 93, 0.24);
+      border-radius: 14px;
+      padding: 12px 14px;
+      background: rgba(10, 19, 40, 0.62);
+      color: #d7e2f7;
+      font-size: 0.87rem;
+    }
+
+    .about-photo-note {
+      font-size: 0.78rem;
+      line-height: 1.75;
+      color: var(--muted);
+    }
+
     .apply-grid {
       display: grid;
       grid-template-columns: 0.9fr 1.1fr;
@@ -987,6 +1064,7 @@
 
       .hero-grid,
       .apply-grid,
+      .about-grid,
       .features-grid,
       .pricing-grid,
       .testimonial-grid {
@@ -1037,6 +1115,11 @@
         bottom: 14px;
         max-width: none;
       }
+
+      .about-photo-shell,
+      .about-photo {
+        min-height: 340px;
+      }
     }
   </style>
 </head>
@@ -1052,6 +1135,7 @@
 
     <div class="nav-links">
       <a href="#process">Proceso</a>
+      <a href="#about">Sobre Mi</a>
       <a href="#programs">Programas</a>
       <a href="#apply" class="nav-cta">Aplica Ahora</a>
     </div>
@@ -1406,6 +1490,35 @@
           <div class="testimonial-author">Sandra K.</div>
           <div class="testimonial-role">Educadora -> Talleres y recursos</div>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="dark-section" id="about">
+    <div class="container about-grid">
+      <div class="about-photo-shell reveal">
+        <div class="about-photo" role="img" aria-label="Foto del fundador de MultiTasking360"></div>
+      </div>
+
+      <div class="about-content reveal">
+        <div class="section-label">Sobre Mi</div>
+        <h2 class="section-title">Soy la persona detrás de MultiTasking360.</h2>
+        <p class="about-intro">
+          Creé este programa para ayudar a profesionales a convertir su trayectoria en una oferta real, con sistemas simples y una estrategia clara para generar ingresos.
+        </p>
+        <p class="about-intro">
+          Mi enfoque combina claridad de negocio, ejecución semanal y estructura de crecimiento para que no te quedes en teoría.
+        </p>
+
+        <ul class="about-points">
+          <li>Enfoque práctico: decisiones simples, implementación rápida y progreso medible.</li>
+          <li>Acompañamiento humano: estrategia personalizada para tu perfil y etapa actual.</li>
+          <li>Objetivo final: construir un negocio que respete tu experiencia, tiempo y visión.</li>
+        </ul>
+
+        <p class="about-photo-note">
+          Foto conectada: <strong>about me.PNG</strong> desde <strong>/static/samples/</strong>. Si quieres cambiarla luego, solo reemplaza el archivo o actualiza el nombre en la línea de <strong>background-image</strong>.
+        </p>
       </div>
     </div>
   </section>
