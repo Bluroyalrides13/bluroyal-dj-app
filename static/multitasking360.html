@@ -211,6 +211,7 @@
 
     .hero h1 .shine {
       background: linear-gradient(90deg, #d6b45d, #f0dfb0 40%, #d6b45d);
+      background-clip: text;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
@@ -794,7 +795,7 @@
         linear-gradient(160deg, rgba(7, 17, 38, 0.44), rgba(10, 20, 41, 0.72)),
         url('/static/samples/about-me.png');
       background-size: cover;
-      background-position: center;
+      background-position: 67% 22%;
       border: 1px solid rgba(214, 180, 93, 0.3);
     }
 
@@ -1113,6 +1114,10 @@
       .about-photo-shell,
       .about-photo {
         min-height: 340px;
+      }
+
+      .about-photo {
+        background-position: 60% 20%;
       }
     }
   </style>
