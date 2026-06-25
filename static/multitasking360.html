@@ -641,6 +641,18 @@
         linear-gradient(180deg, rgba(11, 19, 40, 0.94), rgba(7, 13, 29, 0.94));
       position: relative;
       overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(214, 180, 93, 0.5);
+    }
+
+    .feature-card.active {
+      border-color: rgba(214, 180, 93, 0.8);
+      background: radial-gradient(circle at 80% 0, rgba(214, 180, 93, 0.22), transparent 45%), linear-gradient(180deg, rgba(16, 28, 52, 0.96), rgba(9, 16, 32, 0.96));
     }
 
     .feature-icon {
@@ -667,6 +679,56 @@
       color: var(--muted);
       font-size: 0.88rem;
       line-height: 1.75;
+    }
+
+    .feature-arrow {
+      color: var(--gold);
+      font-size: 0.75rem;
+      margin-top: 12px;
+      display: inline-block;
+      transition: transform 0.3s ease;
+    }
+
+    .feature-card.active .feature-arrow {
+      transform: rotate(180deg);
+    }
+
+    .feature-detail {
+      display: none;
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid rgba(214, 180, 93, 0.2);
+      font-size: 0.84rem;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    .feature-card.active .feature-detail {
+      display: block;
+      animation: revealUp 0.3s ease both;
+    }
+
+    .feature-checklist {
+      margin-top: 12px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .feature-checklist li {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.82rem;
+      color: #dce6fb;
+    }
+
+    .feature-checklist li::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--gold);
+      flex-shrink: 0;
     }
 
     .pricing-grid {
@@ -1420,22 +1482,49 @@
       </div>
 
       <div class="features-grid">
-        <div class="feature-card reveal">
+        <div class="feature-card reveal" onclick="toggleFeature(0, this)">
           <div class="feature-icon">01</div>
           <h3>Mentoría Estratégica</h3>
           <p>Dirección clara para elegir el negocio correcto y avanzar sin sentirte perdido.</p>
+          <div class="feature-arrow">▼</div>
+          <div class="feature-detail">
+            Sin dirección, la mayoría da vueltas en círculos durante meses. La mentoría estratégica te da un camino específico basado en tu experiencia, tu contexto y tus metas - no un plan genérico que le sirve a todos.
+            <ul class="feature-checklist">
+              <li>Claridad sobre qué negocio construir y por qué</li>
+              <li>Decisiones más rápidas y con menos miedo</li>
+              <li>Un plan de acción adaptado a tu situación real</li>
+            </ul>
+          </div>
         </div>
 
-        <div class="feature-card reveal">
+        <div class="feature-card reveal" onclick="toggleFeature(1, this)">
           <div class="feature-icon">02</div>
           <h3>Sistemas Prácticos</h3>
           <p>Herramientas, plantillas y ejercicios para construir sin depender de la teoría.</p>
+          <div class="feature-arrow">▼</div>
+          <div class="feature-detail">
+            La teoría no paga cuentas. Cada módulo de MultiTasking360 incluye worksheets, checklists y plantillas que puedes usar el mismo día - desde el Hidden Income Finder hasta el Revenue Tracking Dashboard.
+            <ul class="feature-checklist">
+              <li>Worksheets listos para completar, no para leer</li>
+              <li>Checklists de implementación paso a paso</li>
+              <li>Plantillas de mensajes, ofertas y seguimiento</li>
+            </ul>
+          </div>
         </div>
 
-        <div class="feature-card reveal">
+        <div class="feature-card reveal" onclick="toggleFeature(2, this)">
           <div class="feature-icon">03</div>
           <h3>Oferta y Clientes</h3>
-          <p>Enfoque en crear algo vendible y abrir conversaciones con personas que necesitan tu solucion.</p>
+          <p>Enfoque en crear algo vendible y abrir conversaciones con personas que necesitan tu solución.</p>
+          <div class="feature-arrow">▼</div>
+          <div class="feature-detail">
+            La mayoría trabaja meses en un producto que nadie compra. Aquí primero defines quién te paga y por qué - luego construyes. Los DM Scripts y el Mini Launch Roadmap te ayudan a conseguir clientes reales antes de tenerlo todo perfecto.
+            <ul class="feature-checklist">
+              <li>Oferta diseñada para compradores reales</li>
+              <li>DM Scripts para abrir conversaciones esta semana</li>
+              <li>Mini Launch Roadmap de 14 días para tu primer cliente</li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
@@ -1785,6 +1874,17 @@
   </div>
 
   <script>
+    function toggleFeature(index, el) {
+      const allFeatures = document.querySelectorAll('.feature-card');
+      const isOpen = el.classList.contains('active');
+
+      allFeatures.forEach((feature) => feature.classList.remove('active'));
+
+      if (!isOpen) {
+        el.classList.add('active');
+      }
+    }
+
     function toggleMetric(index, el) {
       const allMetrics = document.querySelectorAll('.metric');
       const allDetails = document.querySelectorAll('.metric-detail');
