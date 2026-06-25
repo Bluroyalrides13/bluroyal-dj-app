@@ -327,17 +327,30 @@
 
     .metric {
       display: grid;
-      grid-template-columns: auto 1fr;
+      grid-template-columns: auto 1fr auto;
       gap: 14px;
       align-items: start;
       padding: 12px 0;
       border-bottom: 1px solid rgba(214, 180, 93, 0.2);
       position: relative;
       z-index: 1;
+      cursor: pointer;
+      transition: background 0.2s ease, padding-left 0.2s ease;
+      border-radius: 12px;
     }
 
     .metric:last-child {
       border-bottom: 0;
+    }
+
+    .metric:hover {
+      background: rgba(214, 180, 93, 0.06);
+      padding-left: 8px;
+    }
+
+    .metric.active {
+      background: rgba(214, 180, 93, 0.1);
+      padding-left: 8px;
     }
 
     .metric-num {
@@ -362,6 +375,36 @@
     .metric p {
       font-size: 0.84rem;
       color: var(--muted);
+    }
+
+    .metric-arrow {
+      color: var(--gold);
+      font-size: 0.75rem;
+      margin-left: auto;
+      transition: transform 0.3s ease;
+      align-self: center;
+    }
+
+    .metric.active .metric-arrow {
+      transform: rotate(180deg);
+    }
+
+    .metric-detail {
+      display: none;
+      grid-column: 1 / -1;
+      padding: 12px 14px;
+      margin-top: 4px;
+      border-left: 2px solid var(--gold);
+      font-size: 0.84rem;
+      color: var(--muted);
+      line-height: 1.75;
+      border-radius: 0 10px 10px 0;
+      background: rgba(10, 18, 40, 0.5);
+    }
+
+    .metric.active + .metric-detail {
+      display: block;
+      animation: revealUp 0.3s ease both;
     }
 
     .hero-mini {
@@ -1253,36 +1296,52 @@
         <div class="hero-card">
           <div class="card-label">Resultados del Metodo</div>
 
-          <div class="metric">
+          <div class="metric" onclick="toggleMetric(0, this)">
             <div class="metric-num">01</div>
             <div>
               <h3>Claridad de Negocio</h3>
               <p>Descubre que experiencia puedes convertir en ingresos.</p>
             </div>
+            <div class="metric-arrow">▼</div>
+          </div>
+          <div class="metric-detail">
+            La mayoría no sabe lo que realmente vale. En esta fase identificas exactamente qué habilidades, conocimientos y experiencia tienes que el mercado paga - y cuál es la más rentable para ti ahora mismo.
           </div>
 
-          <div class="metric">
+          <div class="metric" onclick="toggleMetric(1, this)">
             <div class="metric-num">02</div>
             <div>
               <h3>Oferta Rentable</h3>
               <p>Construye una oferta clara que tu cliente ideal pueda comprar.</p>
             </div>
+            <div class="metric-arrow">▼</div>
+          </div>
+          <div class="metric-detail">
+            Sin una oferta clara nadie compra. Aquí diseñas tu producto o servicio con un precio justo, un mensaje que conecta y una propuesta que tu cliente ideal entiende de inmediato - sin confusión.
           </div>
 
-          <div class="metric">
+          <div class="metric" onclick="toggleMetric(2, this)">
             <div class="metric-num">03</div>
             <div>
               <h3>Primeros Clientes</h3>
               <p>Activa conversaciones, visibilidad y oportunidades reales.</p>
             </div>
+            <div class="metric-arrow">▼</div>
+          </div>
+          <div class="metric-detail">
+            No necesitas miles de seguidores. Con los DM Scripts, el Mini Launch Roadmap y el Email Sequence Starter activas conversaciones reales con personas reales que necesitan lo que ofreces - esta semana.
           </div>
 
-          <div class="metric">
+          <div class="metric" onclick="toggleMetric(3, this)">
             <div class="metric-num">04</div>
             <div>
               <h3>Ingresos Adicionales</h3>
               <p>Crea una ruta para construir nuevas fuentes de ingresos.</p>
             </div>
+            <div class="metric-arrow">▼</div>
+          </div>
+          <div class="metric-detail">
+            Un solo cliente no es un negocio. Esta fase te da el Revenue Tracking Dashboard, el Income Stream Planner y el Weekly CEO Planner para sistematizar lo que funciona y abrir nuevas fuentes de ingreso desde tu experiencia.
           </div>
         </div>
 
@@ -1726,6 +1785,26 @@
   </div>
 
   <script>
+    function toggleMetric(index, el) {
+      const allMetrics = document.querySelectorAll('.metric');
+      const allDetails = document.querySelectorAll('.metric-detail');
+      const detail = allDetails[index];
+      const isOpen = el.classList.contains('active');
+
+      allMetrics.forEach((metric) => metric.classList.remove('active'));
+      allDetails.forEach((node) => {
+        node.style.display = 'none';
+      });
+
+      if (!isOpen && detail) {
+        el.classList.add('active');
+        detail.style.display = 'block';
+        detail.style.animation = 'none';
+        void detail.offsetWidth;
+        detail.style.animation = 'revealUp 0.3s ease both';
+      }
+    }
+
     const STEP_DATA = [
       {
         title: "01 - Descubre",
