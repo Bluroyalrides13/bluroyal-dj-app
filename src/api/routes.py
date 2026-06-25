@@ -14,12 +14,13 @@ from typing import List, Optional
 
 from src.models.schemas import (
     ChatMessage, BookingRequest, ChatResponse, ApiResponse,
-    InfoProductApplicationRequest,
+    InfoProductApplicationRequest, StripeCheckoutRequest,
 )
 from src.agent.chat_interface import ChatInterface
 from src.agent.booking_manager import BookingManager
 from src.agent.pricing_engine import PricingEngine
 from src.integrations.wix_connector import WixConnector, WixWebhookHandler
+from src.integrations.stripe_payments import StripePaymentProcessor
 from src.marketing.funnel import InfoProductFunnel
 from src.dj_tools.engine import (
     build_event_timeline,
@@ -52,7 +53,18 @@ wix = WixConnector()
 wix_handler = WixWebhookHandler(wix)
 settings = Settings()
 funnel = InfoProductFunnel()
+stripe_processor = StripePaymentProcessor()
 STATIC_DIR = Path(__file__).resolve().parents[2] / "static"
+
+MT360_OFFER_PRICING = {
+    "quickstart-sprint": {"name": "QuickStart Sprint", "amount_cents": 4700},
+    "mini-launch-kit": {"name": "Mini Launch Kit", "amount_cents": 9700},
+    "diy-course": {"name": "DIY Course", "amount_cents": 19700},
+    "group-mentorship": {"name": "Group Mentorship", "amount_cents": 79700},
+    "vip-coaching": {"name": "VIP Coaching", "amount_cents": 349700},
+    "done-with-you-business-launch": {"name": "Done-With-You Business Launch", "amount_cents": 999700},
+    "signature-tools-a-la-carte": {"name": "Signature MultiTask 360 Tools", "amount_cents": 1297},
+}
 
 
 def _is_dashboard_authenticated(request: Request) -> bool:
@@ -548,6 +560,43 @@ async def submit_application(application: InfoProductApplicationRequest):
     except Exception as e:
         logger.error(f"Error capturing application: {e}")
         raise HTTPException(status_code=500, detail="Error capturing application")
+
+
+@router.post("/api/payments/stripe/checkout")
+async def create_stripe_checkout_session(payload: StripeCheckoutRequest):
+    """Create Stripe Checkout session URL for a selected MT360 offer."""
+    if not settings.STRIPE_SECRET_KEY:
+        raise HTTPException(status_code=500, detail="Stripe is not configured")
+
+    offer = MT360_OFFER_PRICING.get(payload.offer_slug)
+    if not offer:
+        raise HTTPException(status_code=400, detail="Invalid offer")
+
+    default_base_url = settings.POST_PURCHASE_LOGIN_URL.rsplit("/academy/login", 1)[0]
+    success_url = payload.success_url or f"{default_base_url}/multitasking360?checkout=success"
+    cancel_url = payload.cancel_url or f"{default_base_url}/multitasking360?checkout=cancel"
+
+    result = stripe_processor.create_checkout_session(
+        amount_cents=offer["amount_cents"],
+        product_name=offer["name"],
+        success_url=success_url,
+        cancel_url=cancel_url,
+        offer_slug=payload.offer_slug,
+        customer_email=payload.customer_email,
+    )
+
+    if not result.get("success"):
+        raise HTTPException(status_code=500, detail=result.get("error", "Failed to create checkout session"))
+
+    return ApiResponse(
+        success=True,
+        message="Stripe checkout session created",
+        data={
+            "checkout_url": result.get("checkout_url"),
+            "session_id": result.get("session_id"),
+            "offer_slug": payload.offer_slug,
+        },
+    )
 
 
 def _fetch_info_product_applications(

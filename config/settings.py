@@ -49,6 +49,11 @@ class Settings(BaseSettings):
     SQUARE_ACCESS_TOKEN: str = os.getenv("SQUARE_ACCESS_TOKEN", "")
     SQUARE_ENVIRONMENT: str = os.getenv("SQUARE_ENVIRONMENT", "sandbox")
     SQUARE_API_VERSION: str = os.getenv("SQUARE_API_VERSION", "2024-03-20")
+
+    # Stripe Payment Configuration
+    STRIPE_SECRET_KEY: str = os.getenv("STRIPE_SECRET_KEY", "")
+    STRIPE_PUBLISHABLE_KEY: str = os.getenv("STRIPE_PUBLISHABLE_KEY", "")
+    STRIPE_WEBHOOK_SECRET: str = os.getenv("STRIPE_WEBHOOK_SECRET", "")
     
     # Wix Integration Configuration
     WIX_API_KEY: str = os.getenv("WIX_API_KEY", "")

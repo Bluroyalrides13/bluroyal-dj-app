@@ -465,12 +465,18 @@
       border-radius: 16px;
       padding: 20px;
       min-height: 188px;
+      cursor: pointer;
       transition: transform 0.25s ease, border-color 0.25s ease;
     }
 
     .step-card:hover {
       transform: translateY(-5px);
       border-color: rgba(74, 217, 217, 0.6);
+    }
+
+    .step-card.active {
+      border-color: rgba(214, 180, 93, 0.8);
+      background: linear-gradient(180deg, rgba(21, 30, 65, 0.9), rgba(13, 20, 45, 0.9));
     }
 
     .step-number {
@@ -498,6 +504,83 @@
       color: var(--muted);
       font-size: 0.84rem;
       line-height: 1.7;
+    }
+
+    .step-arrow {
+      margin-top: 12px;
+      color: var(--gold);
+      font-size: 0.9rem;
+      transition: transform 0.3s ease;
+    }
+
+    .step-card.active .step-arrow {
+      transform: rotate(180deg);
+    }
+
+    .step-detail-panel {
+      display: none;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 28px;
+      margin-top: 14px;
+      background: linear-gradient(180deg, rgba(16, 26, 58, 0.9), rgba(10, 17, 38, 0.9));
+    }
+
+    .step-detail-panel.open {
+      display: block;
+      animation: revealUp 0.35s ease both;
+    }
+
+    .step-detail-title {
+      font-family: var(--display);
+      font-size: 1.5rem;
+      margin-bottom: 14px;
+      color: var(--gold);
+    }
+
+    .step-detail-body {
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.8;
+      margin-bottom: 18px;
+    }
+
+    .step-detail-actions {
+      display: grid;
+      gap: 10px;
+    }
+
+    .step-detail-action {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.88rem;
+      color: #dce6fb;
+      padding: 10px 14px;
+      border: 1px solid rgba(214, 180, 93, 0.2);
+      border-radius: 12px;
+      background: rgba(10, 18, 38, 0.6);
+    }
+
+    .step-detail-action::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--gold);
+      flex-shrink: 0;
+    }
+
+    @keyframes revealUp {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .features-grid {
@@ -1232,36 +1315,38 @@
       </div>
 
       <div class="steps-grid">
-        <div class="step-card reveal">
+        <div class="step-card reveal" onclick="toggleStep(0, this)">
           <div class="step-number">01</div>
           <h3>Descubre</h3>
           <p>Identifica tus habilidades, conocimientos y experiencias con potencial de ingresos.</p>
+          <div class="step-arrow">&#9660;</div>
         </div>
-
-        <div class="step-card reveal">
+        <div class="step-card reveal" onclick="toggleStep(1, this)">
           <div class="step-number">02</div>
           <h3>Planifica</h3>
           <p>Define tu cliente ideal, el problema que resuelves y la oportunidad mas rentable.</p>
+          <div class="step-arrow">&#9660;</div>
         </div>
-
-        <div class="step-card reveal">
+        <div class="step-card reveal" onclick="toggleStep(2, this)">
           <div class="step-number">03</div>
           <h3>Construye</h3>
           <p>Crea una oferta, precio y mensaje profesional que conecte con compradores reales.</p>
+          <div class="step-arrow">&#9660;</div>
         </div>
-
-        <div class="step-card reveal">
+        <div class="step-card reveal" onclick="toggleStep(3, this)">
           <div class="step-number">04</div>
           <h3>Lanza</h3>
           <p>Activa tu presencia, tus conversaciones y tu ruta para conseguir clientes.</p>
+          <div class="step-arrow">&#9660;</div>
         </div>
-
-        <div class="step-card reveal">
+        <div class="step-card reveal" onclick="toggleStep(4, this)">
           <div class="step-number">05</div>
           <h3>Crece</h3>
           <p>Organiza tus sistemas y construye nuevas fuentes de ingresos desde tu experiencia.</p>
+          <div class="step-arrow">&#9660;</div>
         </div>
       </div>
+      <div class="step-detail-panel" id="stepDetailPanel"></div>
     </div>
   </section>
 
@@ -1343,7 +1428,7 @@
             <li>Outcome: primera oferta definida y lista para salir al mercado.</li>
           </ul>
 
-          <a href="#apply" class="btn-secondary">Empezar</a>
+          <button type="button" class="btn-secondary stripe-checkout" data-offer="quickstart-sprint">Pagar con Stripe</button>
         </div>
 
         <div class="price-card reveal">
@@ -1360,7 +1445,7 @@
             <li>Outcome: mensaje claro y mini lanzamiento ejecutable en 2 semanas.</li>
           </ul>
 
-          <a href="#apply" class="btn-secondary">Comenzar</a>
+          <button type="button" class="btn-secondary stripe-checkout" data-offer="mini-launch-kit">Pagar con Stripe</button>
         </div>
 
         <div class="price-card reveal">
@@ -1377,7 +1462,7 @@
             <li>Outcome: negocio autoguiado con estructura integral para crecer.</li>
           </ul>
 
-          <a href="#apply" class="btn-secondary">Comenzar</a>
+          <button type="button" class="btn-secondary stripe-checkout" data-offer="diy-course">Pagar con Stripe</button>
         </div>
 
         <div class="price-card reveal">
@@ -1394,7 +1479,7 @@
             <li>Outcome: ejecución consistente con soporte grupal y avance medible.</li>
           </ul>
 
-          <a href="#apply" class="btn-secondary">Comenzar</a>
+          <button type="button" class="btn-secondary stripe-checkout" data-offer="group-mentorship">Pagar con Stripe</button>
         </div>
 
         <div class="price-card featured reveal">
@@ -1412,7 +1497,7 @@
             <li>Outcome: decisiones estratégicas más precisas y crecimiento acelerado.</li>
           </ul>
 
-          <a href="#apply" class="btn-primary">Aplicar Ahora</a>
+          <button type="button" class="btn-primary stripe-checkout" data-offer="vip-coaching">Pagar con Stripe</button>
         </div>
 
         <div class="price-card reveal">
@@ -1429,7 +1514,7 @@
             <li>Outcome: lanzamiento asistido con sistemas listos para operar y escalar.</li>
           </ul>
 
-          <a href="#apply" class="btn-secondary">Aplicar al Launch</a>
+          <button type="button" class="btn-secondary stripe-checkout" data-offer="done-with-you-business-launch">Pagar con Stripe</button>
         </div>
 
         <div class="price-card reveal">
@@ -1446,7 +1531,7 @@
             <li>Outcome: solución puntual de alto valor por solo $12.97 cada herramienta.</li>
           </ul>
 
-          <a href="#apply" class="btn-secondary">Comprar Herramienta</a>
+          <button type="button" class="btn-secondary stripe-checkout" data-offer="signature-tools-a-la-carte">Pagar con Stripe</button>
         </div>
       </div>
     </div>
@@ -1641,6 +1726,111 @@
   </div>
 
   <script>
+    const STEP_DATA = [
+      {
+        title: "01 - Descubre",
+        body: "Muchas personas tienen mas valor del que creen. Haras un inventario completo de tu experiencia profesional, conocimientos especializados y habilidades que el mercado paga. El Hidden Income Finder te muestra exactamente que tienes y que vale.",
+        actions: ["Completa el Hidden Income Finder", "Haz el Life Story Audit", "Identifica tus 3 activos mas valiosos"],
+      },
+      {
+        title: "02 - Planifica",
+        body: "Con tus activos identificados, defines a quien sirves y que problema especifico resuelves. Esta fase elimina la confusion sobre el nicho y te da claridad total sobre tu cliente ideal, su dolor mas profundo y el angulo de mercado con mas oportunidad para ti.",
+        actions: ["Construye tu Dream Client Avatar", "Valida tu Business Idea con el Scorecard", "Elige tu oportunidad mas rentable"],
+      },
+      {
+        title: "03 - Construye",
+        body: "Conviertes tu experiencia en un producto o servicio que la gente realmente compra. Disenas tu oferta con precio justo y mensaje claro usando el Messaging Framework y el 1-Page Business Concept.",
+        actions: ["Disena tu oferta con el Offer Builder", "Define precio con el Pricing Optimizer", "Crea tu Positioning Statement"],
+      },
+      {
+        title: "04 - Lanza",
+        body: "Con tu oferta lista, esta fase te da el plan para salir al mercado. Los 3 DM Scripts, el Email Sequence Starter y el Mini Launch Roadmap de 14 dias te dan conversaciones reales con prospectos reales - sin audiencia grande ni publicidad pagada.",
+        actions: ["Usa los 3 DM Scripts para primeros contactos", "Ejecuta el Mini Launch Roadmap de 14 dias", "Consigue tu primer cliente o primera venta"],
+      },
+      {
+        title: "05 - Crece",
+        body: "Una vez que tienes clientes, construyes sistemas que escalen sin que todo dependa de ti. Revenue Tracking, Weekly CEO Planner e Income Stream Planner te permiten ver que funciona y abrir nuevas fuentes de ingreso desde lo que ya tienes.",
+        actions: ["Activa el Revenue Tracking Dashboard", "Usa el Weekly CEO Planner", "Planifica tu segunda fuente de ingresos"],
+      },
+    ];
+
+    let activeStepIndex = null;
+
+    function toggleStep(index, element) {
+      const panel = document.getElementById('stepDetailPanel');
+      document.querySelectorAll('.step-card').forEach((c) => c.classList.remove('active'));
+
+      if (activeStepIndex === index) {
+        activeStepIndex = null;
+        panel.classList.remove('open');
+        return;
+      }
+
+      activeStepIndex = index;
+      element.classList.add('active');
+
+      const s = STEP_DATA[index];
+      panel.innerHTML = `
+        <div class="step-detail-title">${s.title}</div>
+        <div class="step-detail-body">${s.body}</div>
+        <div class="step-detail-actions">
+          ${s.actions.map((a) => `<div class="step-detail-action">${a}</div>`).join('')}
+        </div>
+      `;
+
+      panel.classList.remove('open');
+      void panel.offsetWidth;
+      panel.classList.add('open');
+      panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    async function launchStripeCheckout(offerSlug, customerEmail) {
+      const payload = {
+        offer_slug: offerSlug,
+        customer_email: customerEmail || null,
+        success_url: `${window.location.origin}/multitasking360?checkout=success`,
+        cancel_url: `${window.location.origin}/multitasking360?checkout=cancel`,
+      };
+
+      const response = await fetch("/api/payments/stripe/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error("No se pudo iniciar el pago con Stripe.");
+      }
+
+      const result = await response.json();
+      const checkoutUrl = result?.data?.checkout_url;
+      if (!checkoutUrl) {
+        throw new Error("Stripe no devolvió una URL de pago.");
+      }
+
+      window.location.href = checkoutUrl;
+    }
+
+    document.querySelectorAll(".stripe-checkout").forEach((button) => {
+      button.addEventListener("click", async () => {
+        const offerSlug = button.dataset.offer;
+        const emailInput = document.querySelector("input[name='email']");
+        const customerEmail = emailInput && emailInput.value ? emailInput.value.trim() : "";
+        const originalLabel = button.textContent;
+
+        button.disabled = true;
+        button.textContent = "Conectando Stripe...";
+
+        try {
+          await launchStripeCheckout(offerSlug, customerEmail);
+        } catch (error) {
+          alert("No se pudo abrir Stripe Checkout. Verifica la configuración de Stripe e intenta nuevamente.");
+          button.disabled = false;
+          button.textContent = originalLabel;
+        }
+      });
+    });
+
     document.getElementById("intakeForm").addEventListener("submit", async function (e) {
       e.preventDefault();
 
@@ -1649,15 +1839,15 @@
       const successEl = document.getElementById("formSuccess");
       const endpoint = "/api/applications";
 
+      const firstName = form.elements.first_name.value.trim();
+      const lastName = form.elements.last_name.value.trim();
+      const fullName = `${firstName} ${lastName}`.trim();
       const payload = {
-        first_name: form.elements.first_name.value,
-        last_name: form.elements.last_name.value,
+        name: fullName || firstName,
         email: form.elements.email.value,
-        instagram_handle: form.elements.instagram_handle.value,
-        phone: form.elements.phone.value,
-        industry: form.elements.industry.value,
-        program: form.elements.program.value,
-        goal: form.elements.goal.value,
+        instagram_handle: "not_provided",
+        interested_offer: form.elements.program.value,
+        biggest_goal: form.elements.goal.value,
       };
 
       submitButton.disabled = true;

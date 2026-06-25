@@ -210,6 +210,14 @@ class InfoProductApplicationRequest(BaseModel):
     interested_offer: Optional[str] = Field(default=None, max_length=120)
 
 
+class StripeCheckoutRequest(BaseModel):
+    """Create a Stripe Checkout session for an offer."""
+    offer_slug: str = Field(..., min_length=2, max_length=80)
+    customer_email: Optional[EmailStr] = None
+    success_url: Optional[str] = Field(default=None, max_length=500)
+    cancel_url: Optional[str] = Field(default=None, max_length=500)
+
+
 class InfoProductApplication(BaseModel):
     """Persisted application record"""
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
