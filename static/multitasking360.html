@@ -458,6 +458,37 @@
       margin-bottom: 40px;
     }
 
+    .trust-story {
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 30px;
+      background:
+        radial-gradient(circle at 85% 0, rgba(214, 180, 93, 0.14), transparent 42%),
+        linear-gradient(180deg, rgba(10, 17, 35, 0.94), rgba(7, 13, 28, 0.94));
+      box-shadow: var(--shadow);
+      max-width: 980px;
+      margin: 0 auto;
+    }
+
+    .trust-story h3 {
+      font-family: var(--display);
+      font-size: clamp(1.8rem, 4vw, 2.5rem);
+      color: var(--gold);
+      margin-bottom: 16px;
+    }
+
+    .trust-story p {
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.85;
+      margin-bottom: 14px;
+      max-width: 840px;
+    }
+
+    .trust-story p:last-child {
+      margin-bottom: 0;
+    }
+
     .section-label {
       font-family: var(--display);
       font-size: 0.68rem;
@@ -1299,6 +1330,10 @@
         max-width: none;
       }
 
+      .trust-story {
+        padding: 24px 20px;
+      }
+
       .about-photo-shell,
       .about-photo {
         min-height: 340px;
@@ -1333,16 +1368,17 @@
       <div class="reveal">
         <div class="eyebrow">De la Idea al Impacto</div>
         <h1>
-          <span>Tu Negocio.</span>
-          <span>Tu Sistema.</span>
-          <span class="shine">Tu Libertad.</span>
+          <span>Turn Your Experience</span>
+          <span>Into a</span>
+          <span class="shine">Profitable Business</span>
         </h1>
 
         <p class="hero-sub">
-          Te ayudamos a transformar tu experiencia, conocimiento y habilidades en un negocio rentable y sostenible con mentoría estratégica, sistemas claros y apoyo 360.
+          Discover the skills, knowledge, and life experience you already have — and turn them into your next income stream.
         </p>
 
         <div class="hero-actions">
+          <a href="#programs" class="btn-primary">Find My Business Idea</a>
           <a href="#apply" class="btn-primary">Aplicar Ahora</a>
           <a href="#process" class="btn-secondary">Ver el Proceso</a>
         </div>
@@ -1470,6 +1506,16 @@
       <div class="step-detail-panel" id="stepDetailPanel"></div>
     </div>
   </section>
+    <div class="container">
+      <div class="trust-story reveal">
+        <h3>Hi, I’m Cindy.</h3>
+        <p>I created MultiTasking360™ to help professionals over 40 turn their skills, experience, and life story into real income opportunities.</p>
+        <p>After building multiple businesses and starting over through real-life challenges, I know what it feels like to want more freedom, more control, and a business you can finally call your own.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
 
   <section>
     <div class="container">
@@ -1576,7 +1622,7 @@
             <li>Outcome: primera oferta definida y lista para salir al mercado.</li>
           </ul>
 
-          <button type="button" class="btn-secondary stripe-checkout" data-offer="quickstart-sprint">Pagar con Stripe</button>
+          <button type="button" class="btn-secondary stripe-checkout" data-offer="quickstart-sprint">Comenzar Ahora</button>
         </div>
 
         <div class="price-card reveal">
@@ -1593,7 +1639,7 @@
             <li>Outcome: mensaje claro y mini lanzamiento ejecutable en 2 semanas.</li>
           </ul>
 
-          <button type="button" class="btn-secondary stripe-checkout" data-offer="mini-launch-kit">Pagar con Stripe</button>
+          <button type="button" class="btn-secondary stripe-checkout" data-offer="mini-launch-kit">Comenzar Ahora</button>
         </div>
 
         <div class="price-card reveal">
@@ -1610,7 +1656,7 @@
             <li>Outcome: negocio autoguiado con estructura integral para crecer.</li>
           </ul>
 
-          <button type="button" class="btn-secondary stripe-checkout" data-offer="diy-course">Pagar con Stripe</button>
+          <button type="button" class="btn-secondary stripe-checkout" data-offer="diy-course">Comenzar Ahora</button>
         </div>
 
         <div class="price-card reveal">
@@ -1627,7 +1673,7 @@
             <li>Outcome: ejecución consistente con soporte grupal y avance medible.</li>
           </ul>
 
-          <button type="button" class="btn-secondary stripe-checkout" data-offer="group-mentorship">Pagar con Stripe</button>
+          <button type="button" class="btn-secondary stripe-checkout" data-offer="group-mentorship">Comenzar Ahora</button>
         </div>
 
         <div class="price-card featured reveal">
@@ -1645,7 +1691,7 @@
             <li>Outcome: decisiones estratégicas más precisas y crecimiento acelerado.</li>
           </ul>
 
-          <button type="button" class="btn-primary stripe-checkout" data-offer="vip-coaching">Pagar con Stripe</button>
+          <button type="button" class="btn-primary stripe-checkout" data-offer="vip-coaching">Comenzar Ahora</button>
         </div>
 
         <div class="price-card reveal">
@@ -1662,7 +1708,7 @@
             <li>Outcome: lanzamiento asistido con sistemas listos para operar y escalar.</li>
           </ul>
 
-          <button type="button" class="btn-secondary stripe-checkout" data-offer="done-with-you-business-launch">Pagar con Stripe</button>
+          <button type="button" class="btn-secondary stripe-checkout" data-offer="done-with-you-business-launch">Comenzar Ahora</button>
         </div>
 
         <div class="price-card reveal">
@@ -1679,7 +1725,7 @@
             <li>Outcome: solución puntual de alto valor por solo $12.97 cada herramienta.</li>
           </ul>
 
-          <button type="button" class="btn-secondary stripe-checkout" data-offer="signature-tools-a-la-carte">Pagar con Stripe</button>
+          <button type="button" class="btn-secondary stripe-checkout" data-offer="signature-tools-a-la-carte">Comenzar Ahora</button>
         </div>
       </div>
     </div>
@@ -1870,7 +1916,7 @@
 
   <div class="purchase-popup purchase-popup-enter" id="purchasePopup">
     <span class="verified">● VERIFIED PURCHASE</span>
-    <div><strong id="purchaseBuyer">Maria from Tampa</strong> purchased <span id="purchaseItem">QuickStart Sprint</span></div>
+    <div><strong id="purchaseBuyer">Popular choice:</strong> <span id="purchaseItem">QuickStart Sprint</span></div>
   </div>
 
   <script>
@@ -2069,10 +2115,10 @@
     revealItems.forEach((item) => observer.observe(item));
 
     const purchaseEvents = [
-      { buyer: "Maria from Tampa", item: "QuickStart Sprint" },
-      { buyer: "Carlos from Miami", item: "Mini Launch Kit" },
-      { buyer: "Elena from Orlando", item: "Group Mentorship" },
-      { buyer: "Jasmine from Atlanta", item: "VIP Coaching" },
+      { buyer: "Popular choice:", item: "QuickStart Sprint" },
+      { buyer: "Popular choice:", item: "Mini Launch Kit" },
+      { buyer: "Popular choice:", item: "VIP Coaching" },
+      { buyer: "Popular choice:", item: "Done-With-You Business Launch" },
     ];
     let purchaseIndex = 0;
     const purchaseBuyerEl = document.getElementById("purchaseBuyer");
