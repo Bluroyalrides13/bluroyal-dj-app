@@ -174,11 +174,11 @@ async def create_stripe_checkout_session(payload: StripeCheckoutRequest):
     )
 
     if not result.get("success"):
+        # Log the provider's message, never return it. Stripe's client errors
+        # can embed the Authorization header — i.e. the live secret key — and
+        # this response body is public.
         logger.error("Stripe checkout failed for %s: %s", payload.offer_slug, result.get("error"))
-        raise HTTPException(
-            status_code=500,
-            detail=result.get("error", "Failed to create checkout session"),
-        )
+        raise HTTPException(status_code=500, detail="Failed to create checkout session")
 
     return ApiResponse(
         success=True,

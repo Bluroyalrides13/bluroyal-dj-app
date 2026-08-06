@@ -61,9 +61,12 @@ class Settings(BaseSettings):
     SQUARE_API_VERSION: str = os.getenv("SQUARE_API_VERSION", "2024-03-20")
 
     # Stripe Payment Configuration
-    STRIPE_SECRET_KEY: str = os.getenv("STRIPE_SECRET_KEY", "")
-    STRIPE_PUBLISHABLE_KEY: str = os.getenv("STRIPE_PUBLISHABLE_KEY", "")
-    STRIPE_WEBHOOK_SECRET: str = os.getenv("STRIPE_WEBHOOK_SECRET", "")
+    # .strip() because a key pasted into a dashboard field often carries a
+    # trailing newline, which makes the HTTP auth header invalid and causes
+    # Stripe's client to echo the whole key back in its error text.
+    STRIPE_SECRET_KEY: str = os.getenv("STRIPE_SECRET_KEY", "").strip()
+    STRIPE_PUBLISHABLE_KEY: str = os.getenv("STRIPE_PUBLISHABLE_KEY", "").strip()
+    STRIPE_WEBHOOK_SECRET: str = os.getenv("STRIPE_WEBHOOK_SECRET", "").strip()
     
     # Wix Integration Configuration
     WIX_API_KEY: str = os.getenv("WIX_API_KEY", "")
