@@ -55,6 +55,68 @@ def _format_body(application: Dict, scoring: Dict) -> str:
     return "\n".join(lines)
 
 
+def _first_name(full_name: str) -> str:
+    return (full_name or "").strip().split(" ")[0] or "Hola"
+
+
+def send_applicant_confirmation(application: Dict) -> bool:
+    """Acknowledge the applicant so they aren't left wondering.
+
+    Separate from the internal notification: this one goes to the person who
+    filled in the form. Also best-effort — a failure here must not affect the
+    submission or the internal notification.
+    """
+    to_address = (application.get("email") or "").strip()
+    if not _is_configured() or not to_address:
+        return False
+
+    name = _first_name(application.get("name"))
+    offer = application.get("interested_offer")
+
+    body = [
+        f"Hola {name},",
+        "",
+        "Gracias por tu solicitud. Ya la recibimos y la estamos revisando.",
+        "",
+    ]
+    if offer:
+        body += [f"Programa de interés: {offer}", ""]
+    body += [
+        "Qué sigue:",
+        "  1. Revisamos tu situación y tus metas.",
+        "  2. Te contactamos con la recomendación del mejor camino para ti.",
+        "  3. Si encaja, agendamos una conversación.",
+        "",
+        "Normalmente respondemos en 1 o 2 días hábiles.",
+        "",
+        "Si tienes alguna pregunta, simplemente responde a este correo.",
+        "",
+        "Un abrazo,",
+        "Código de Poder 777",
+        "https://codigodepoder777.com",
+    ]
+
+    message = EmailMessage()
+    message["Subject"] = "Recibimos tu solicitud — Código de Poder 777"
+    message["From"] = settings.SMTP_FROM_EMAIL or settings.SMTP_USERNAME
+    message["To"] = to_address
+    if settings.SMTP_TO_EMAIL:
+        message["Reply-To"] = settings.SMTP_TO_EMAIL
+    message.set_content("\n".join(body))
+
+    try:
+        with smtplib.SMTP(settings.SMTP_HOST, settings.SMTP_PORT, timeout=15) as smtp:
+            if settings.SMTP_USE_TLS:
+                smtp.starttls()
+            smtp.login(settings.SMTP_USERNAME, settings.SMTP_PASSWORD)
+            smtp.send_message(message)
+        logger.info("Applicant confirmation sent to %s", to_address)
+        return True
+    except Exception as exc:
+        logger.error("Applicant confirmation FAILED for %s: %s", to_address, exc)
+        return False
+
+
 def send_application_notification(application: Dict, scoring: Dict) -> bool:
     """Email a new application. Returns True if sent, False otherwise."""
     if not _is_configured():

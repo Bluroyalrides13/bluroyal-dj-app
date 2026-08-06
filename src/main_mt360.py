@@ -14,7 +14,10 @@ from fastapi.staticfiles import StaticFiles
 import uvicorn
 
 from config.settings import Settings
-from src.integrations.email_notify import send_application_notification
+from src.integrations.email_notify import (
+    send_applicant_confirmation,
+    send_application_notification,
+)
 from src.integrations.stripe_payments import StripePaymentProcessor
 from src.marketing.funnel import InfoProductFunnel
 from src.marketing.mt360_offers import MT360_OFFER_PRICING
@@ -152,20 +155,25 @@ async def submit_application(request: Request):
 
         # Best-effort: the applicant already succeeded, so a mail failure is
         # logged and swallowed rather than surfaced as a form error.
+        applicant = {
+            "name": name,
+            "email": body.get("email"),
+            "instagram_handle": instagram_handle,
+            "interested_offer": app_request.interested_offer,
+            "biggest_goal": app_request.biggest_goal,
+            "biggest_block": app_request.biggest_block,
+        }
         try:
-            send_application_notification(
-                {
-                    "name": name,
-                    "email": body.get("email"),
-                    "instagram_handle": instagram_handle,
-                    "interested_offer": app_request.interested_offer,
-                    "biggest_goal": app_request.biggest_goal,
-                    "biggest_block": app_request.biggest_block,
-                },
-                result,
-            )
+            send_application_notification(applicant, result)
         except Exception as notify_error:  # pragma: no cover - defensive
             logger.error(f"Lead notification raised unexpectedly: {notify_error}")
+
+        # Independent try: a failed confirmation must not hide the fact that
+        # the internal notification succeeded, or vice versa.
+        try:
+            send_applicant_confirmation(applicant)
+        except Exception as confirm_error:  # pragma: no cover - defensive
+            logger.error(f"Applicant confirmation raised unexpectedly: {confirm_error}")
 
         return ApiResponse(success=True, message="Application captured", data=result)
     except Exception as e:
