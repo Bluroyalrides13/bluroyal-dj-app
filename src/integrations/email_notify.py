@@ -86,4 +86,19 @@ def send_application_notification(application: Dict, scoring: Dict) -> bool:
         return True
     except Exception as exc:
         logger.error("Lead notification FAILED for %s: %s", application.get("email"), exc)
+        # Diagnostics without ever logging the secret itself. A length of 16
+        # with no spaces is what Google expects; anything else is the bug.
+        pwd = settings.SMTP_PASSWORD
+        logger.error(
+            "SMTP diagnostics -> host=%s port=%s username=%r from=%r to=%r "
+            "password_length=%d has_spaces=%s tls=%s",
+            settings.SMTP_HOST,
+            settings.SMTP_PORT,
+            settings.SMTP_USERNAME,
+            settings.SMTP_FROM_EMAIL,
+            settings.SMTP_TO_EMAIL,
+            len(pwd),
+            " " in pwd,
+            settings.SMTP_USE_TLS,
+        )
         return False
