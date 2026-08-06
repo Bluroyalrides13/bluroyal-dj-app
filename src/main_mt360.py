@@ -53,6 +53,34 @@ app.add_middleware(
 )
 
 
+@app.on_event("startup")
+async def log_storage_location():
+    """Log where applications are stored and how many exist.
+
+    SQLite on Render is wiped every deploy unless the file sits on a mounted
+    disk. Printing the path and the row count at boot makes it obvious from
+    the logs whether persistence is actually working: the count should hold
+    across a redeploy, not reset to zero. Count only — no applicant data.
+    """
+    try:
+        db_path = funnel.db.db_path
+        count = funnel.db.count_info_product_applications()
+        persisted = db_path.startswith("/var/data")
+        logger.info(
+            "Storage check -> db_path=%s applications=%d persisted_disk=%s",
+            db_path,
+            count,
+            persisted,
+        )
+        if not persisted:
+            logger.warning(
+                "Applications are on ephemeral storage and will be lost on the "
+                "next deploy. Set DATABASE_URL=sqlite:////var/data/mt360.db"
+            )
+    except Exception as exc:  # pragma: no cover - diagnostics must never block boot
+        logger.error("Storage check failed: %s", exc)
+
+
 @app.get("/", include_in_schema=False)
 async def home_page():
     """Serve the primary MultiTasking360 page as root."""
