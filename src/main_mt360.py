@@ -69,6 +69,20 @@ async def multitasking360_corporate_page():
     return FileResponse(STATIC_DIR / "multitasking360-corporate.html")
 
 
+# Clean, brand-neutral aliases. The /multitasking360 paths above stay because
+# Stripe checkout returns to them, but these are what we link publicly.
+@app.get("/editorial", include_in_schema=False)
+async def editorial_page():
+    """Serve editorial variant at a clean path."""
+    return FileResponse(STATIC_DIR / "multitasking360-editorial.html")
+
+
+@app.get("/corporate", include_in_schema=False)
+async def corporate_page():
+    """Serve corporate variant at a clean path."""
+    return FileResponse(STATIC_DIR / "multitasking360-corporate.html")
+
+
 @app.get("/hidden-income-finder", include_in_schema=False)
 async def hidden_income_finder_page():
     """Serve Hidden Income Finder page."""
