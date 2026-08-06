@@ -15,8 +15,14 @@ import uvicorn
 
 from config.settings import Settings
 from src.integrations.email_notify import send_application_notification
+from src.integrations.stripe_payments import StripePaymentProcessor
 from src.marketing.funnel import InfoProductFunnel
-from src.models.schemas import ApiResponse, InfoProductApplicationRequest
+from src.marketing.mt360_offers import MT360_OFFER_PRICING
+from src.models.schemas import (
+    ApiResponse,
+    InfoProductApplicationRequest,
+    StripeCheckoutRequest,
+)
 
 logging.basicConfig(
     level=logging.INFO,
@@ -26,6 +32,7 @@ logger = logging.getLogger(__name__)
 
 settings = Settings()
 funnel = InfoProductFunnel()
+stripe_processor = StripePaymentProcessor()
 BASE_DIR = Path(__file__).resolve().parent.parent
 STATIC_DIR = BASE_DIR / "static"
 
@@ -136,6 +143,52 @@ async def submit_application(request: Request):
     except Exception as e:
         logger.error(f"Error capturing standalone MT360 application: {e}")
         raise HTTPException(status_code=500, detail="Error capturing application")
+
+
+@app.post("/api/payments/stripe/checkout")
+async def create_stripe_checkout_session(payload: StripeCheckoutRequest):
+    """Create a Stripe Checkout session for a selected offer.
+
+    The buy buttons on the sales page have always called this path, but the
+    standalone app never defined it — every purchase attempt 404'd. Mirrors
+    the handler in src/api/routes.py and shares the same pricing table.
+    """
+    if not settings.STRIPE_SECRET_KEY:
+        logger.error("Checkout attempted but STRIPE_SECRET_KEY is not set")
+        raise HTTPException(status_code=500, detail="Stripe is not configured")
+
+    offer = MT360_OFFER_PRICING.get(payload.offer_slug)
+    if not offer:
+        raise HTTPException(status_code=400, detail="Invalid offer")
+
+    success_url = payload.success_url or "https://codigodepoder777.com/?checkout=success"
+    cancel_url = payload.cancel_url or "https://codigodepoder777.com/?checkout=cancel"
+
+    result = stripe_processor.create_checkout_session(
+        amount_cents=offer["amount_cents"],
+        product_name=offer["name"],
+        success_url=success_url,
+        cancel_url=cancel_url,
+        offer_slug=payload.offer_slug,
+        customer_email=payload.customer_email,
+    )
+
+    if not result.get("success"):
+        logger.error("Stripe checkout failed for %s: %s", payload.offer_slug, result.get("error"))
+        raise HTTPException(
+            status_code=500,
+            detail=result.get("error", "Failed to create checkout session"),
+        )
+
+    return ApiResponse(
+        success=True,
+        message="Stripe checkout session created",
+        data={
+            "checkout_url": result.get("checkout_url"),
+            "session_id": result.get("session_id"),
+            "offer_slug": payload.offer_slug,
+        },
+    )
 
 
 @app.get("/health")

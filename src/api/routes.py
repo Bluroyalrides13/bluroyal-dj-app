@@ -56,15 +56,7 @@ funnel = InfoProductFunnel()
 stripe_processor = StripePaymentProcessor()
 STATIC_DIR = Path(__file__).resolve().parents[2] / "static"
 
-MT360_OFFER_PRICING = {
-    "quickstart-sprint": {"name": "QuickStart Sprint", "amount_cents": 4700},
-    "mini-launch-kit": {"name": "Mini Launch Kit", "amount_cents": 9700},
-    "diy-course": {"name": "DIY Course", "amount_cents": 19700},
-    "group-mentorship": {"name": "Group Mentorship", "amount_cents": 79700},
-    "vip-coaching": {"name": "VIP Coaching", "amount_cents": 349700},
-    "done-with-you-business-launch": {"name": "Done-With-You Business Launch", "amount_cents": 999700},
-    "signature-tools-a-la-carte": {"name": "Signature Poder 777 Tools", "amount_cents": 1297},
-}
+from src.marketing.mt360_offers import MT360_OFFER_PRICING
 
 
 def _is_dashboard_authenticated(request: Request) -> bool:
