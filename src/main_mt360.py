@@ -14,6 +14,7 @@ from fastapi.staticfiles import StaticFiles
 import uvicorn
 
 from config.settings import Settings
+from src.integrations.email_notify import send_application_notification
 from src.marketing.funnel import InfoProductFunnel
 from src.models.schemas import ApiResponse, InfoProductApplicationRequest
 
@@ -113,6 +114,24 @@ async def submit_application(request: Request):
         )
 
         result = funnel.process_application(app_request)
+
+        # Best-effort: the applicant already succeeded, so a mail failure is
+        # logged and swallowed rather than surfaced as a form error.
+        try:
+            send_application_notification(
+                {
+                    "name": name,
+                    "email": body.get("email"),
+                    "instagram_handle": instagram_handle,
+                    "interested_offer": app_request.interested_offer,
+                    "biggest_goal": app_request.biggest_goal,
+                    "biggest_block": app_request.biggest_block,
+                },
+                result,
+            )
+        except Exception as notify_error:  # pragma: no cover - defensive
+            logger.error(f"Lead notification raised unexpectedly: {notify_error}")
+
         return ApiResponse(success=True, message="Application captured", data=result)
     except Exception as e:
         logger.error(f"Error capturing standalone MT360 application: {e}")

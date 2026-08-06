@@ -36,7 +36,17 @@ class Settings(BaseSettings):
         "https://app.bluroyaladventures.com/academy/login",
     )
     SUPPORT_EMAIL: str = os.getenv("SUPPORT_EMAIL", "")
-    
+
+    # SMTP — lead notification email. Names match .env.example, which
+    # documented these long before anything read them.
+    SMTP_HOST: str = os.getenv("SMTP_HOST", "smtp.gmail.com")
+    SMTP_PORT: int = int(os.getenv("SMTP_PORT", "587"))
+    SMTP_USERNAME: str = os.getenv("SMTP_USERNAME", "")
+    SMTP_PASSWORD: str = os.getenv("SMTP_PASSWORD", "")
+    SMTP_FROM_EMAIL: str = os.getenv("SMTP_FROM_EMAIL", "")
+    SMTP_TO_EMAIL: str = os.getenv("SMTP_TO_EMAIL", "")
+    SMTP_USE_TLS: bool = os.getenv("SMTP_USE_TLS", "true").lower() == "true"
+
     # Claude AI Configuration
     ANTHROPIC_API_KEY: str = os.getenv("ANTHROPIC_API_KEY", "")
     CLAUDE_MODEL: str = os.getenv("CLAUDE_MODEL", "claude-3-5-sonnet-20241022")
