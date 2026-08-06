@@ -2014,8 +2014,8 @@
       const payload = {
         offer_slug: offerSlug,
         customer_email: customerEmail || null,
-        success_url: `${window.location.origin}/multitasking360?checkout=success`,
-        cancel_url: `${window.location.origin}/multitasking360?checkout=cancel`,
+        success_url: `${window.location.origin}/?checkout=success`,
+        cancel_url: `${window.location.origin}/?checkout=cancel`,
       };
 
       const response = await fetch("/api/payments/stripe/checkout", {
