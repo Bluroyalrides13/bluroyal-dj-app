@@ -55,6 +55,50 @@ def _format_body(application: Dict, scoring: Dict) -> str:
     return "\n".join(lines)
 
 
+def send_checkout_failure_alert(offer_slug: str, reason: str) -> bool:
+    """Alert when a buy button fails to produce a checkout session.
+
+    Stripe only ever hears about attempts that reach it, so a failure here is
+    invisible everywhere else: the shopper sees an error and leaves, the
+    dashboard stays empty, and it reads as 'nobody is buying' rather than
+    'nobody can buy'. Worth an email every time.
+    """
+    if not _is_configured():
+        return False
+
+    message = EmailMessage()
+    message["Subject"] = f"ALERTA: falló el checkout — {offer_slug}"
+    message["From"] = settings.SMTP_FROM_EMAIL or settings.SMTP_USERNAME
+    message["To"] = settings.SMTP_TO_EMAIL
+    message.set_content(
+        "\n".join(
+            [
+                "Un cliente intentó comprar y el checkout falló.",
+                "",
+                f"Producto: {offer_slug}",
+                f"Motivo técnico: {reason}",
+                "",
+                "Esto significa que la persona vio un error y probablemente se fue.",
+                "Stripe no registra estos intentos, así que este correo es el único aviso.",
+                "",
+                "Revisa STRIPE_SECRET_KEY en Render y los logs del servicio.",
+            ]
+        )
+    )
+
+    try:
+        with smtplib.SMTP(settings.SMTP_HOST, settings.SMTP_PORT, timeout=15) as smtp:
+            if settings.SMTP_USE_TLS:
+                smtp.starttls()
+            smtp.login(settings.SMTP_USERNAME, settings.SMTP_PASSWORD)
+            smtp.send_message(message)
+        logger.info("Checkout failure alert sent for %s", offer_slug)
+        return True
+    except Exception as exc:
+        logger.error("Checkout failure alert FAILED for %s: %s", offer_slug, exc)
+        return False
+
+
 def _first_name(full_name: str) -> str:
     return (full_name or "").strip().split(" ")[0] or "Hola"
 

@@ -17,6 +17,7 @@ from config.settings import Settings
 from src.integrations.email_notify import (
     send_applicant_confirmation,
     send_application_notification,
+    send_checkout_failure_alert,
 )
 from src.integrations.stripe_payments import StripePaymentProcessor
 from src.marketing.funnel import InfoProductFunnel
@@ -181,6 +182,14 @@ async def submit_application(request: Request):
         raise HTTPException(status_code=500, detail="Error capturing application")
 
 
+def _alert_checkout_failure(offer_slug: str, reason: str) -> None:
+    """Fire the alert without letting a mail problem change the response."""
+    try:
+        send_checkout_failure_alert(offer_slug, reason)
+    except Exception as exc:  # pragma: no cover - defensive
+        logger.error("Checkout failure alert raised unexpectedly: %s", exc)
+
+
 @app.post("/api/payments/stripe/checkout")
 async def create_stripe_checkout_session(payload: StripeCheckoutRequest):
     """Create a Stripe Checkout session for a selected offer.
@@ -191,6 +200,7 @@ async def create_stripe_checkout_session(payload: StripeCheckoutRequest):
     """
     if not settings.STRIPE_SECRET_KEY:
         logger.error("Checkout attempted but STRIPE_SECRET_KEY is not set")
+        _alert_checkout_failure(payload.offer_slug, "STRIPE_SECRET_KEY is not set")
         raise HTTPException(status_code=500, detail="Stripe is not configured")
 
     offer = MT360_OFFER_PRICING.get(payload.offer_slug)
@@ -214,6 +224,7 @@ async def create_stripe_checkout_session(payload: StripeCheckoutRequest):
         # can embed the Authorization header — i.e. the live secret key — and
         # this response body is public.
         logger.error("Stripe checkout failed for %s: %s", payload.offer_slug, result.get("error"))
+        _alert_checkout_failure(payload.offer_slug, str(result.get("error"))[:300])
         raise HTTPException(status_code=500, detail="Failed to create checkout session")
 
     return ApiResponse(
