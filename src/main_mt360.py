@@ -221,11 +221,23 @@ async def create_stripe_checkout_session(payload: StripeCheckoutRequest):
 
 @app.get("/health")
 async def health_check():
-    """Health check endpoint."""
+    """Health check endpoint.
+
+    Reports whether the application database sits on the mounted disk. This
+    is public, so it exposes the path and a boolean only — never the lead
+    count, which is business data.
+    """
+    try:
+        db_path = funnel.db.db_path
+        persisted = db_path.startswith("/var/data")
+    except Exception:  # pragma: no cover - health must never fail
+        db_path, persisted = "unknown", False
+
     return {
         "status": "healthy",
         "service": "multitasking360official",
         "version": "1.0.0",
+        "storage": {"db_path": db_path, "persisted_disk": persisted},
     }
 
 
