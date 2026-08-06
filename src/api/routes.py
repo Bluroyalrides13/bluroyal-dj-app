@@ -63,7 +63,7 @@ MT360_OFFER_PRICING = {
     "group-mentorship": {"name": "Group Mentorship", "amount_cents": 79700},
     "vip-coaching": {"name": "VIP Coaching", "amount_cents": 349700},
     "done-with-you-business-launch": {"name": "Done-With-You Business Launch", "amount_cents": 999700},
-    "signature-tools-a-la-carte": {"name": "Signature MultiTask 360 Tools", "amount_cents": 1297},
+    "signature-tools-a-la-carte": {"name": "Signature Poder 777 Tools", "amount_cents": 1297},
 }
 
 
