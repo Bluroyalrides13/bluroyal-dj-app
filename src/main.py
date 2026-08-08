@@ -6,6 +6,7 @@ Orchestrates the Claude AI agent with LangChain for ride booking and lead qualif
 import logging
 from pathlib import Path
 from fastapi import FastAPI
+from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from contextlib import asynccontextmanager
@@ -63,6 +64,11 @@ app.include_router(router)
 # Setup WebSocket for real-time chat
 setup_websocket(app)
 
+
+@app.get("/vault", include_in_schema=False)
+async def vault_shop_page():
+    """Serve the digital vault shop page."""
+    return FileResponse(STATIC_DIR / "vault-shop.html")
 
 @app.get("/health")
 async def health_check():
