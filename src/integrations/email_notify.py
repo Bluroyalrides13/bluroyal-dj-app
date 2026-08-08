@@ -99,6 +99,54 @@ def send_checkout_failure_alert(offer_slug: str, reason: str) -> bool:
         return False
 
 
+def send_vault_delivery_email(buyer_email: str, product_name: str, download_url: str) -> bool:
+    """Send the buyer their download link right after a successful payment.
+
+    This is the entire "fulfillment" step for a digital product — there is
+    no order dashboard, so if this send fails the buyer paid and got
+    nothing, with no other system that will ever notice. Log failures
+    loudly; the caller alerts the business side separately.
+    """
+    if not _is_configured():
+        logger.error("Vault delivery email NOT sent (SMTP not configured): %s -> %s", product_name, buyer_email)
+        return False
+
+    message = EmailMessage()
+    message["Subject"] = f"Tu descarga: {product_name} — Código de Poder 777"
+    message["From"] = settings.SMTP_FROM_EMAIL or settings.SMTP_USERNAME
+    message["To"] = buyer_email
+    message.set_content(
+        "\n".join(
+            [
+                "¡Gracias por tu compra!",
+                "",
+                f"Aquí está tu descarga de: {product_name}",
+                "",
+                download_url,
+                "",
+                "Este enlace es válido por 14 días. Guarda una copia del archivo",
+                "en tu computadora o Google Drive apenas lo descargues.",
+                "",
+                f"¿Problemas con el enlace? Responde a este correo o escribe a {settings.SUPPORT_EMAIL or settings.SMTP_TO_EMAIL}.",
+                "",
+                "— Código de Poder 777",
+            ]
+        )
+    )
+
+    try:
+        with smtplib.SMTP(settings.SMTP_HOST, settings.SMTP_PORT, timeout=15) as smtp:
+            if settings.SMTP_USE_TLS:
+                smtp.starttls()
+            smtp.login(settings.SMTP_USERNAME, settings.SMTP_PASSWORD)
+            smtp.send_message(message)
+        logger.info("Vault delivery email sent: %s -> %s", product_name, buyer_email)
+        return True
+    except Exception as exc:
+        logger.error("Vault delivery email FAILED: %s -> %s (%s)", product_name, buyer_email, exc)
+        return False
+
+
 def _first_name(full_name: str) -> str:
     return (full_name or "").strip().split(" ")[0] or "Hola"
 

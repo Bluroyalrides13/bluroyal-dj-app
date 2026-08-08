@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>La Bóveda — Código de Poder 777™</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Montserrat:wght@400;500;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #070d1c; --bg-soft: #0b142d; --surface: rgba(8, 15, 33, 0.86);
+      --surface-solid: #091326; --line: rgba(214, 180, 93, 0.32);
+      --text: #dfe8f8; --muted: #b9cbe8; --gold: #d6b45d;
+      --blue: #3452aa; --display: "Playfair Display", serif; --body: "Montserrat", sans-serif;
+      --radius: 18px;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--body); color: var(--text);
+      background: radial-gradient(circle at top, rgba(52, 82, 170, 0.35), transparent 35%),
+        linear-gradient(180deg, #070d1c 0%, #050814 100%);
+      min-height: 100vh; padding-bottom: 80px;
+    }
+    header { text-align: center; padding: 56px 20px 32px; }
+    header h1 { font-family: var(--display); color: var(--gold); font-size: clamp(28px, 5vw, 44px); }
+    header p { color: var(--muted); margin-top: 10px; font-size: 15px; }
+    .filters { display: flex; justify-content: center; gap: 10px; margin: 24px 0; flex-wrap: wrap; }
+    .filters button {
+      background: var(--surface-solid); border: 1px solid var(--line); color: var(--text);
+      padding: 8px 18px; border-radius: 999px; cursor: pointer; font-family: var(--body); font-size: 13px;
+    }
+    .filters button.active { background: var(--gold); color: #070d1c; border-color: var(--gold); font-weight: 700; }
+    .grid {
+      max-width: 1200px; margin: 0 auto; padding: 0 20px;
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 18px;
+    }
+    .card {
+      background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+      padding: 20px; position: relative; display: flex; flex-direction: column; gap: 10px;
+    }
+    .badge {
+      position: absolute; top: 14px; right: 14px; font-size: 11px; color: var(--gold);
+      border: 1px solid var(--line); border-radius: 999px; padding: 2px 9px;
+    }
+    .card h3 { font-family: var(--display); font-size: 18px; color: var(--text); padding-right: 34px; }
+    .card .headline { color: var(--muted); font-size: 13px; flex-grow: 1; }
+    .row { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; }
+    .price { font-family: var(--display); color: var(--gold); font-size: 20px; font-weight: 700; }
+    .buy {
+      background: linear-gradient(135deg, var(--gold), #b8933f); color: #070d1c; border: none;
+      padding: 10px 18px; border-radius: 999px; font-weight: 700; cursor: pointer; font-family: var(--body); font-size: 13px;
+    }
+    .buy:hover { filter: brightness(1.08); }
+    .buy:disabled { opacity: 0.6; cursor: wait; }
+    #email-modal {
+      display: none; position: fixed; inset: 0; background: rgba(5,8,20,0.85);
+      align-items: center; justify-content: center; z-index: 50; padding: 20px;
+    }
+    #email-modal.open { display: flex; }
+    #email-modal .box {
+      background: var(--surface-solid); border: 1px solid var(--line); border-radius: var(--radius);
+      padding: 28px; max-width: 380px; width: 100%; text-align: center;
+    }
+    #email-modal input {
+      width: 100%; padding: 12px; margin: 16px 0; border-radius: 10px; border: 1px solid var(--line);
+      background: var(--bg); color: var(--text); font-family: var(--body);
+    }
+    #email-modal button {
+      background: var(--gold); color: #070d1c; border: none; padding: 12px 24px;
+      border-radius: 999px; font-weight: 700; cursor: pointer; width: 100%;
+    }
+    #toast {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+      background: var(--surface-solid); border: 1px solid var(--gold); color: var(--text);
+      padding: 12px 22px; border-radius: 999px; display: none; font-size: 14px; z-index: 60;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>La Bóveda — Código de Poder 777™</h1>
+    <p>76 recursos digitales para la emprendedora multi-marca. Descarga instantánea.</p>
+  </header>
+
+  <div class="filters">
+    <button class="active" data-filter="ALL">Todos</button>
+    <button data-filter="ES">Español</button>
+    <button data-filter="EN">English</button>
+  </div>
+
+  <div class="grid" id="grid">
+      <article class="card" data-lang="ES">
+        <div class="badge">ES</div>
+        <h3>Guía de Prompts de IA para Fotografía de Producto</h3>
+        <p class="headline">Fotos de producto con IA que se ven profesionales, no artificiales</p>
+        <div class="row">
+          <span class="price">$19.00</span>
+          <button class="buy" data-slug="guia-de-prompts-de-ia-para-fotografia-de-producto" data-free="0">
+            Comprar
+          </button>
+        </div>
+      </article>
+      <article class="card" data-lang="EN">
+        <div class="badge">EN</div>
+        <h3>Wellness &amp; Meal Planner</h3>
+        <p class="headline">Fuel and Energy for the Woman Running Everything</p>
+        <div class="row">
+          <span class="price">$19.00</span>
+          <button class="buy" data-slug="wellness-meal-planner" data-free="0">
+            Comprar
+          </button>
+        </div>
+      </article>
+      <article class="card" data-lang="EN">
+        <div class="badge">EN</div>
+        <h3>Vendor &amp; Contractor Management Tracker</h3>
+        <p class="headline">Know Who You Pay, and Why, Across Every Brand</p>
+        <div class="row">
+          <span class="price">$19.00</span>
+          <button class="buy" data-slug="vendor-contractor-management-tracker" data-free="0">
+            Comprar
+          </button>
+        </div>
+      </article>
+      <article class="card" data-lang="EN">
+        <div class="badge">EN</div>
+        <h3>Testimonial &amp; Case Study Builder</h3>
+        <p class="headline">Turn Client Wins Into Marketing You Can Reuse</p>
+        <div class="row">
+          <span class="price">$19.00</span>
+          <button class="buy" data-slug="testimonial-case-study-builder" data-free="0">
+            Comprar
+          </button>
+        </div>
+      </article>
+      <article class="card" data-lang="EN">
+        <div class="badge">EN</div>
+        <h3>Business Startup Workbook</h3>
+        <p class="headline">From Idea to First Customer in 90 Days</p>
+        <div class="row">
+          <span class="price">$27.00</span>
+          <button class="buy" data-slug="business-startup-workbook" data-free="0">
+            Comprar
+          </button>
+        </div>
+      </article>
+      <article class="card" data-lang="EN">
+        <div class="badge">EN</div>
+        <h3>Speaking &amp; Media Visibility Tracker</h3>
+        <p class="headline">Pitch, Prepare, and Repurpose Every Appearance</p>
+        <div class="row">
+          <span class="price">$22.00</span>
+          <button class="buy" data-slug="speaking-media-visibility-tracker" data-free="0">
+            Comprar
+          </button>
+        </div>
+      </article>
+      <article class="card" data-lang="EN">
+        <div class="badge">EN</div>
+        <h3>Shadow Work &amp; Mindfulness Journal</h3>
+        <p class="headline">The Inner Work Underneath the Business Work</p>
+        <div class="row">
+          <span class="price">$22.00</span>
+          <button class="buy" data-slug="shadow-work-mindfulness-journal" data-free="0">
+            Comprar
+          </button>
+        </div>
+      </article>
+      <article class="card" data-lang="EN">
+        <div class="badge">EN</div>
+        <h3>Seasonal &amp; Holiday Promotion Planner</h3>
+        <p class="headline">Plan Every Sale Season Ahead of Time</p>
+        <div class="row">
+          <span class="price">$22.00</span>
+          <button class="buy" data-slug="seasonal-holiday-promotion-planner" data-free="0">
+            Comprar
+          </button>
+        </div>
+      </article>
+      <article class="card" data-lang="EN">
+        <div class="badge">EN</div>
+        <h3>Business Retreat &amp; Travel Planner</h3>
+        <p class="headline">Step Away Without Everything Falling Apart</p>
+        <div class="row">
+          <span class="price">$19.00</span>
+          <button class="buy" data-slug="business-retreat-travel-planner" data-free="0">
+            Comprar
+          </button>
+        </div>
+      </article>
+      <article class="card" data-lang="EN">
+        <div class="badge">EN</div>
+        <h3>Referral &amp; Word-of-Mouth Growth Tracker</h3>
+        <p class="headline">Turn Happy Customers Into Your Best Marketing Channel</p>
+        <div class="row">
+          <span class="price">$19.00</span>
+          <button class="buy" data-slug="referral-word-of-mouth-growth-tracker" data-free="0">
+            Comprar
+          </button>
+        </div>
+      </article>
+      <article class="card" data-lang="EN">
+        <div class="badge">EN</div>
+        <h3>Reading &amp; Personal Growth Journal</h3>
+        <p class="headline">Turn What You Learn Into What You Actually Do</p>
+        <div class="row">
+          <span class="price">$19.00</span>
+          <button class="buy" data-slug="reading-personal-growth-journal" data-free="0">
+            Comprar
+          </button>
+        </div>
+      </article>
+      <article class="card" data-lang="EN">
+        <div class="badge">EN</div>
+        <h3>Podcast &amp; Video Content Planner</h3>
+        <p class="headline">Plan, Record, and Repurpose Every Episode</p>
+        <div class="row">
+          <span class="price">$22.00</span>
+          <button class="buy" data-slug="podcast-video-content-planner" data-free="0">
+            Comprar
+          </button>
+        </div>
+      </article>
+      <article class="card" data-lang="EN">
+        <div class="badge">EN</div>
+        <h3>Personal Branding Workbook</h3>
+        <p class="headline">The Throughline Across Every Business You Run</p>
+        <div class="row">
+          <span class="price">$24.00</span>
+          <button class="buy" data-slug="personal-branding-workbook" data-free="0">
+            Comprar
+          </button>
+        </div>
+      </article>
+      <article class="card" data-lang="EN">
+        <div class="badge">EN</div>
+        <h3>Customer Onboarding &amp; Fulfillment Kit</h3>
+        <p class="headline">Give Every Client a White-Glove Experience, On Repeat</p>
+        <div class="row">
+          <span class="price">$24.00</span>
+          <button class="buy" data-slug="customer-onboarding-fulfillment-kit" data-free="0">
+            Comprar
+          </button>
+        </div>
+      </article>
+      <article class="card" data-lang="EN">
+        <div class="badge">EN</div>
+        <h3>Email Newsletter &amp; List Growth Planner</h3>
+        <p class="headline">Write Consistently, Grow On Purpose</p>
+        <div class="row">
+          <span class="price">$19.00</span>
+          <button class="buy" data-slug="email-newsletter-list-growth-planner" data-free="0">
+            Comprar
+          </button>
+        </div>
+      </article>
+      <article class="card" data-lang="EN">
+        <div class="badge">EN</div>
+        <h3>Networking &amp; Relationship Building Tracker</h3>
+        <p class="headline">Maintain the Network, Not Just Mine It</p>
+        <div class="row">
+          <span class="price">$17.00</span>
+          <button class="buy" data-slug="networking-relationship-building-tracker" data-free="0">
+            Comprar
+          </button>
+        </div>
+      </article>
+      <article class="card" data-lang="EN">
+        <div class="badge">EN</div>
+        <h3>Meeting &amp; Decision Log</h3>
+        <p class="headline">Never Lose Track of What Was Decided, or By Whom</p>
+        <div class="row">
+          <span class="price">$19.00</span>
+          <button class="buy" data-slug="meeting-decision-log" data-free="0">
+            Comprar
+          </button>
+        </div>
+      </article>
+      <article class="card" data-lang="EN">
+        <div class="badge">EN</div>
+        <h3>Marketing &amp; Launch Campaign Planner</h3>
+        <p class="headline">Plan Every Launch Like a System, Not a Scramble</p>
+        <div class="row">
+          <span class="price">$24.00</span>
+          <button class="buy" data-slug="marketing-launch-campaign-planner" data-free="0">
+            Comprar
+          </button>
+        </div>
+      </article>
+      <article class="card" data-lang="EN">
+        <div class="badge">EN</div>
+        <h3>Investment &amp; Wealth Building Tracker</h3>
+        <p class="headline">See the Whole Picture Across Every Asset</p>
+        <div class="row">
+          <span class="price">$22.00</span>
+          <button class="buy" data-slug="investment-wealth-building-tracker" data-free="0">
+            Comprar
+          </button>
+        </div>
+      </article>
+      <article class="card" data-lang="EN">
+        <div class="badge">EN</div>
+        <h3>Home &amp; Household Management Planner</h3>
+        <p class="headline">Run Your Home Like the System It Actually Is</p>
+        <div class="row">
+          <span class="price">$19.00</span>
+          <button class="buy" data-slug="home-household-management-planner" data-free="0">
+            Comprar
+          </button>
+        </div>
+      </article>
+      <article class="card" data-lang="EN">
+        <div class="badge">EN</div>
+        <h3>Gratitude &amp; Affirmation Journal</h3>
+        <p class="headline">30 Days of Rewiring How You Talk to Yourself</p>
+        <div class="row">
+          <span class="price">$19.00</span>
+          <button class="buy" data-slug="gratitude-affirmation-journal" data-free="0">
+            Comprar
+          </button>
+        </div>
+      </article>
+      <article class="card" data-lang="EN">
+        <div class="badge">EN</div>
+        <h3>Deep Work &amp; Time Blocking Planner</h3>
+        <p class="headline">Protect the Hours That Actually Move the Needle</p>
+        <div class="row">
+          <span class="price">$22.00</span>
+          <button class="buy" data-slug="deep-work-time-blocking-planner" data-free="0">
+            Comprar
+          </button>
+        </div>
+      </article>
+      <article class="card" data-lang="EN">
+        <div class="badge">EN</div>
+        <h3>Debt Payoff &amp; Savings Challenge Tracker</h3>
+        <p class="headline">Pay It Down, Save It Up, On Your Terms</p>
+        <div class="row">
+          <span class="price">$17.00</span>
+          <button class="buy" data-slug="debt-payoff-savings-challenge-tracker" data-free="0">
+            Comprar
+          </button>
+        </div>
+      </article>
+      <article class="card" data-lang="EN">
+        <div class="badge">EN</div>
+        <h3>Course Creator Workbook</h3>
+        <p class="headline">From Expertise to a Finished, Sellable Course</p>
+        <div class="row">
+          <span class="price">$27.00</span>
+          <button class="buy" data-slug="course-creator-workbook" data-free="0">
+            Comprar
+          </button>
+        </div>
+      </article>
+      <article class="card" data-lang="EN">
+        <div class="badge">EN</div>
+        <h3>Burnout Prevention &amp; Recovery Workbook</h3>
+        <p class="headline">Catch It Early, Recover Fully, Build Sustainably</p>
+        <div class="row">
+          <span class="price">$22.00</span>
+          <button class="buy" data-slug="burnout-prevention-recovery-workbook" data-free="0">
+            Comprar
+          </button>
+        </div>
+      </article>
+      <article class="card" data-lang="EN">
+        <div class="badge">EN</div>
+        <h3>Year in Review &amp; Annual Planning Workbook</h3>
+        <p class="headline">Close One Chapter Well, Open the Next On Purpose</p>
+        <div class="row">
+          <span class="price">$24.00</span>
+          <button class="buy" data-slug="year-in-review-annual-planning-workbook" data-free="0">
+            Comprar
+          </button>
+        </div>
+      </article>
+      <article class="card" data-lang="EN">
+        <div class="badge">EN</div>
+        <h3>ADHD-Friendly Focus &amp; Productivity Planner</h3>
+        <p class="headline">Built for Brains That Don't Work in Straight Lines</p>
+        <div class="row">
+          <span class="price">$22.00</span>
+          <button class="buy" data-slug="adhd-friendly-focus-productivity-planner" data-free="0">
+            Comprar
+          </button>
+        </div>
+      </article>
+      <article class="card" data-lang="ES">
+        <div class="badge">ES</div>
+        <h3>Companion Workbook MultiTask360 (ES)</h3>
+        <p class="headline">El Método Detrás de Todo el Vault</p>
+        <div class="row">
+          <span class="price">$29.00</span>
+          <button class="buy" data-slug="companion-workbook-multitask360-es" data-free="0">
+            Comprar
+          </button>
+        </div>
+      </article>
+      <article class="card" data-lang="EN">
+        <div class="badge">EN</div>
+        <h3>Diario de Reinicio Semanal</h3>
+        <p class="headline">Un Ritual de Cinco Minutos para Cerrar Bien Cada Semana</p>
+        <div class="row">
+          <span class="price">$17.00</span>
+          <button class="buy" data-slug="diario-de-reinicio-semanal" data-free="0">
+            Comprar
+          </button>
+        </div>
+      </article>
+      <article class="card" data-lang="ES">
+        <div class="badge">ES</div>
+        <h3>Planificador Diario (90 Días Sin Fecha)</h3>
+        <p class="headline">Empieza Cuando Quieras</p>
+        <div class="row">
+          <span class="price">$24.00</span>
+          <button class="buy" data-slug="planificador-diario-90-dias-sin-fecha" data-free="0">
+            Comprar
+          </button>
+        </div>
+      </article>
+      <article class="card" data-lang="EN">
+        <div class="badge">EN</div>
+        <h3>Rastreador de Presupuesto e Ingresos</h3>
+        <p class="headline">Ve los Números de Cada Marca, Claramente</p>
+        <div class="row">
+          <span class="price">$19.00</span>
+          <button class="buy" data-slug="rastreador-de-presupuesto-e-ingresos" data-free="0">
+            Comprar
+          </button>
+        </div>
+      </article>
+      <article class="card" data-lang="EN">
+        <div class="badge">EN</div>
+        <h3>Rastreador de Clientes y CRM</h3>
+        <p class="headline">Nunca Más Pierdas un Seguimiento</p>
+        <div class="row">
+          <span class="price">$19.00</span>
+          <button class="buy" data-slug="rastreador-de-clientes-y-crm" data-free="0">
+            Comprar
+          </button>
+        </div>
+      </article>
+      <article class="card" data-lang="EN">
+        <div class="badge">EN</div>
+        <h3>Dashboard CEO y KPI</h3>
+        <p class="headline">Los Números Detrás de Cada Marca, en Un Solo Lugar</p>
+        <div class="row">
+          <span class="price">$27.00</span>
+          <button class="buy" data-slug="dashboard-ceo-y-kpi" data-free="0">
+            Comprar
+          </button>
+        </div>
+      </article>
+      <article class="card" data-lang="ES">
+        <div class="badge">ES</div>
+        <h3>Rastreador de Hábitos y Tiempo</h3>
+        <p class="headline">Descubre En Qué Se Va Realmente Tu Día</p>
+        <div class="row">
+          <span class="price">$17.00</span>
+          <button class="buy" data-slug="rastreador-de-habitos-y-tiempo" data-free="0">
+            Comprar
+          </button>
+        </div>
+      </article>
+      <article class="card" data-lang="ES">
+        <div class="badge">ES</div>
+        <h3>Workbook de Procesos y Automatización</h3>
+        <p class="headline">Convierte Lo Que Tienes en la Cabeza en Algo Delegable</p>
+        <div class="row">
+          <span class="price">$27.00</span>
+          <button class="buy" data-slug="workbook-de-procesos-y-automatizacion" data-free="0">
+            Comprar
+          </button>
+        </div>
+      </article>
+      <article class="card" data-lang="EN">
+        <div class="badge">EN</div>
+        <h3>Biblioteca de Prompts de IA</h3>
+        <p class="headline">216 Prompts para la Emprendedora Multi-Marca</p>
+        <div class="row">
+          <span class="price">$19.00</span>
+          <button class="buy" data-slug="biblioteca-de-prompts-de-ia" data-free="0">
+            Comprar
+          </button>
+        </div>
+      </article>
+      <article class="card" data-lang="EN">
+        <div class="badge">EN</div>
+        <h3>Planificador de Contenido y Redes Sociales</h3>
+        <p class="headline">Planifica, Agrupa y Reutiliza Sin Agotarte</p>
+        <div class="row">
+          <span class="price">$29.00</span>
+          <button class="buy" data-slug="planificador-de-contenido-y-redes-sociales" data-free="0">
+            Comprar
+          </button>
+        </div>
+      </article>
+      <article class="card" data-lang="ES">
+        <div class="badge">ES</div>
+        <h3>Diario de Metas y Visión</h3>
+        <p class="headline">El Trabajo Interior Detrás de Tu Plan de 90 Días</p>
+        <div class="row">
+          <span class="price">$27.00</span>
+          <button class="buy" data-slug="diario-de-metas-y-vision" data-free="0">
+            Comprar
+          </button>
+        </div>
+      </article>
+      <article class="card" data-lang="ES">
+        <div class="badge">ES</div>
+        <h3>Blueprint de Negocios con IA: El Planificador de 90 Días</h3>
+        <p class="headline">Metas, Contenido, Flujos de IA y Finanzas en Un Solo Sistema</p>
+        <div class="row">
+          <span class="price">$47.00</span>
+          <button class="buy" data-slug="blueprint-de-negocios-con-ia-el-planificador-de-90-dias" data-free="0">
+            Comprar
+          </button>
+        </div>
+      </article>
+      <article class="card" data-lang="ES">
+        <div class="badge">ES</div>
+        <h3>AI Productivity Vault — Full Bundle (Spanish)</h3>
+        <p class="headline">Los 12 Productos en Español — La Colección Completa</p>
+        <div class="row">
+          <span class="price">$97.00</span>
+          <button class="buy" data-slug="ai-productivity-vault-full-bundle-spanish" data-free="0">
+            Comprar
+          </button>
+        </div>
+      </article>
+      <article class="card" data-lang="EN">
+        <div class="badge">EN</div>
+        <h3>AI Productivity Vault — Full Bundle (English)</h3>
+        <p class="headline">All 38 English Products — The Entire Vault in One Download</p>
+        <div class="row">
+          <span class="price">$97.00</span>
+          <button class="buy" data-slug="ai-productivity-vault-full-bundle-english" data-free="0">
+            Comprar
+          </button>
+        </div>
+      </article>
+      <article class="card" data-lang="EN">
+        <div class="badge">EN</div>
+        <h3>MultiTask360 Companion Workbook</h3>
+        <p class="headline">The method behind the whole vault.</p>
+        <div class="row">
+          <span class="price">$29.00</span>
+          <button class="buy" data-slug="multitask360-companion-workbook" data-free="0">
+            Comprar
+          </button>
+        </div>
+      </article>
+      <article class="card" data-lang="EN">
+        <div class="badge">EN</div>
+        <h3>Weekly Reset &amp; Reflection Journal</h3>
+        <p class="headline">A five-minute ritual to close every week well.</p>
+        <div class="row">
+          <span class="price">$17.00</span>
+          <button class="buy" data-slug="weekly-reset-reflection-journal" data-free="0">
+            Comprar
+          </button>
+        </div>
+      </article>
+      <article class="card" data-lang="EN">
+        <div class="badge">EN</div>
+        <h3>Daily Planner — 90 Undated Days</h3>
+        <p class="headline">Start any time. No wasted pages.</p>
+        <div class="row">
+          <span class="price">$24.00</span>
+          <button class="buy" data-slug="daily-planner-90-undated-days" data-free="0">
+            Comprar
+          </button>
+        </div>
+      </article>
+      <article class="card" data-lang="EN">
+        <div class="badge">EN</div>
+        <h3>Budget &amp; Income Tracker</h3>
+        <p class="headline">See every brand's numbers, clearly.</p>
+        <div class="row">
+          <span class="price">$19.00</span>
+          <button class="buy" data-slug="budget-income-tracker" data-free="0">
+            Comprar
+          </button>
+        </div>
+      </article>
+      <article class="card" data-lang="EN">
+        <div class="badge">EN</div>
+        <h3>Client &amp; CRM Tracker</h3>
+        <p class="headline">Never lose track of a follow-up again.</p>
+        <div class="row">
+          <span class="price">$19.00</span>
+          <button class="buy" data-slug="client-crm-tracker" data-free="0">
+            Comprar
+          </button>
+        </div>
+      </article>
+      <article class="card" data-lang="EN">
+        <div class="badge">EN</div>
+        <h3>CEO Dashboard &amp; KPI Tracker</h3>
+        <p class="headline">The numbers behind every brand, in one place.</p>
+        <div class="row">
+          <span class="price">$27.00</span>
+          <button class="buy" data-slug="ceo-dashboard-kpi-tracker" data-free="0">
+            Comprar
+          </button>
+        </div>
+      </article>
+      <article class="card" data-lang="EN">
+        <div class="badge">EN</div>
+        <h3>Habit &amp; Time Tracker</h3>
+        <p class="headline">See where your days actually go.</p>
+        <div class="row">
+          <span class="price">$17.00</span>
+          <button class="buy" data-slug="habit-time-tracker" data-free="0">
+            Comprar
+          </button>
+        </div>
+      </article>
+      <article class="card" data-lang="EN">
+        <div class="badge">EN</div>
+        <h3>SOP &amp; Automation Workbook</h3>
+        <p class="headline">Turn what's in your head into something you can hand off.</p>
+        <div class="row">
+          <span class="price">$27.00</span>
+          <button class="buy" data-slug="sop-automation-workbook" data-free="0">
+            Comprar
+          </button>
+        </div>
+      </article>
+      <article class="card" data-lang="EN">
+        <div class="badge">EN</div>
+        <h3>AI Prompt Library — 216 Prompts for the Multi-Brand Entrepreneur</h3>
+        <p class="headline">Stop staring at a blank AI chat. Copy, paste, customize, done.</p>
+        <div class="row">
+          <span class="price">$19.00</span>
+          <button class="buy" data-slug="ai-prompt-library-216-prompts-for-the-multi-brand-entrepreneur-e9" data-free="0">
+            Comprar
+          </button>
+        </div>
+      </article>
+      <article class="card" data-lang="EN">
+        <div class="badge">EN</div>
+        <h3>Content &amp; Social Media Planner</h3>
+        <p class="headline">Stop starting from a blank page. Build your pillars once, pull from them all qua</p>
+        <div class="row">
+          <span class="price">$29.00</span>
+          <button class="buy" data-slug="content-social-media-planner-9a" data-free="0">
+            Comprar
+          </button>
+        </div>
+      </article>
+      <article class="card" data-lang="EN">
+        <div class="badge">EN</div>
+        <h3>Goal &amp; Vision Companion Journal</h3>
+        <p class="headline">Get honest about what you actually want before you plan another goal you don't f</p>
+        <div class="row">
+          <span class="price">$27.00</span>
+          <button class="buy" data-slug="goal-vision-companion-journal" data-free="0">
+            Comprar
+          </button>
+        </div>
+      </article>
+      <article class="card" data-lang="EN">
+        <div class="badge">EN</div>
+        <h3>AI Business Blueprint: The 90-Day Planner for Multi-Passionate Entrepreneurs</h3>
+        <p class="headline">Plan your goals, content, AI workflows, and cash flow — in one system built for </p>
+        <div class="row">
+          <span class="price">$47.00</span>
+          <button class="buy" data-slug="ai-business-blueprint-the-90-day-planner-for-multi-passionate-entrepreneurs" data-free="0">
+            Comprar
+          </button>
+        </div>
+      </article>
+      <article class="card" data-lang="EN">
+        <div class="badge">EN</div>
+        <h3>10 AI Prompts to Start Your Business</h3>
+        <p class="headline">Free AI prompts to help you kickstart your own business</p>
+        <div class="row">
+          <span class="price">GRATIS</span>
+          <button class="buy" data-slug="10-ai-prompts-to-start-your-business" data-free="1">
+            Descargar gratis
+          </button>
+        </div>
+      </article>
+      <article class="card" data-lang="EN">
+        <div class="badge">EN</div>
+        <h3>Blu Royal Academy — Full Program Implementation</h3>
+        <p class="headline">The complete bilingual curriculum library — every file we offer, including all S</p>
+        <div class="row">
+          <span class="price">$2499.00</span>
+          <button class="buy" data-slug="blu-royal-academy-full-program-implementation" data-free="0">
+            Comprar
+          </button>
+        </div>
+      </article>
+      <article class="card" data-lang="EN">
+        <div class="badge">EN</div>
+        <h3>Blu Royal Academy — Intermediate Growth Kit</h3>
+        <p class="headline">Expanded download package for a deeper curriculum library and more printable res</p>
+        <div class="row">
+          <span class="price">$1500.00</span>
+          <button class="buy" data-slug="blu-royal-academy-intermediate-growth-kit" data-free="0">
+            Comprar
+          </button>
+        </div>
+      </article>
+      <article class="card" data-lang="EN">
+        <div class="badge">EN</div>
+        <h3>Blu Royal Academy — Basic Curriculum Kit</h3>
+        <p class="headline">Starter download bundle for teachers &amp; homeschool parents who need preschool pla</p>
+        <div class="row">
+          <span class="price">$497.00</span>
+          <button class="buy" data-slug="blu-royal-academy-basic-curriculum-kit" data-free="0">
+            Comprar
+          </button>
+        </div>
+      </article>
+      <article class="card" data-lang="EN">
+        <div class="badge">EN</div>
+        <h3>Blu Royal Academy — Fine Motor Skills Mega Pack</h3>
+        <p class="headline">Quick-start printable pack for grip, tracing, cutting &amp; hand coordination</p>
+        <div class="row">
+          <span class="price">$17.00</span>
+          <button class="buy" data-slug="blu-royal-academy-fine-motor-skills-mega-pack" data-free="0">
+            Comprar
+          </button>
+        </div>
+      </article>
+      <article class="card" data-lang="EN">
+        <div class="badge">EN</div>
+        <h3>DJ Event Assistant AI — Professional (Yearly)</h3>
+        <p class="headline">Best value for established DJs managing frequent events</p>
+        <div class="row">
+          <span class="price">$249.99</span>
+          <button class="buy" data-slug="dj-event-assistant-ai-professional-yearly" data-free="0">
+            Comprar
+          </button>
+        </div>
+      </article>
+      <article class="card" data-lang="EN">
+        <div class="badge">EN</div>
+        <h3>DJ Event Assistant AI — Professional (Monthly)</h3>
+        <p class="headline">Scale premium events with AI planning and financial visibility</p>
+        <div class="row">
+          <span class="price">$30.00</span>
+          <button class="buy" data-slug="dj-event-assistant-ai-professional-monthly" data-free="0">
+            Comprar
+          </button>
+        </div>
+      </article>
+      <article class="card" data-lang="EN">
+        <div class="badge">EN</div>
+        <h3>DJ Event Assistant AI — Starter (Yearly)</h3>
+        <p class="headline">Save annually while running your full starter workflow</p>
+        <div class="row">
+          <span class="price">$149.00</span>
+          <button class="buy" data-slug="dj-event-assistant-ai-starter-yearly" data-free="0">
+            Comprar
+          </button>
+        </div>
+      </article>
+      <article class="card" data-lang="EN">
+        <div class="badge">EN</div>
+        <h3>DJ Event Assistant AI — Starter (Monthly)</h3>
+        <p class="headline">Run bookings, clients &amp; invoices with one AI command center</p>
+        <div class="row">
+          <span class="price">$15.00</span>
+          <button class="buy" data-slug="dj-event-assistant-ai-starter-monthly" data-free="0">
+            Comprar
+          </button>
+        </div>
+      </article>
+      <article class="card" data-lang="EN">
+        <div class="badge">EN</div>
+        <h3>Digital Gap Year Starter Guide</h3>
+        <p class="headline">Digital Gap Year Starter Guide — How to Travel and Work from Anywhere</p>
+        <div class="row">
+          <span class="price">$17.00</span>
+          <button class="buy" data-slug="digital-gap-year-starter-guide" data-free="0">
+            Comprar
+          </button>
+        </div>
+      </article>
+      <article class="card" data-lang="EN">
+        <div class="badge">EN</div>
+        <h3>Lower Cholesterol Naturally</h3>
+        <p class="headline">Lower Cholesterol Naturally — The Complete Practical Guide</p>
+        <div class="row">
+          <span class="price">$12.00</span>
+          <button class="buy" data-slug="lower-cholesterol-naturally" data-free="0">
+            Comprar
+          </button>
+        </div>
+      </article>
+      <article class="card" data-lang="EN">
+        <div class="badge">EN</div>
+        <h3>Deja de Comprar por Impulso</h3>
+        <p class="headline">Controla tu gasto en 21 días con un sistema simple de compra consciente · Ebook </p>
+        <div class="row">
+          <span class="price">$17.00</span>
+          <button class="buy" data-slug="deja-de-comprar-por-impulso" data-free="0">
+            Comprar
+          </button>
+        </div>
+      </article>
+      <article class="card" data-lang="ES">
+        <div class="badge">ES</div>
+        <h3>Límites Sanos: Di que No sin Culpa</h3>
+        <p class="headline">Aprende a decir que no sin culpa en 21 días · Ebook en Español</p>
+        <div class="row">
+          <span class="price">$17.00</span>
+          <button class="buy" data-slug="limites-sanos-di-que-no-sin-culpa" data-free="0">
+            Comprar
+          </button>
+        </div>
+      </article>
+      <article class="card" data-lang="EN">
+        <div class="badge">EN</div>
+        <h3>Plan Luxury — Workbook multitasking360 (VIP)</h3>
+        <p class="headline">La experiencia VIP: done-for-you, mentoría extendida y bóveda de recursos · Espa</p>
+        <div class="row">
+          <span class="price">$149.00</span>
+          <button class="buy" data-slug="plan-luxury-workbook-multitasking360-vip" data-free="0">
+            Comprar
+          </button>
+        </div>
+      </article>
+      <article class="card" data-lang="ES">
+        <div class="badge">ES</div>
+        <h3>Plan Premium — Workbook multitasking360 (1:1)</h3>
+        <p class="headline">Acompañamiento 1:1 + workbook · Estrategia personalizada · Español &amp; English</p>
+        <div class="row">
+          <span class="price">$79.00</span>
+          <button class="buy" data-slug="plan-premium-workbook-multitasking360-1-1" data-free="0">
+            Comprar
+          </button>
+        </div>
+      </article>
+      <article class="card" data-lang="ES">
+        <div class="badge">ES</div>
+        <h3>Plan Pro — Workbook multitasking360</h3>
+        <p class="headline">Escala tu marca, contenido y ventas · Español &amp; English</p>
+        <div class="row">
+          <span class="price">$49.00</span>
+          <button class="buy" data-slug="plan-pro-workbook-multitasking360" data-free="0">
+            Comprar
+          </button>
+        </div>
+      </article>
+      <article class="card" data-lang="ES">
+        <div class="badge">ES</div>
+        <h3>Plan Básico — Workbook multitasking360</h3>
+        <p class="headline">Construye las bases de tu negocio online · Español &amp; English</p>
+        <div class="row">
+          <span class="price">$29.00</span>
+          <button class="buy" data-slug="plan-basico-workbook-multitasking360" data-free="0">
+            Comprar
+          </button>
+        </div>
+      </article>
+      <article class="card" data-lang="EN">
+        <div class="badge">EN</div>
+        <h3>🏆 MultiTask360 Pro Membership</h3>
+        <p class="headline">Premium AI apps, business systems, templates &amp; exclusive member resources.</p>
+        <div class="row">
+          <span class="price">$29.99</span>
+          <button class="buy" data-slug="multitask360-pro-membership" data-free="0">
+            Comprar
+          </button>
+        </div>
+      </article>
+      <article class="card" data-lang="EN">
+        <div class="badge">EN</div>
+        <h3>The Hook Rules: 5 Rules for Unskippable Hooks</h3>
+        <p class="headline">Write first lines that stop the scroll, grab attention, and get your content rea</p>
+        <div class="row">
+          <span class="price">$17.00</span>
+          <button class="buy" data-slug="the-hook-rules-5-rules-for-unskippable-hooks" data-free="0">
+            Comprar
+          </button>
+        </div>
+      </article>
+      <article class="card" data-lang="EN">
+        <div class="badge">EN</div>
+        <h3>5 Prompts to Start a YouTube Channel</h3>
+        <p class="headline">Launch a Profitable Youtube Channel with 5 AI Prompts</p>
+        <div class="row">
+          <span class="price">$17.00</span>
+          <button class="buy" data-slug="5-prompts-to-start-a-youtube-channel" data-free="0">
+            Comprar
+          </button>
+        </div>
+      </article>
+      <article class="card" data-lang="EN">
+        <div class="badge">EN</div>
+        <h3>12 Gemini Prompts That Save Hours Every Week</h3>
+        <p class="headline">Copy Paste and turn Gmail Docs &amp; Drive into your AI assistant.</p>
+        <div class="row">
+          <span class="price">$7.00</span>
+          <button class="buy" data-slug="12-gemini-prompts-that-save-hours-every-week" data-free="0">
+            Comprar
+          </button>
+        </div>
+      </article>
+      <article class="card" data-lang="EN">
+        <div class="badge">EN</div>
+        <h3>COMPLETE AI VIDEO EDITING STACK 2026 100+ AI Tools, Prompts &amp; Workflows</h3>
+        <p class="headline">Learn how to script, generate, edit, enhance, and publish professional AI videos</p>
+        <div class="row">
+          <span class="price">$7.00</span>
+          <button class="buy" data-slug="complete-ai-video-editing-stack-2026-edition" data-free="0">
+            Comprar
+          </button>
+        </div>
+      </article>
+      <article class="card" data-lang="EN">
+        <div class="badge">EN</div>
+        <h3>Hidden Income Finder</h3>
+        <p class="headline">Discover the Business Opportunity Hidden in Your Experience</p>
+        <div class="row">
+          <span class="price">GRATIS</span>
+          <button class="buy" data-slug="hidden-income-finder" data-free="1">
+            Descargar gratis
+          </button>
+        </div>
+      </article>
+  </div>
+
+  <div id="email-modal">
+    <div class="box">
+      <h3 style="font-family: var(--display); color: var(--gold); margin-bottom: 6px;">Tu correo</h3>
+      <p style="color: var(--muted); font-size: 13px;">Te enviaremos el enlace de descarga.</p>
+      <input type="email" id="email-input" placeholder="tucorreo@ejemplo.com" />
+      <button id="email-submit">Enviar</button>
+    </div>
+  </div>
+
+  <div id="toast"></div>
+
+  <script>
+    const grid = document.getElementById('grid');
+    const modal = document.getElementById('email-modal');
+    const emailInput = document.getElementById('email-input');
+    const emailSubmit = document.getElementById('email-submit');
+    const toast = document.getElementById('toast');
+    let pendingSlug = null;
+
+    function showToast(msg) {
+      toast.textContent = msg;
+      toast.style.display = 'block';
+      setTimeout(() => toast.style.display = 'none', 4000);
+    }
+
+    document.querySelectorAll('.filters button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filters button').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const f = btn.dataset.filter;
+        document.querySelectorAll('.card').forEach(card => {
+          card.style.display = (f === 'ALL' || card.dataset.lang === f) ? '' : 'none';
+        });
+      });
+    });
+
+    async function checkout(slug, isFree, email) {
+      const btn = document.querySelector(`.buy[data-slug="${slug}"]`);
+      if (btn) { btn.disabled = true; btn.textContent = 'Un momento...'; }
+      try {
+        const res = await fetch('/api/vault/checkout', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ slug, customer_email: email || null })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.detail || 'Error');
+        if (isFree) {
+          showToast('¡Listo! Revisa tu correo para el enlace de descarga.');
+        } else if (data.data && data.data.checkout_url) {
+          window.location.href = data.data.checkout_url;
+        }
+      } catch (err) {
+        showToast('Algo salió mal. Intenta de nuevo o escríbenos.');
+      } finally {
+        if (btn) { btn.disabled = false; btn.textContent = isFree ? 'Descargar gratis' : 'Comprar'; }
+      }
+    }
+
+    grid.addEventListener('click', (e) => {
+      const btn = e.target.closest('.buy');
+      if (!btn) return;
+      const slug = btn.dataset.slug;
+      const isFree = btn.dataset.free === '1';
+      if (isFree) {
+        pendingSlug = slug;
+        modal.classList.add('open');
+        emailInput.focus();
+      } else {
+        checkout(slug, false, null);
+      }
+    });
+
+    emailSubmit.addEventListener('click', () => {
+      const email = emailInput.value.trim();
+      if (!email || !email.includes('@')) { showToast('Escribe un correo válido.'); return; }
+      modal.classList.remove('open');
+      checkout(pendingSlug, true, email);
+      emailInput.value = '';
+    });
+  </script>
+</body>
+</html>

@@ -7,10 +7,12 @@ so it can be deployed independently from the DJ dashboard service.
 import logging
 from pathlib import Path
 
-from fastapi import FastAPI, HTTPException, Request
+import stripe
+from fastapi import FastAPI, Header, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
+from pydantic import BaseModel, EmailStr
 import uvicorn
 
 from config.settings import Settings
@@ -18,15 +20,25 @@ from src.integrations.email_notify import (
     send_applicant_confirmation,
     send_application_notification,
     send_checkout_failure_alert,
+    send_vault_delivery_email,
 )
 from src.integrations.stripe_payments import StripePaymentProcessor
+from src.integrations.vault_tokens import make_download_token, read_download_token
 from src.marketing.funnel import InfoProductFunnel
 from src.marketing.mt360_offers import MT360_OFFER_PRICING
+from src.marketing.mt360_vault_products import MT360_VAULT_PRODUCTS
 from src.models.schemas import (
     ApiResponse,
     InfoProductApplicationRequest,
     StripeCheckoutRequest,
 )
+
+
+class VaultCheckoutRequest(BaseModel):
+    """Body for /api/vault/checkout — a buy click from the shop page."""
+
+    slug: str
+    customer_email: EmailStr | None = None
 
 logging.basicConfig(
     level=logging.INFO,
@@ -236,6 +248,133 @@ async def create_stripe_checkout_session(payload: StripeCheckoutRequest):
             "offer_slug": payload.offer_slug,
         },
     )
+
+
+@app.get("/vault", include_in_schema=False)
+async def vault_shop_page():
+    """Serve the digital vault shop page (76-product catalog)."""
+    return FileResponse(STATIC_DIR / "vault-shop.html")
+
+
+@app.post("/api/vault/checkout")
+async def create_vault_checkout_session(payload: VaultCheckoutRequest):
+    """Create a Stripe Checkout session for one vault product.
+
+    Mirrors /api/payments/stripe/checkout but reads from the 76-product
+    vault catalog instead of the high-ticket MT360_OFFER_PRICING table, and
+    tags the session so the webhook below knows which PDF to deliver.
+    """
+    if not settings.STRIPE_SECRET_KEY:
+        logger.error("Vault checkout attempted but STRIPE_SECRET_KEY is not set")
+        _alert_checkout_failure(payload.slug, "STRIPE_SECRET_KEY is not set")
+        raise HTTPException(status_code=500, detail="Stripe is not configured")
+
+    product = MT360_VAULT_PRODUCTS.get(payload.slug)
+    if not product:
+        raise HTTPException(status_code=400, detail="Invalid product")
+
+    if product["price_cents"] == 0:
+        # Free lead magnet — no Stripe session needed. Deliver immediately
+        # if we already have an email; otherwise the shop page should be
+        # collecting one before calling this endpoint for a $0 item.
+        if not payload.customer_email:
+            raise HTTPException(status_code=400, detail="Email required for free download")
+        token = make_download_token(payload.slug)
+        download_url = f"https://codigodepoder777.com/vault/download/{token}"
+        send_vault_delivery_email(payload.customer_email, product["name"], download_url)
+        return ApiResponse(
+            success=True,
+            message="Free download sent",
+            data={"free": True, "download_url": download_url},
+        )
+
+    success_url = f"https://codigodepoder777.com/vault?checkout=success&product={payload.slug}"
+    cancel_url = "https://codigodepoder777.com/vault?checkout=cancel"
+
+    result = stripe_processor.create_checkout_session(
+        amount_cents=product["price_cents"],
+        product_name=product["name"],
+        success_url=success_url,
+        cancel_url=cancel_url,
+        offer_slug=f"vault:{payload.slug}",
+        customer_email=payload.customer_email,
+    )
+
+    if not result.get("success"):
+        logger.error("Vault checkout failed for %s: %s", payload.slug, result.get("error"))
+        _alert_checkout_failure(payload.slug, str(result.get("error"))[:300])
+        raise HTTPException(status_code=500, detail="Failed to create checkout session")
+
+    return ApiResponse(
+        success=True,
+        message="Stripe checkout session created",
+        data={"checkout_url": result.get("checkout_url"), "session_id": result.get("session_id")},
+    )
+
+
+@app.post("/webhooks/stripe", include_in_schema=False)
+async def stripe_webhook(request: Request, stripe_signature: str = Header(None, alias="Stripe-Signature")):
+    """Handle Stripe events — this is what actually delivers a vault purchase.
+
+    Without this endpoint, checkout succeeds but nothing ever emails the
+    buyer their file: /api/vault/checkout only opens the payment page.
+    Reads raw bytes (not parsed JSON) because signature verification is
+    computed over the exact request body Stripe sent.
+    """
+    body = await request.body()
+
+    if not settings.STRIPE_WEBHOOK_SECRET:
+        logger.error("Stripe webhook received but STRIPE_WEBHOOK_SECRET is not set — rejecting")
+        raise HTTPException(status_code=500, detail="Webhook not configured")
+
+    try:
+        event = stripe.Webhook.construct_event(body, stripe_signature, settings.STRIPE_WEBHOOK_SECRET)
+    except (ValueError, stripe.error.SignatureVerificationError) as exc:
+        logger.error("Stripe webhook signature verification failed: %s", exc)
+        raise HTTPException(status_code=400, detail="Invalid signature")
+
+    if event["type"] == "checkout.session.completed":
+        session = event["data"]["object"]
+        offer_slug = (session.get("metadata") or {}).get("offer_slug", "")
+        buyer_email = session.get("customer_details", {}).get("email") or session.get("customer_email")
+
+        if offer_slug.startswith("vault:") and buyer_email:
+            slug = offer_slug.split("vault:", 1)[1]
+            product = MT360_VAULT_PRODUCTS.get(slug)
+            if product:
+                token = make_download_token(slug)
+                download_url = f"https://codigodepoder777.com/vault/download/{token}"
+                sent = send_vault_delivery_email(buyer_email, product["name"], download_url)
+                if not sent:
+                    _alert_checkout_failure(slug, f"Payment succeeded but delivery email failed for {buyer_email}")
+            else:
+                logger.error("Webhook: unknown vault slug in metadata: %s", slug)
+        elif offer_slug.startswith("vault:"):
+            logger.error("Webhook: vault purchase with no buyer email, session %s", session.get("id"))
+        # Non-vault offers (coaching/mentorship) keep the existing manual
+        # follow-up process and are intentionally not handled here.
+
+    return {"received": True}
+
+
+@app.get("/vault/download/{token}", include_in_schema=False)
+async def vault_download(token: str):
+    """Serve a purchased PDF if the signed token is valid and unexpired."""
+    try:
+        slug = read_download_token(token)
+    except ValueError as exc:
+        raise HTTPException(status_code=403, detail=str(exc))
+
+    product = MT360_VAULT_PRODUCTS.get(slug)
+    if not product:
+        raise HTTPException(status_code=404, detail="Product not found")
+
+    file_path = STATIC_DIR / "vault" / product["file"]
+    if not file_path.exists():
+        logger.error("Vault file missing on disk: %s (slug=%s)", file_path, slug)
+        raise HTTPException(status_code=404, detail="File not available yet — contact support")
+
+    return FileResponse(file_path, filename=product["file"], media_type="application/pdf")
 
 
 @app.get("/health")
