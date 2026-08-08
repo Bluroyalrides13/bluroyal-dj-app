@@ -7,6 +7,7 @@ import logging
 import uuid
 import csv
 import io
+import secrets
 from pathlib import Path
 from fastapi import APIRouter, HTTPException, Header, Request, Form
 from fastapi.responses import FileResponse, RedirectResponse, StreamingResponse
@@ -59,6 +60,31 @@ STATIC_DIR = Path(__file__).resolve().parents[2] / "static"
 from src.marketing.mt360_offers import MT360_OFFER_PRICING
 
 
+# Passwords that ship in this repo. The repo is public, so any of these being
+# live is the same as having no password at all — refuse the login outright
+# rather than accept a credential the whole internet can read.
+_PUBLIC_DEFAULT_PASSWORDS = frozenset(
+    {
+        "",
+        "change-this-now",
+        "multitask360-admin-2026",
+        "change-me",
+        "password",
+    }
+)
+
+
+def _password_is_public_default(password: str) -> bool:
+    return password.strip() in _PUBLIC_DEFAULT_PASSWORDS
+
+
+def _credentials_match(supplied_user: str, supplied_pw: str, real_user: str, real_pw: str) -> bool:
+    """Constant-time credential check, so timing can't reveal the password."""
+    user_ok = secrets.compare_digest(supplied_user or "", real_user or "")
+    pw_ok = secrets.compare_digest(supplied_pw or "", real_pw or "")
+    return user_ok and pw_ok
+
+
 def _is_dashboard_authenticated(request: Request) -> bool:
     return request.cookies.get("dj_dashboard_auth") == "1"
 
@@ -103,7 +129,16 @@ async def dashboard_login_page():
 @router.post("/dashboard/login", include_in_schema=False)
 async def dashboard_login(username: str = Form(...), password: str = Form(...)):
     """Authenticate dashboard access"""
-    if username != settings.DASHBOARD_USERNAME or password != settings.DASHBOARD_PASSWORD:
+    if _password_is_public_default(settings.DASHBOARD_PASSWORD):
+        logger.error(
+            "Dashboard login refused: DASHBOARD_PASSWORD is still a default "
+            "published in this repo. Set a real one in the environment."
+        )
+        return RedirectResponse(url="/dashboard/login?error=unconfigured", status_code=303)
+
+    if not _credentials_match(
+        username, password, settings.DASHBOARD_USERNAME, settings.DASHBOARD_PASSWORD
+    ):
         return RedirectResponse(url="/dashboard/login?error=1", status_code=303)
 
     response = RedirectResponse(url="/dashboard", status_code=303)
@@ -111,6 +146,7 @@ async def dashboard_login(username: str = Form(...), password: str = Form(...)):
         key="dj_dashboard_auth",
         value="1",
         httponly=True,
+        secure=True,
         samesite="lax",
     )
     return response
@@ -151,7 +187,16 @@ async def academy_login_page():
 @router.post("/academy/login", include_in_schema=False)
 async def academy_login(username: str = Form(...), password: str = Form(...)):
     """Authenticate academy app access"""
-    if username != settings.ACADEMY_APP_USERNAME or password != settings.ACADEMY_APP_PASSWORD:
+    if _password_is_public_default(settings.ACADEMY_APP_PASSWORD):
+        logger.error(
+            "Academy login refused: ACADEMY_APP_PASSWORD is still a default "
+            "published in this repo. Set a real one in the environment."
+        )
+        return RedirectResponse(url="/academy/login?error=unconfigured", status_code=303)
+
+    if not _credentials_match(
+        username, password, settings.ACADEMY_APP_USERNAME, settings.ACADEMY_APP_PASSWORD
+    ):
         return RedirectResponse(url="/academy/login?error=1", status_code=303)
 
     response = RedirectResponse(url="/academy", status_code=303)
@@ -159,6 +204,7 @@ async def academy_login(username: str = Form(...), password: str = Form(...)):
         key="academy_app_auth",
         value="1",
         httponly=True,
+        secure=True,
         samesite="lax",
     )
     return response
@@ -191,7 +237,16 @@ async def mt360_admin_login_page():
 @router.post("/mt360-admin/login", include_in_schema=False)
 async def mt360_admin_login(username: str = Form(...), password: str = Form(...)):
     """Authenticate MT360 admin access"""
-    if username != settings.MT360_ADMIN_USERNAME or password != settings.MT360_ADMIN_PASSWORD:
+    if _password_is_public_default(settings.MT360_ADMIN_PASSWORD):
+        logger.error(
+            "Admin login refused: MT360_ADMIN_PASSWORD is still a default "
+            "published in this repo. Set a real one in the environment."
+        )
+        return RedirectResponse(url="/mt360-admin/login?error=unconfigured", status_code=303)
+
+    if not _credentials_match(
+        username, password, settings.MT360_ADMIN_USERNAME, settings.MT360_ADMIN_PASSWORD
+    ):
         return RedirectResponse(url="/mt360-admin/login?error=1", status_code=303)
 
     response = RedirectResponse(url="/mt360-admin", status_code=303)
@@ -199,6 +254,7 @@ async def mt360_admin_login(username: str = Form(...), password: str = Form(...)
         key="mt360_admin_auth",
         value="1",
         httponly=True,
+        secure=True,
         samesite="lax",
     )
     return response

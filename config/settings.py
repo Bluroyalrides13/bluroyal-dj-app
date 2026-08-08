@@ -18,14 +18,17 @@ class Settings(BaseSettings):
     LOG_LEVEL: str = os.getenv("LOG_LEVEL", "INFO")
 
     # Dashboard Access Control
+    # Passwords default to empty, never to a literal. This repo is public, so
+    # any default here is a published credential — the login handlers refuse
+    # to authenticate when one of these is blank.
     DASHBOARD_USERNAME: str = os.getenv("DASHBOARD_USERNAME", "djadmin")
-    DASHBOARD_PASSWORD: str = os.getenv("DASHBOARD_PASSWORD", "change-this-now")
+    DASHBOARD_PASSWORD: str = os.getenv("DASHBOARD_PASSWORD", "")
     ACADEMY_APP_USERNAME: str = os.getenv("ACADEMY_APP_USERNAME", "academyadmin")
-    ACADEMY_APP_PASSWORD: str = os.getenv("ACADEMY_APP_PASSWORD", "change-this-now")
-    
+    ACADEMY_APP_PASSWORD: str = os.getenv("ACADEMY_APP_PASSWORD", "")
+
     # MultiTasking360 Admin Portal
     MT360_ADMIN_USERNAME: str = os.getenv("MT360_ADMIN_USERNAME", "multitask360official")
-    MT360_ADMIN_PASSWORD: str = os.getenv("MT360_ADMIN_PASSWORD", "multitask360-admin-2026")
+    MT360_ADMIN_PASSWORD: str = os.getenv("MT360_ADMIN_PASSWORD", "")
 
     # Payment Link Configuration
     STARTER_PAYMENT_LINK: str = os.getenv("STARTER_PAYMENT_LINK", "").replace('\n', '').replace('\r', '').strip()
