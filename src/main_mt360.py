@@ -27,6 +27,7 @@ from src.integrations.vault_tokens import make_download_token, read_download_tok
 from src.marketing.funnel import InfoProductFunnel
 from src.marketing.mt360_offers import MT360_OFFER_PRICING
 from src.marketing.mt360_vault_products import MT360_VAULT_PRODUCTS
+from src.codigo_agent.chat_interface import CodigoChatInterface
 from src.models.schemas import (
     ApiResponse,
     InfoProductApplicationRequest,
@@ -40,6 +41,13 @@ class VaultCheckoutRequest(BaseModel):
     slug: str
     customer_email: EmailStr | None = None
 
+
+class CodigoChatRequest(BaseModel):
+    """Body for /api/codigo/chat — one incoming message from a lead."""
+
+    lead_id: str
+    message: str
+
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
@@ -48,6 +56,7 @@ logger = logging.getLogger(__name__)
 
 settings = Settings()
 funnel = InfoProductFunnel()
+codigo_chat = CodigoChatInterface()
 stripe_processor = StripePaymentProcessor()
 BASE_DIR = Path(__file__).resolve().parent.parent
 STATIC_DIR = BASE_DIR / "static"
