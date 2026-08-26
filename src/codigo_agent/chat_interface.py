@@ -19,7 +19,7 @@ from src.codigo_agent.lead_memory import LeadMemory
 logger = logging.getLogger(__name__)
 
 # Match the model your other agents already use, unless overridden.
-DEFAULT_MODEL = Settings().CLAUDE_MODEL
+DEFAULT_MODEL = "claude-sonnet-5"  # current model; Settings().CLAUDE_MODEL default was retired
 
 _HANDOFF_PHRASE = "voy a pasar esto directamente con cindy"
 
