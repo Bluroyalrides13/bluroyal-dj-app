@@ -11,13 +11,15 @@ from typing import Optional
 
 from anthropic import Anthropic
 
+from config.settings import Settings
+
 from src.codigo_agent.system_prompt import SYSTEM_PROMPT
 from src.codigo_agent.lead_memory import LeadMemory
 
 logger = logging.getLogger(__name__)
 
 # Match the model your other agents already use, unless overridden.
-DEFAULT_MODEL = "claude-sonnet-4-6"
+DEFAULT_MODEL = Settings().CLAUDE_MODEL
 
 _HANDOFF_PHRASE = "voy a pasar esto directamente con cindy"
 
