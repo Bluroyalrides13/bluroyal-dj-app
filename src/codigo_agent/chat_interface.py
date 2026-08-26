@@ -96,6 +96,10 @@ class CodigoChatInterface:
             system=SYSTEM_PROMPT + context_note,
             messages=messages,
         )
+        logger.info(
+            f"Claude raw response: stop_reason={response.stop_reason}, "
+            f"content_blocks={response.content}"
+        )
         return "".join(
             block.text for block in response.content if block.type == "text"
         )
