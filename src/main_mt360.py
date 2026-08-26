@@ -264,6 +264,17 @@ async def vault_shop_page():
     """Serve the digital vault shop page (76-product catalog)."""
     return FileResponse(STATIC_DIR / "vault-shop.html")
 
+
+@app.post("/api/codigo/chat")
+async def codigo_chat_endpoint(payload: CodigoChatRequest):
+    """Receives one message from a lead and returns the sales agent reply."""
+    result = codigo_chat.process_message(payload.lead_id, payload.message)
+    return {
+        "reply": result["reply"],
+        "lead_status": result["lead_status"],
+        "handoff": result["handoff"],
+    }
+
 @app.get("/cinzilla", include_in_schema=False)
 async def cinzilla_page():
     """Serve the Cinzilla live avatar page."""
