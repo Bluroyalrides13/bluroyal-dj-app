@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cinzilla — Código de Poder 777™</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Montserrat:wght@400;500;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #070d1c; --bg-soft: #0b142d; --surface: rgba(8, 15, 33, 0.86);
+      --surface-solid: #091326; --line: rgba(214, 180, 93, 0.32);
+      --text: #dfe8f8; --muted: #b9cbe8; --gold: #d6b45d;
+      --blue: #3452aa; --display: "Playfair Display", serif; --body: "Montserrat", sans-serif;
+      --radius: 18px;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--body); color: var(--text);
+      background: radial-gradient(circle at top, rgba(52, 82, 170, 0.35), transparent 35%),
+        linear-gradient(180deg, #070d1c 0%, #050814 100%);
+      min-height: 100vh; padding-bottom: 80px;
+    }
+    header { text-align: center; padding: 56px 20px 24px; }
+    header h1 { font-family: var(--display); color: var(--gold); font-size: clamp(28px, 5vw, 44px); }
+    header p { color: var(--muted); margin-top: 10px; font-size: 15px; max-width: 560px; margin-left: auto; margin-right: auto; }
+    .stage { max-width: 900px; margin: 32px auto 0; padding: 0 20px; }
+    .frame-wrap {
+      background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+      padding: 16px; box-shadow: 0 30px 60px rgba(0,0,0,0.35);
+    }
+    .frame-wrap iframe { width: 100%; min-height: 640px; border: 0; border-radius: 12px; display: block; }
+    footer { text-align: center; color: var(--muted); font-size: 12px; margin-top: 40px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Cinzilla</h1>
+    <p>Tu avatar en vivo — conversa en tiempo real.</p>
+  </header>
+  <div class="stage">
+    <div class="frame-wrap">
+      <iframe src="https://embed.liveavatar.com/v1/0d7708e0-38ff-44c2-93e0-90448a544cdd?orientation=horizontal" allow="microphone" title="LiveAvatar Embed" style="aspect-ratio: 16/9;"></iframe>
+    </div>
+  </div>
+  <footer>Código de Poder 777™</footer>
+</body>
+</html>

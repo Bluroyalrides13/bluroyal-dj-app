@@ -255,6 +255,12 @@ async def vault_shop_page():
     """Serve the digital vault shop page (76-product catalog)."""
     return FileResponse(STATIC_DIR / "vault-shop.html")
 
+@app.get("/cinzilla", include_in_schema=False)
+async def cinzilla_page():
+    """Serve the Cinzilla live avatar page."""
+    return FileResponse(STATIC_DIR / "cinzilla.html")
+
+
 
 @app.post("/api/vault/checkout")
 async def create_vault_checkout_session(payload: VaultCheckoutRequest):
