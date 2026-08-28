@@ -488,6 +488,14 @@ async def get_service_agreement_setup(request: Request):
         raise HTTPException(status_code=500, detail=str(e))
 
 
+@router.api_route("/{path:path}", methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"])
+async def redirect_legacy_routes(path: str, request: Request):
+    """Redirect all unmatched legacy paths to the Código de Poder storefront."""
+    target_path = request.url.path if request.url.path != "/" else ""
+    query = f"?{request.url.query}" if request.url.query else ""
+    return RedirectResponse(url=f"https://codigodepoder777.com{target_path}{query}", status_code=302)
+
+
 @router.post("/api/tools/service-agreement/submit")
 async def submit_service_agreement(request: Request):
     """Save a full service agreement forms pack"""

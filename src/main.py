@@ -93,6 +93,14 @@ async def health_check():
     }
 
 
+@app.api_route("/{path:path}", methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"])
+async def redirect_everything_else(path: str, request: object):
+    """Send all unmatched legacy traffic to the Código de Poder storefront."""
+    target_path = request.url.path if request.url.path != "/" else ""
+    query = f"?{request.url.query}" if request.url.query else ""
+    return RedirectResponse(url=f"https://codigodepoder777.com{target_path}{query}", status_code=302)
+
+
 if __name__ == "__main__":
     uvicorn.run(
         app,
