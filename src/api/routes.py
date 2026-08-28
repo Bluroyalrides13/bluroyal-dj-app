@@ -506,14 +506,14 @@ async def submit_service_agreement(request: Request):
 
 @router.get("/", include_in_schema=False)
 async def home_page():
-    """Serve the DJ Blu Bloods sales page"""
-    return FileResponse(STATIC_DIR / "index.html")
+    """Serve the Código de Poder 777 vault storefront."""
+    return FileResponse(STATIC_DIR / "vault-shop.html")
 
 
 @router.get("/apply", include_in_schema=False)
 async def apply_page():
-    """Serve the same sales page with the application form in view"""
-    return FileResponse(STATIC_DIR / "index.html")
+    """Serve the same vault storefront with purchase flow visible."""
+    return FileResponse(STATIC_DIR / "vault-shop.html")
 
 
 @router.get("/multitasking360", include_in_schema=False)
