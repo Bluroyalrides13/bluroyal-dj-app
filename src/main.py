@@ -6,7 +6,7 @@ Orchestrates the Claude AI agent with LangChain for ride booking and lead qualif
 import logging
 from pathlib import Path
 from fastapi import FastAPI
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, RedirectResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from contextlib import asynccontextmanager
@@ -65,10 +65,23 @@ app.include_router(router)
 setup_websocket(app)
 
 
+@app.get("/", include_in_schema=False)
+async def home_page():
+    """Redirect legacy traffic to the Código de Poder storefront."""
+    return RedirectResponse(url="https://codigodepoder777.com/", status_code=302)
+
+
 @app.get("/vault", include_in_schema=False)
 async def vault_shop_page():
-    """Serve the digital vault shop page."""
-    return FileResponse(STATIC_DIR / "vault-shop.html")
+    """Redirect legacy vault traffic to the Código de Poder storefront."""
+    return RedirectResponse(url="https://codigodepoder777.com/vault", status_code=302)
+
+
+@app.get("/apply", include_in_schema=False)
+async def apply_page():
+    """Redirect legacy application flow to the Código de Poder storefront."""
+    return RedirectResponse(url="https://codigodepoder777.com/vault", status_code=302)
+
 
 @app.get("/health")
 async def health_check():

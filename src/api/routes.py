@@ -506,14 +506,14 @@ async def submit_service_agreement(request: Request):
 
 @router.get("/", include_in_schema=False)
 async def home_page():
-    """Serve the Código de Poder 777 vault storefront."""
-    return FileResponse(STATIC_DIR / "vault-shop.html")
+    """Redirect legacy traffic to the Código de Poder storefront."""
+    return RedirectResponse(url="https://codigodepoder777.com/", status_code=302)
 
 
 @router.get("/apply", include_in_schema=False)
 async def apply_page():
-    """Serve the same vault storefront with purchase flow visible."""
-    return FileResponse(STATIC_DIR / "vault-shop.html")
+    """Redirect application flow to the Código de Poder storefront."""
+    return RedirectResponse(url="https://codigodepoder777.com/vault", status_code=302)
 
 
 @router.get("/multitasking360", include_in_schema=False)
