@@ -111,24 +111,53 @@ def _system(brand_key: str, opts: Dict[str, Any]) -> str:
         f"YouTube (link in bio).{keyword}\n"
         "- 8 to 15 Instagram hashtags, mixing broad and niche, no # symbol needed.\n"
         f"- Never promise income results or make medical/legal claims.{site}\n"
-        "Return the result only through the save_content_pack tool."
+        "Return the result by calling the save_content_pack tool (always call it, never answer in plain text)."
     )
 
 
 def _call(system: str, user: str) -> Dict[str, Any]:
+    """Ask Claude for the pack. Some models refuse a forced tool call, so we
+    let it choose the tool, and fall back to plain JSON if it answers in text."""
     client = Anthropic()
-    resp = client.messages.create(
-        model=config.ANTHROPIC_MODEL,
-        max_tokens=6000,
-        system=system,
-        tools=[_PACK_TOOL],
-        tool_choice={"type": "tool", "name": "save_content_pack"},
-        messages=[{"role": "user", "content": user}],
-    )
-    for block in resp.content:
-        if getattr(block, "type", "") == "tool_use":
-            return _clean(dict(block.input))
-    raise RuntimeError("The writer returned no content pack.")
+    attempts = [
+        {"tool_choice": {"type": "auto"}},
+        {"tool_choice": {"type": "auto"}, "nudge": True},
+    ]
+    last_text = ""
+    for attempt in attempts:
+        content = user
+        if attempt.get("nudge"):
+            content += ("\n\nIMPORTANT: respond ONLY by calling the save_content_pack tool. "
+                        "If you cannot call tools, reply with a single JSON object with exactly its fields.")
+        resp = client.messages.create(
+            model=config.ANTHROPIC_MODEL,
+            max_tokens=8000,
+            system=system,
+            tools=[_PACK_TOOL],
+            tool_choice=attempt["tool_choice"],
+            messages=[{"role": "user", "content": content}],
+        )
+        texts = []
+        for block in resp.content:
+            if getattr(block, "type", "") == "tool_use" and block.name == "save_content_pack":
+                return _clean(dict(block.input))
+            if getattr(block, "type", "") == "text":
+                texts.append(block.text)
+        last_text = "\n".join(texts)
+        parsed = _json_from_text(last_text)
+        if parsed and "video_script" in parsed:
+            return _clean(parsed)
+    raise RuntimeError(f"The writer didn't return a content pack. Tap Try again. ({last_text[:200]})")
+
+
+def _json_from_text(text: str) -> Optional[Dict[str, Any]]:
+    start, end = text.find("{"), text.rfind("}")
+    if start == -1 or end <= start:
+        return None
+    try:
+        return json.loads(text[start:end + 1])
+    except json.JSONDecodeError:
+        return None
 
 
 def _clean(pack: Dict[str, Any]) -> Dict[str, Any]:
