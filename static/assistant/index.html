@@ -171,9 +171,9 @@ async function showJob(id){
   if (job.status === 'needs_video' || (job.options.video_mode==='meta' && p.meta_ai_scenes && ['review','partial'].includes(job.status))) {
     const scenes = p.meta_ai_scenes || [];
     html += `<div class="card"><h2>${job.status==='needs_video'?'Make it in Meta AI':'Meta AI prompts'}</h2>
-      <p class="muted">Paste each prompt into Meta AI, save the clips, put them together with the narration, then upload the finished video below.</p>
-      ${scenes.map(s => `<div class="scene"><button class="btn small copy" data-copy="${esc(s.prompt)}">Copy</button><b>Scene ${s.scene}</b><p>${esc(s.prompt)}</p><p class="muted">🎙 ${esc(s.voiceover)}</p></div>`).join('')}
-      <button class="btn ghost" data-copy="${esc(p.video_script||'')}">Copy full narration</button>
+      <p class="muted"><b>1.</b> Paste <b>one scene at a time</b> into Meta AI (it makes a few seconds per prompt) and save each clip. <b>2.</b> In CapCut, put the clips in order and add the narration as voiceover (record it or use Text to speech) plus auto captions. <b>3.</b> Upload the finished video below.</p>
+      ${scenes.map(s => `<div class="scene"><button class="btn small copy" data-copy="${esc(s.prompt)}">Copy for Meta AI</button><b>Scene ${s.scene}</b><p>${esc(s.prompt)}</p><p class="muted">🎙 ${esc(s.voiceover)}</p></div>`).join('')}
+      <button class="btn ghost" data-copy="${esc(p.video_script||'')}">Copy narration (for CapCut voiceover, not Meta AI)</button>
       ${job.status==='needs_video' ? `<label style="margin-top:18px">Finished video</label><input type="file" id="vid" accept="video/*"><button class="btn" id="upload">Upload video</button>` : ''}
     </div>`;
   }
