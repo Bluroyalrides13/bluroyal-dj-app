@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Assistant">
+<meta name="theme-color" content="#0a1628">
+<title>Content Assistant</title>
+<style>
+@font-face{font-family:Cormorant;src:url(/static/assistant/fonts/CormorantGaramond.ttf);font-weight:300 700}
+@font-face{font-family:Montserrat;src:url(/static/assistant/fonts/Montserrat.ttf);font-weight:100 900}
+:root{--bg:#0a1628;--card:#111f36;--line:#22355a;--gold:#d4af37;--text:#f2f2f2;--mute:#9aa8c1;--ok:#4caf50;--bad:#ef5350;--warn:#ffb74d}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.45 Montserrat,-apple-system,system-ui,sans-serif;padding:env(safe-area-inset-top) 0 calc(90px + env(safe-area-inset-bottom))}
+header{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);padding:14px 18px;display:flex;align-items:center;gap:12px}
+header h1{font:600 26px Cormorant,serif;color:var(--gold);margin:0;flex:1}
+header button{background:none;border:1px solid var(--line);color:var(--mute);border-radius:10px;padding:7px 11px;font:500 13px Montserrat}
+main{padding:16px;max-width:680px;margin:0 auto}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:14px}
+h2{font:600 24px Cormorant,serif;color:var(--gold);margin:0 0 10px}
+h3{font:600 13px Montserrat;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);margin:16px 0 6px}
+label{display:block;font-size:13px;color:var(--mute);margin:12px 0 6px}
+textarea,input[type=text],input[type=password],input[type=url],select{width:100%;background:#0c1a30;color:var(--text);border:1px solid var(--line);border-radius:12px;padding:12px;font:16px Montserrat}
+textarea{min-height:110px;resize:vertical}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid var(--line);background:#0c1a30;color:var(--text);border-radius:999px;padding:9px 14px;font:500 14px Montserrat}
+.chip.on{background:var(--gold);color:var(--bg);border-color:var(--gold);font-weight:700}
+.btn{display:block;width:100%;border:0;border-radius:14px;padding:15px;font:700 16px Montserrat;background:var(--gold);color:var(--bg);margin-top:14px;text-align:center;text-decoration:none}
+.btn.ghost{background:none;border:1px solid var(--gold);color:var(--gold)}
+.btn.small{display:inline-block;width:auto;padding:8px 12px;font-size:13px;margin:0;border-radius:10px}
+.btn:disabled{opacity:.5}
+.row{display:flex;gap:10px;align-items:center}
+.row>*{flex:1}
+.muted{color:var(--mute);font-size:14px}
+.pill{display:inline-block;font:700 11px Montserrat;letter-spacing:.06em;text-transform:uppercase;padding:4px 9px;border-radius:999px;background:#1d2e4f;color:var(--mute)}
+.pill.review,.pill.needs_video{background:var(--gold);color:var(--bg)}
+.pill.done{background:var(--ok);color:#fff}.pill.error,.pill.partial{background:var(--bad);color:#fff}
+.job{display:block;padding:12px 0;border-bottom:1px solid var(--line);color:inherit;text-decoration:none}
+.job:last-child{border:0}
+.job b{display:block;font-weight:600;margin:4px 0 2px}
+.spin{width:22px;height:22px;border:3px solid var(--line);border-top-color:var(--gold);border-radius:50%;animation:s 1s linear infinite;display:inline-block;vertical-align:middle;margin-right:8px}
+@keyframes s{to{transform:rotate(360deg)}}
+video,img.preview{width:100%;border-radius:12px;border:1px solid var(--line);background:#000;display:block}
+.scene{border-left:3px solid var(--gold);padding:8px 12px;margin:10px 0;background:#0c1a30;border-radius:0 10px 10px 0}
+.scene p{margin:4px 0;font-size:14px}
+.copy{float:right}
+.check{display:flex;align-items:center;gap:10px;padding:12px;border:1px solid var(--line);border-radius:12px;margin-top:8px;font-weight:600}
+.check input{width:22px;height:22px;accent-color:var(--gold)}
+.res{padding:10px 12px;border-radius:12px;margin-top:8px;background:#0c1a30;font-size:14px;word-break:break-word}
+.res a{color:var(--gold)}
+.res a.btn{color:var(--bg)}
+.ok{color:var(--ok)}.bad{color:var(--bad)}.warn{color:var(--warn)}
+.acct{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid var(--line)}
+.acct:last-child{border:0}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--gold);color:var(--bg);padding:12px 18px;border-radius:12px;font-weight:700;z-index:9;display:none;max-width:90%}
+.hide{display:none!important}
+details summary{cursor:pointer;color:var(--gold);font-weight:600;padding:6px 0}
+</style>
+</head>
+<body>
+<header><h1>Content Assistant</h1><button id="navAccounts">Accounts</button><button id="navHome">Home</button></header>
+<main id="app"></main>
+<div class="toast" id="toast"></div>
+<script>
+const $ = s => document.querySelector(s);
+const app = $('#app');
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let state = {overview:null, timer:null, form:{brand:'codigo', video_mode:'heygen', format:'short', language:'es'}};
+const STATUS = {drafting:'Writing',rendering:'Making video',needs_video:'Your turn',review:'Ready to approve',posting:'Posting',done:'Posted',partial:'Needs attention',error:'Problem'};
+const PLAT = {youtube:'YouTube', linkedin:'LinkedIn', instagram:'Instagram'};
+
+function toast(msg){const t=$('#toast');t.textContent=msg;t.style.display='block';clearTimeout(t._h);t._h=setTimeout(()=>t.style.display='none',2600)}
+async function api(path, opts={}){
+  const r = await fetch(path, {credentials:'same-origin', ...opts, headers: opts.body instanceof FormData ? {} : {'Content-Type':'application/json', ...(opts.headers||{})}});
+  if (r.status === 401 && !path.endsWith('/login')) { showLogin(); throw new Error('Please log in'); }
+  const data = r.headers.get('content-type')?.includes('json') ? await r.json() : {};
+  if (!r.ok) throw new Error(data.detail || ('Error ' + r.status));
+  return data;
+}
+async function copy(text){try{await navigator.clipboard.writeText(text);toast('Copied ✓')}catch(e){prompt('Copy this:', text)}}
+function stopTimer(){clearTimeout(state.timer)}
+
+// ---------- routing ----------
+function route(){
+  stopTimer();
+  const h = location.hash;
+  if (h.startsWith('#job=')) return showJob(h.slice(5));
+  if (h === '#accounts') return showAccounts();
+  return showHome();
+}
+window.addEventListener('hashchange', route);
+$('#navHome').onclick = () => location.hash = '';
+$('#navAccounts').onclick = () => location.hash = '#accounts';
+
+// ---------- login ----------
+function showLogin(){
+  stopTimer();
+  app.innerHTML = `<div class="card"><h2>Welcome back, Cindy</h2>
+    <label>Password</label><input type="password" id="pw" autocomplete="current-password">
+    <button class="btn" id="go">Log in</button><p class="muted" id="msg"></p></div>`;
+  const go = async () => { try { await api('/assistant/api/login', {method:'POST', body:JSON.stringify({password:$('#pw').value})}); route(); } catch(e){ $('#msg').textContent = e.message; } };
+  $('#go').onclick = go; $('#pw').onkeydown = e => e.key==='Enter' && go();
+}
+
+// ---------- home ----------
+async function showHome(){
+  const ov = state.overview = await api('/assistant/api/overview');
+  const f = state.form;
+  const brandChips = Object.entries(ov.brands).map(([k,b]) => `<button class="chip ${f.brand===k?'on':''}" data-brand="${k}">${esc(b.name)}</button>`).join('');
+  const setupGaps = Object.entries(ov.accounts.setup).filter(([k,v]) => !v && k!=='email').map(([k]) => k);
+  app.innerHTML = `
+  ${setupGaps.length ? `<div class="card"><b class="warn">Setup not finished:</b> <span class="muted">${setupGaps.join(', ')} keys missing in Render. See the setup guide.</span></div>` : ''}
+  <div class="card"><h2>New video</h2>
+    <label>Brand</label><div class="chips" id="brands">${brandChips}</div>
+    <label>What's today's video about?</label>
+    <textarea id="prompt" placeholder="e.g. 3 free AI tools that save a business owner 10 hours a week"></textarea>
+    <label>Who makes the video?</label>
+    <div class="chips" id="modes"><button class="chip ${f.video_mode==='heygen'?'on':''}" data-mode="heygen">HeyGen avatar (automatic)</button><button class="chip ${f.video_mode==='meta'?'on':''}" data-mode="meta">Me, in Meta AI</button></div>
+    <details><summary>More options</summary>
+      <label>Format</label>
+      <div class="chips" id="formats"><button class="chip ${f.format==='short'?'on':''}" data-format="short">Short (vertical)</button><button class="chip ${f.format==='long'?'on':''}" data-format="long">Regular (horizontal)</button></div>
+      <label>Language</label>
+      <div class="chips" id="langs">${[['es','Español'],['en','English'],['bilingual','Bilingual']].map(([k,l])=>`<button class="chip ${f.language===k?'on':''}" data-lang="${k}">${l}</button>`).join('')}</div>
+      <label>Length in seconds (optional)</label><input type="text" inputmode="numeric" id="secs" placeholder="${f.format==='short'?'50':'300'}">
+    </details>
+    <button class="btn" id="create">Create my video & posts</button>
+    <p class="muted">Nothing gets posted until you approve it.</p>
+  </div>
+  <div class="card"><h2>Recent</h2>${ov.jobs.length ? ov.jobs.map(j => `
+    <a class="job" href="#job=${j.id}"><span class="pill ${j.status}">${STATUS[j.status]||j.status}</span>
+    <b>${esc(j.title || j.prompt)}</b><span class="muted">${esc(ov.brands[j.brand]?.name||j.brand)} · ${new Date(j.created*1000).toLocaleString()}</span></a>`).join('') : '<p class="muted">Your videos will show up here.</p>'}</div>`;
+  $('#brands').onclick = e => { const b=e.target.dataset.brand; if(!b) return; f.brand=b; f.video_mode=ov.brands[b].default_video_mode; f.language=ov.brands[b].default_language; keepPrompt(showHome); };
+  $('#modes').onclick = e => { if(e.target.dataset.mode){ f.video_mode=e.target.dataset.mode; keepPrompt(showHome);} };
+  $('#formats').onclick = e => { if(e.target.dataset.format){ f.format=e.target.dataset.format; keepPrompt(showHome);} };
+  $('#langs').onclick = e => { if(e.target.dataset.lang){ f.language=e.target.dataset.lang; keepPrompt(showHome);} };
+  if (state.draftPrompt) { $('#prompt').value = state.draftPrompt; }
+  $('#create').onclick = async () => {
+    const prompt = $('#prompt').value.trim();
+    if (prompt.length < 3) return toast('Type your video idea first');
+    $('#create').disabled = true; $('#create').textContent = 'Starting…';
+    try {
+      const secs = parseInt($('#secs').value) || null;
+      const r = await api('/assistant/api/jobs', {method:'POST', body:JSON.stringify({...f, prompt, seconds:secs})});
+      state.draftPrompt = ''; location.hash = '#job=' + r.id;
+    } catch(e){ toast(e.message); $('#create').disabled=false; $('#create').textContent='Create my video & posts'; }
+  };
+}
+function keepPrompt(fn){ state.draftPrompt = $('#prompt')?.value || ''; fn(); }
+
+// ---------- job ----------
+async function showJob(id){
+  let job;
+  try { job = await api('/assistant/api/jobs/' + id); } catch(e){ app.innerHTML = `<div class="card">${esc(e.message)}</div>`; return; }
+  const ov = state.overview || (state.overview = await api('/assistant/api/overview'));
+  const p = job.pack || {};
+  const brandName = ov.brands[job.brand]?.name || job.brand;
+  let html = `<div class="card"><span class="pill ${job.status}">${STATUS[job.status]||job.status}</span>
+    <h2 style="margin-top:8px">${esc(p.youtube_title || job.prompt)}</h2>
+    <p class="muted">${esc(brandName)} · ${job.options.video_mode==='heygen'?'HeyGen avatar':'Meta AI'} · ${job.options.format==='long'?'Regular':'Short'}</p>
+    ${['drafting','rendering','posting'].includes(job.status) && !job.stale ? `<p><span class="spin"></span>${esc(job.step)}</p>` : `<p>${esc(job.step||'')}</p>`}
+    ${job.error ? `<p class="bad">${esc(job.error)}</p>` : ''}
+    ${job.status==='error' || job.stale ? `<button class="btn" id="retry">Try again</button>` : ''}
+    ${job.status==='rendering' ? `<button class="btn ghost" id="checkNow">Check HeyGen now</button><p class="muted">You'll get an email when it's ready — you can close this page.</p>` : ''}
+  </div>`;
+
+  if (job.status === 'needs_video' || (job.options.video_mode==='meta' && p.meta_ai_scenes && ['review','partial'].includes(job.status))) {
+    const scenes = p.meta_ai_scenes || [];
+    html += `<div class="card"><h2>${job.status==='needs_video'?'Make it in Meta AI':'Meta AI prompts'}</h2>
+      <p class="muted">Paste each prompt into Meta AI, save the clips, put them together with the narration, then upload the finished video below.</p>
+      ${scenes.map(s => `<div class="scene"><button class="btn small copy" data-copy="${esc(s.prompt)}">Copy</button><b>Scene ${s.scene}</b><p>${esc(s.prompt)}</p><p class="muted">🎙 ${esc(s.voiceover)}</p></div>`).join('')}
+      <button class="btn ghost" data-copy="${esc(p.video_script||'')}">Copy full narration</button>
+      ${job.status==='needs_video' ? `<label style="margin-top:18px">Finished video</label><input type="file" id="vid" accept="video/*"><button class="btn" id="upload">Upload video</button>` : ''}
+    </div>`;
+  }
+
+  if (['review','partial','posting','done'].includes(job.status)) {
+    const editable = ['review','partial'].includes(job.status);
+    const ro = editable ? '' : 'readonly';
+    html += `<div class="card"><h2>Preview</h2>
+      ${job.has_video ? `<video controls playsinline preload="metadata" src="/assistant/api/jobs/${job.id}/video"></video>` : '<p class="muted">No video yet.</p>'}
+      ${job.has_video && editable && job.options.video_mode==='meta' ? `<label>Replace video</label><input type="file" id="vid" accept="video/*"><button class="btn small ghost" id="upload" style="margin-top:8px">Upload replacement</button>` : ''}
+      <h3>Instagram graphic</h3>${job.has_image ? `<img class="preview" src="/assistant/api/jobs/${job.id}/image?v=${job.image_v}">` : ''}
+      <h3>YouTube</h3>
+      <label>Title</label><input type="text" id="f_youtube_title" value="${esc(p.youtube_title)}" ${ro}>
+      <label>Description</label><textarea id="f_youtube_description" ${ro}>${esc(p.youtube_description)}</textarea>
+      <label>Tags (comma separated)</label><input type="text" id="f_youtube_tags" value="${esc((p.youtube_tags||[]).join(', '))}" ${ro}>
+      <h3>LinkedIn</h3><textarea id="f_linkedin_post" style="min-height:200px" ${ro}>${esc(p.linkedin_post)}</textarea>
+      <p class="muted">{YOUTUBE_LINK} is swapped for your video link when it posts.</p>
+      <h3>Instagram</h3><textarea id="f_instagram_caption" ${ro}>${esc(p.instagram_caption)}</textarea>
+      <label>Hashtags</label><input type="text" id="f_instagram_hashtags" value="${esc((p.instagram_hashtags||[]).join(' '))}" ${ro}>
+      <label>Graphic headline</label><input type="text" id="f_image_headline" value="${esc(p.image_headline)}" ${ro}>
+      <label>Graphic subline</label><input type="text" id="f_image_subline" value="${esc(p.image_subline)}" ${ro}>
+      <label>Graphic button</label><input type="text" id="f_image_cta" value="${esc(p.image_cta)}" ${ro}>
+      ${editable ? `<button class="btn ghost" id="saveEdits">Save my edits</button>` : ''}
+      <details><summary>Video script</summary><p style="white-space:pre-wrap">${esc(p.video_script)}</p><button class="btn small ghost" data-copy="${esc(p.video_script||'')}">Copy script</button></details>
+    </div>`;
+
+    if (editable) {
+      html += `<div class="card"><h2>Want changes?</h2>
+        <textarea id="feedback" placeholder="e.g. Make the hook punchier and mention the free guide"></textarea>
+        <label class="check"><input type="checkbox" id="remake"> Also remake the video with the new script</label>
+        <button class="btn ghost" id="revise">Rewrite it</button></div>`;
+      const manual = ov.youtube_mode !== 'api';
+      const done = p => job.results?.[p]?.ok;
+      html += `<div class="card"><h2>Approve & post</h2>
+        ${manual ? `<div class="res"><b>YouTube is in manual mode.</b> Download the video, upload it in the YouTube app, use the copy buttons, then paste the link here so LinkedIn links to it.
+          <div class="row" style="margin-top:10px"><a class="btn small" href="/assistant/api/jobs/${job.id}/video?download=1">Download video</a><button class="btn small ghost" data-copy="${esc(p.youtube_title)}">Copy title</button></div>
+          <div class="row" style="margin-top:8px"><button class="btn small ghost" data-copy="${esc(p.youtube_description)}">Copy description</button><button class="btn small ghost" data-copy="${esc((p.youtube_tags||[]).join(', '))}">Copy tags</button></div>
+          <label>YouTube link</label><input type="url" id="ytUrl" placeholder="https://youtube.com/shorts/…" value="${esc(job.youtube_url||'')}"></div>` : ''}
+        ${Object.entries(PLAT).map(([k,l]) => `<label class="check"><input type="checkbox" class="plat" value="${k}" ${done(k)?'disabled':'checked'}> ${l} ${done(k)?'<span class="ok">✓ posted</span>':''}</label>`).join('')}
+        <button class="btn" id="approve">${job.status==='partial'?'Retry the failed ones':'Approve & post now'}</button></div>`;
+    }
+  }
+
+  if (Object.keys(job.results||{}).length) {
+    html += `<div class="card"><h2>Results</h2>${Object.entries(job.results).map(([k,r]) => `
+      <div class="res"><b>${PLAT[k]||k}:</b> ${r.ok ? `<span class="ok">Posted ✓</span> ${r.url?`<a href="${esc(r.url)}" target="_blank">Open</a>`:''} ${r.note?`<br><span class="warn">${esc(r.note)}</span>`:''}` : `<span class="bad">${esc(r.error)}</span>`}</div>`).join('')}</div>`;
+  }
+  html += `<button class="btn ghost" id="del" style="border-color:var(--bad);color:var(--bad)">Delete this job</button>`;
+  app.innerHTML = html;
+
+  // wiring
+  app.querySelectorAll('[data-copy]').forEach(b => b.onclick = () => copy(b.dataset.copy));
+  const on = (sel, fn) => { const el = $(sel); if (el) el.onclick = fn; };
+  on('#retry', async () => { try{ await api(`/assistant/api/jobs/${id}/retry`, {method:'POST'}); showJob(id);}catch(e){toast(e.message)} });
+  on('#checkNow', async () => { try{ await api(`/assistant/api/jobs/${id}/check`, {method:'POST'}); showJob(id);}catch(e){toast(e.message)} });
+  on('#upload', async () => {
+    const file = $('#vid').files[0]; if (!file) return toast('Pick the video first');
+    const fd = new FormData(); fd.append('file', file);
+    $('#upload').disabled = true; $('#upload').textContent = 'Uploading… keep this page open';
+    try { await api(`/assistant/api/jobs/${id}/video`, {method:'POST', body:fd}); toast('Video uploaded ✓'); showJob(id); }
+    catch(e){ toast(e.message); $('#upload').disabled=false; $('#upload').textContent='Upload video'; }
+  });
+  const collect = () => ({
+    youtube_title: $('#f_youtube_title').value, youtube_description: $('#f_youtube_description').value,
+    youtube_tags: $('#f_youtube_tags').value.split(',').map(s=>s.trim()).filter(Boolean),
+    linkedin_post: $('#f_linkedin_post').value, instagram_caption: $('#f_instagram_caption').value,
+    instagram_hashtags: $('#f_instagram_hashtags').value.split(/\s+/).filter(Boolean).map(t => t.startsWith('#')?t:'#'+t),
+    image_headline: $('#f_image_headline').value, image_subline: $('#f_image_subline').value, image_cta: $('#f_image_cta').value,
+  });
+  const saveEdits = async (quiet) => { await api(`/assistant/api/jobs/${id}/edit`, {method:'POST', body:JSON.stringify({fields:collect()})}); if(!quiet) toast('Saved ✓'); };
+  on('#saveEdits', async () => { try{ await saveEdits(); showJob(id);}catch(e){toast(e.message)} });
+  on('#revise', async () => {
+    const fb = $('#feedback').value.trim(); if (fb.length<2) return toast('Tell me what to change');
+    try{ await api(`/assistant/api/jobs/${id}/revise`, {method:'POST', body:JSON.stringify({feedback:fb, remake_video:$('#remake').checked})}); showJob(id);}catch(e){toast(e.message)}
+  });
+  on('#approve', async () => {
+    const platforms = [...app.querySelectorAll('.plat:checked')].map(c => c.value);
+    if (!platforms.length) return toast('Tick at least one platform');
+    if (!confirm(`Post to ${platforms.map(p=>PLAT[p]).join(', ')} now?`)) return;
+    try {
+      await saveEdits(true);
+      await api(`/assistant/api/jobs/${id}/approve`, {method:'POST', body:JSON.stringify({platforms, youtube_url: $('#ytUrl')?.value || ''})});
+      showJob(id);
+    } catch(e){ toast(e.message) }
+  });
+  on('#del', async () => { if(!confirm('Delete this job and its files?')) return; await api(`/assistant/api/jobs/${id}`, {method:'DELETE'}); location.hash=''; });
+
+  if (['drafting','rendering','posting'].includes(job.status) && !job.stale) {
+    state.timer = setTimeout(() => { if (location.hash === '#job=' + id) showJob(id); }, job.status==='rendering' ? 15000 : 4000);
+  }
+}
+
+// ---------- accounts ----------
+async function showAccounts(){
+  const ov = state.overview = await api('/assistant/api/overview');
+  const a = ov.accounts;
+  const line = (title, info, connectUrl, key) => `<div class="acct"><div><b>${title}</b><br><span class="muted">${info.connected ? `<span class="ok">Connected</span> ${esc(info.label||'')}${info.days_left!=null?` · ${info.days_left} days left`:''}` : 'Not connected'}</span></div>
+     <div><a class="btn small" href="${connectUrl}">${info.connected?'Reconnect':'Connect'}</a>${info.connected && key ? ` <button class="btn small ghost" data-disc="${key}">✕</button>`:''}</div></div>`;
+  let html = `<div class="card"><h2>Accounts</h2>
+    ${!ov.persistent_storage ? `<p class="warn">Your server has no saved disk yet, so logins reset on every deploy. See "Add a disk" in the setup guide.</p>` : ''}
+    <h3>YouTube</h3>${Object.entries(ov.brands).map(([k,b]) => line(b.name, a.youtube[k], `/assistant/connect/youtube?brand=${k}`, `youtube:${k}`)).join('')}
+    <p class="muted">YouTube mode: <b>${ov.youtube_mode==='api'?'automatic upload':'manual (you upload, I prep everything)'}</b></p>
+    <h3>LinkedIn</h3>${line('Your profile', a.linkedin, '/assistant/connect/linkedin', 'linkedin')}
+    <h3>Instagram</h3>${Object.entries(ov.brands).map(([k,b]) => line(b.name, a.instagram[k], `/assistant/connect/instagram?brand=${k}`, `instagram:${k}`)).join('')}
+    <p class="muted">If a brand has no Instagram connected, its posts go to the Código de Poder account.</p>
+  </div>
+  <div class="card"><h2>HeyGen avatar</h2>
+    ${a.setup.heygen ? `<p class="muted">Pick the avatar and voice for each brand.</p><button class="btn ghost" id="loadHG">Load my HeyGen avatars</button><div id="hg"></div>` : '<p class="warn">Add HEYGEN_API_KEY in Render first.</p>'}
+  </div>
+  <div class="card"><h2>Setup check</h2>${Object.entries(a.setup).map(([k,v]) => `<div class="res">${v?'<span class="ok">✓</span>':'<span class="bad">✕</span>'} ${k}</div>`).join('')}
+    <button class="btn ghost" id="logout">Log out</button></div>`;
+  app.innerHTML = html;
+  app.querySelectorAll('[data-disc]').forEach(b => b.onclick = async () => { if(!confirm('Disconnect this account?')) return; await api('/assistant/api/disconnect', {method:'POST', body:JSON.stringify({key:b.dataset.disc})}); showAccounts(); });
+  const lo = $('#logout'); if (lo) lo.onclick = async () => { await api('/assistant/api/logout', {method:'POST'}); showLogin(); };
+  const lh = $('#loadHG'); if (lh) lh.onclick = async () => {
+    lh.textContent = 'Loading…';
+    try {
+      const o = await api('/assistant/api/heygen/options');
+      $('#hg').innerHTML = Object.entries(ov.brands).map(([k,b]) => {
+        const cur = a.heygen[k];
+        return `<h3>${esc(b.name)}</h3>
+          <label>Avatar</label><select id="av_${k}">${o.avatars.map(v => `<option value="${esc(v.id)}" data-kind="${v.kind}" ${v.id===cur.avatar_id?'selected':''}>${esc(v.name)}${v.kind==='talking_photo'?' (photo)':''}</option>`).join('')}</select>
+          <label>Voice</label><select id="vo_${k}">${o.voices.map(v => `<option value="${esc(v.id)}" ${v.id===cur.voice_id?'selected':''}>${esc(v.name)} · ${esc(v.language||'')} ${esc(v.gender||'')}</option>`).join('')}</select>
+          <button class="btn small" data-save="${k}" style="margin-top:10px">Save for ${esc(b.name)}</button>`;
+      }).join('');
+      $('#hg').querySelectorAll('[data-save]').forEach(btn => btn.onclick = async () => {
+        const k = btn.dataset.save, sel = $('#av_'+k);
+        await api('/assistant/api/heygen/choice', {method:'POST', body:JSON.stringify({brand:k, avatar_id:sel.value, avatar_kind:sel.selectedOptions[0].dataset.kind, voice_id:$('#vo_'+k).value})});
+        toast('Saved ✓');
+      });
+      lh.classList.add('hide');
+    } catch(e){ toast(e.message); lh.textContent = 'Load my HeyGen avatars'; }
+  };
+}
+
+(async () => { const me = await api('/assistant/api/me'); me.logged_in ? route() : showLogin(); })();
+</script>
+</body>
+</html>

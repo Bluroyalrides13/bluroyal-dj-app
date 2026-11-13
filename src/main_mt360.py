@@ -28,6 +28,7 @@ from src.marketing.funnel import InfoProductFunnel
 from src.marketing.mt360_offers import MT360_OFFER_PRICING
 from src.marketing.mt360_vault_products import MT360_VAULT_PRODUCTS
 from src.codigo_agent.chat_interface import CodigoChatInterface
+from src.content_assistant.routes import router as content_assistant_router
 from src.models.schemas import (
     ApiResponse,
     InfoProductApplicationRequest,
@@ -68,6 +69,7 @@ app = FastAPI(
 )
 
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
+app.include_router(content_assistant_router)  # /assistant — Content Assistant
 
 app.add_middleware(
     CORSMiddleware,
