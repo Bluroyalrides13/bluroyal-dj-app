@@ -98,9 +98,12 @@ $('#navAccounts').onclick = () => location.hash = '#accounts';
 function showLogin(){
   stopTimer();
   app.innerHTML = `<div class="card"><h2>Welcome back, Cindy</h2>
-    <label>Password</label><input type="password" id="pw" autocomplete="current-password">
+    <label>Password</label>
+    <div class="row"><input type="password" id="pw" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" style="flex:4">
+    <button class="btn small ghost" id="show" type="button" style="flex:1;padding:12px">👁 Show</button></div>
     <button class="btn" id="go">Log in</button><p class="muted" id="msg"></p></div>`;
-  const go = async () => { try { await api('/assistant/api/login', {method:'POST', body:JSON.stringify({password:$('#pw').value})}); route(); } catch(e){ $('#msg').textContent = e.message; } };
+  $('#show').onclick = () => { const p=$('#pw'); const hidden = p.type==='password'; p.type = hidden ? 'text' : 'password'; $('#show').textContent = hidden ? 'Hide' : '👁 Show'; p.focus(); };
+  const go = async () => { try { await api('/assistant/api/login', {method:'POST', body:JSON.stringify({password:$('#pw').value.trim()})}); route(); } catch(e){ $('#msg').textContent = e.message; } };
   $('#go').onclick = go; $('#pw').onkeydown = e => e.key==='Enter' && go();
 }
 

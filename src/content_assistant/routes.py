@@ -67,7 +67,7 @@ async def login(body: LoginIn, request: Request, response: Response):
         raise HTTPException(429, "Too many tries. Wait 15 minutes.")
     if not config.ASSISTANT_PASSWORD:
         raise HTTPException(500, "ASSISTANT_PASSWORD is not set in Render yet.")
-    if not hmac.compare_digest(body.password.encode(), config.ASSISTANT_PASSWORD.encode()):
+    if not hmac.compare_digest(body.password.strip().encode(), config.ASSISTANT_PASSWORD.encode()):
         _fails[ip].append(now)
         raise HTTPException(401, "Wrong password.")
     response.set_cookie(COOKIE, _sessions.dumps({"t": now}), max_age=SESSION_DAYS * 86400,
