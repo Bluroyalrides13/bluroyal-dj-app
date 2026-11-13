@@ -104,7 +104,7 @@ function showLogin(){
     <button class="btn" id="go">Log in</button><p class="muted" id="msg"></p></div>`;
   $('#show').onclick = () => { const p=$('#pw'); const hidden = p.type==='password'; p.type = hidden ? 'text' : 'password'; $('#show').textContent = hidden ? 'Hide' : '👁 Show'; p.focus(); };
   const go = async () => { try { await api('/assistant/api/login', {method:'POST', body:JSON.stringify({password:$('#pw').value.trim()})}); route(); } catch(e){ $('#msg').textContent = e.message; } };
-  $('#go').onclick = go; $('#pw').onkeydown = e => e.key==='Enter' && go();
+  $('#go').onclick = go; $('#pw').addEventListener('keydown', e => { if (e.key === 'Enter') go(); });
 }
 
 // ---------- home ----------
